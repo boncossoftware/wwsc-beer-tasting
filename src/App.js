@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import Events from './containers/Events/Events';
+
+
+
+import { auth } from './store';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import Login from './containers/Login';
+import { useEffect } from 'react';
+import AddEvent from './containers/AddEvent';
+
+
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const dispatch = useDispatch();
+    const initialized = useSelector( s => s?.auth?.initialized );
+    const user = useSelector( s => s?.auth?.user );
+
+    //Intialize the auth state.
+    useEffect( () => {
+        dispatch(auth.initialize());
+    }, [dispatch] );
+
+    return (
+        <div className="App">
+            {!initialized && "loading..."}
+            {initialized &&
+                <Switch>
+                    <Route path="/login" exact render={() => <Login />} />
+                    {!user && <Redirect to="/login" />}
+                    <Route path="/" exact render={() => <Events />} />
+                    <Route path="/event/add" exact render={ () => <AddEvent /> } />
+                </Switch>
+            }
+        </div>
+
+    );
 }
 
 export default App;
