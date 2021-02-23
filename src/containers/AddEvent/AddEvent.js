@@ -14,7 +14,6 @@ const AddEvent = () => {
 
     useEffect( () => {
         if (added) {
-            console.log(added);
             dispatch(events.resetAdd());
             history.push(`/event/${added.id}`);
         }
@@ -30,7 +29,6 @@ const AddEvent = () => {
     }
 
     const handleEventChange = (event) => {
-        console.log(event);
         setEvent(event);
     }
 

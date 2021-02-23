@@ -11,6 +11,9 @@ export const eventFromDoc = (doc) => {
         related: doc.data().related,
         bartender: doc.data().bartender,
         tasters: doc.data().tasters,
+        ownerAddedAsTaster: doc.data().ownerAddedAsTaster,
+        beers: doc.data().beers,
+        asterisksAllowed: doc.data().asterisksAllowed
     }
 }
 
@@ -23,5 +26,8 @@ export const eventToDocData = (event) => {
         related: event?.related,
         bartender: event?.bartender,
         tasters: event?.tasters,
+        ownerAddedAsTaster: event?.ownerAddedAsTaster,
+        beers: event?.beers,
+        asterisksAllowed: event?.asterisksAllowed
     }   
 }

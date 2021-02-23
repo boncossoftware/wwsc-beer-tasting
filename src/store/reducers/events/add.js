@@ -25,6 +25,7 @@ export default function add(event) {
                 ...event,
                 owner: uid, //Set the user as the owner.
                 related: related,
+                tasters: [...(event?.tasters || []), ...(event?.ownerAddedAsTaster ? [email] : []) ],
             });
             const docRef = await firebase.firestore().collection('events').add(docData);
             const doc = await docRef.get();

@@ -65,6 +65,23 @@ const EventEditForm = ({event, onChange}) => {
         tasters.splice(index, 1);
         handleChange('tasters', { target: { value: tasters} });
     }
+
+    const handleAddBeer = () => {
+        const beers = [...(event?.beers || []), ''];
+        handleChange('beers', { target: { value:  beers}});
+    }
+
+    const handleChangeBeer = (index, clickEvent) => {
+        const beers = event?.beers || [];
+        beers[index] = clickEvent?.target?.value || '';
+        handleChange('beers', { target: { value: beers} });
+    }
+
+    const handleRemoveBeer = (index) => {
+        const beers = (event?.beers || [])
+        beers.splice(index, 1);
+        handleChange('beers', { target: { value: beers} });
+    }
     
     return <div>
         <TextField label="Name" field="name" event={event} placeholder="My Special Event" onChange={handleChange}/>
@@ -77,19 +94,44 @@ const EventEditForm = ({event, onChange}) => {
         <TextField label="Bartender's Email" field="bartender" event={event} onChange={handleChange} placeholder="bartender@gmail.com" />
         <br/>
         <label>Tasters</label><br/>
-        {event?.tasters && event.tasters.map( (taster, index) => <>
-            <input 
-                key={index}
-                id={taster}
-                name={taster}
-                value={ taster } 
-                onChange={  e => handleChangeTaster(index, e) }
-            /> 
-            <button onClick={ () => handleRemoveTaster(index) }>X</button>
-            <br/>
-        </>)}
+        {event?.tasters && event.tasters.map( (taster, index) => 
+            <div key={index}>
+                <input 
+                    
+                    id={taster}
+                    name={taster}
+                    value={ taster } 
+                    onChange={  e => handleChangeTaster(index, e) }
+                /> 
+                <button onClick={ () => handleRemoveTaster(index) }>X</button>
+                <br/>
+            </div>
+        )}
         <button onClick={handleAddTaster}>Add taster</button>
         <br/>
+        <input type="checkbox" id="added_as_taster" name="added_as_taster" onChange={ e => {
+            const ownerAddedAsTaster = e.target.value === 'on';
+            handleChange('ownerAddedAsTaster', {target: {value: ownerAddedAsTaster}}) 
+        }}/>
+        <label htmlFor="added_as_taster">Include me as taster</label> <br/>
+        <br/>
+        <label>Beers</label><br/>
+        {event?.beers && event?.beers.map( (beer, index) => 
+            <div key={index}>
+                <input 
+                    id={beer}
+                    name={beer}
+                    value={ beer } 
+                    onChange={  e => handleChangeBeer(index, e) }
+                /> 
+                <button onClick={ () => handleRemoveBeer(index) }>X</button>
+                <br/>
+            </div>
+        )}
+        <button onClick={handleAddBeer}>Add beer</button>
+        <br/>
+        <br/>
+        <TextField label="Asterisks' Allowed" field="asterisksAllowed" event={event} onChange={handleChange} placeholder="2" />
     </div>
 }
 export default EventEditForm;
