@@ -8,11 +8,14 @@ import {
     ACTION_EVENTS_LOADING, 
     ACTION_EVENTS_LOAD_ERROR 
 } from "./load";
+import { ACTION_EVENTS_ITEM_LOADING, ACTION_EVENTS_LOAD_ITEM, ACTION_EVENTS_LOAD_ITEM_ERROR } from "./load-item";
 import { ACTION_EVENTS_ADD_RESET } from "./reset-add";
 
 
 const initialState = {
     loading: false,
+    itemsLoading: {},
+    itemsError: {},
     loaded: false,
     items: null,
     error: null,
@@ -22,6 +25,8 @@ const initialState = {
         error: null,
     },
 }
+
+
 
 export default function eventsReducer(state = initialState, action) {
     switch(action.type) {
@@ -36,6 +41,22 @@ export default function eventsReducer(state = initialState, action) {
         case ACTION_EVENTS_LOAD_ERROR: {
             state.items = null;
             state.error = action.payload;
+            return state;
+        }
+        case ACTION_EVENTS_ITEM_LOADING: {
+            const {id, loading} = action.payload;
+            state.itemsLoading[id] = loading;
+            return state;
+        }
+        case ACTION_EVENTS_LOAD_ITEM: {
+            const item = action.payload;
+            state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
+            console.log(state.items);
+            return state;
+        }
+        case ACTION_EVENTS_LOAD_ITEM_ERROR: {
+            const {id, error} = action.payload;
+            state.itemsError[id] = error;
             return state;
         }
         case ACTION_EVENTS_ADDING: {

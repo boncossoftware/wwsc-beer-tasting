@@ -21,6 +21,10 @@ const Events = () => {
     const handleAddEvent = () => {
         history.push('/event/add');
     }
+    
+    const handleClickEvent = (item) => () => {
+        history.push(`/event/${item.id}`);
+    }
 
     return <div> 
         <button onClick={handleLogout} >Logout</button>
@@ -28,7 +32,11 @@ const Events = () => {
         <button onClick={handleAddEvent}>Add</button>
         <br/>
         {loading && <>{"loading..."} <br/> </> }
-        {items && items.map( (item, index) => <div key={index}><span >{item.name}</span><br/></div>)} 
+        {items && items.map( (item, index) => 
+            <div key={index} onClick={ handleClickEvent(item) }>
+                <span >{item.name}</span><br/>
+            </div>
+        )} 
         {items?.length === 0 && <>No events.<br/></>}
         {error && error.message}
     </div>;

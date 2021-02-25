@@ -8,6 +8,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import Login from './containers/Login';
 import { useEffect } from 'react';
 import AddEvent from './containers/AddEvent';
+import EventDetails from './containers/EventDetails';
 
 
 
@@ -30,6 +31,7 @@ function App() {
                     {!user && <Redirect to="/login" />}
                     <Route path="/" exact render={() => <Events />} />
                     <Route path="/event/add" exact render={ () => <AddEvent /> } />
+                    <Route path="/event/:id" render={ () => <EventDetails /> } />
                 </Switch>
             }
         </div>
