@@ -28,7 +28,7 @@ const Events = () => {
 
     return <div> 
         <button onClick={handleLogout} >Logout</button>
-        events <br/>
+        events 
         <button onClick={handleAddEvent}>Add</button>
         <br/>
         {loading && <>{"loading..."} <br/> </> }

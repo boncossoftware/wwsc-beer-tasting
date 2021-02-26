@@ -51,7 +51,6 @@ export default function eventsReducer(state = initialState, action) {
         case ACTION_EVENTS_LOAD_ITEM: {
             const item = action.payload;
             state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
-            console.log(state.items);
             return state;
         }
         case ACTION_EVENTS_LOAD_ITEM_ERROR: {
