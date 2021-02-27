@@ -13,7 +13,8 @@ export const eventFromDoc = (doc) => {
         tasters: doc.data().tasters,
         ownerAddedAsTaster: doc.data().ownerAddedAsTaster,
         beers: doc.data().beers,
-        asterisksAllowed: doc.data().asterisksAllowed
+        asterisksAllowed: doc.data().asterisksAllowed,
+        editingAllowed: doc.data().editingAllowed,
     }
 }
 
@@ -28,6 +29,7 @@ export const eventToDocData = (event) => {
         tasters: event?.tasters,
         ownerAddedAsTaster: event?.ownerAddedAsTaster,
         beers: event?.beers,
-        asterisksAllowed: event?.asterisksAllowed
+        asterisksAllowed: event?.asterisksAllowed,
+        editingAllowed: event?.editingAllowed,
     }   
 }

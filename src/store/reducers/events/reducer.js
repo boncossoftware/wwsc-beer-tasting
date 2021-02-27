@@ -4,13 +4,17 @@ import {
     ACTION_EVENTS_ADD_ERROR 
 } from "./add";
 import { 
+    ACTION_EVENTS_ALLOW_EDIT_ALLOWING,
+    ACTION_EVENTS_ALLOW_EDIT,
+    ACTION_EVENTS_ALLOW_EDIT_ERROR
+} from "./allow-edit";
+import { 
     ACTION_EVENTS_LOAD, 
     ACTION_EVENTS_LOADING, 
     ACTION_EVENTS_LOAD_ERROR 
 } from "./load";
 import { ACTION_EVENTS_ITEM_LOADING, ACTION_EVENTS_LOAD_ITEM, ACTION_EVENTS_LOAD_ITEM_ERROR } from "./load-item";
 import { ACTION_EVENTS_ADD_RESET } from "./reset-add";
-
 
 const initialState = {
     loading: false,
@@ -24,9 +28,9 @@ const initialState = {
         added: null,
         error: null,
     },
+    allowEditingAllowing: {},
+    allowEditingError: {}
 }
-
-
 
 export default function eventsReducer(state = initialState, action) {
     switch(action.type) {
@@ -50,7 +54,7 @@ export default function eventsReducer(state = initialState, action) {
         }
         case ACTION_EVENTS_LOAD_ITEM: {
             const item = action.payload;
-            state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
+            state.items = state.items?.map( i => (i.id !== item.id) ? i : item ) || [item];
             return state;
         }
         case ACTION_EVENTS_LOAD_ITEM_ERROR: {
@@ -67,13 +71,28 @@ export default function eventsReducer(state = initialState, action) {
             return state;
         }
         case ACTION_EVENTS_ADD_ERROR: {
-            state.add.added = action.payload; 
+            state.add.error = action.payload; 
             return state;
         }
         case ACTION_EVENTS_ADD_RESET: {
             state.add.adding = false;
             state.add.added = null;
             state.add.error = null;
+            return state;
+        }
+        case ACTION_EVENTS_ALLOW_EDIT_ALLOWING: {
+            const {id, allowing} = action.payload;
+            state.allowEditingAllowing[id] = allowing;
+            return state;
+        }
+        case ACTION_EVENTS_ALLOW_EDIT: {
+            const {id, allowed} = action.payload;
+            state.items = state.items?.map( i => (i.id !== id) ? i : {...i,  editingAllowed: allowed}) ;
+            return state;
+        }
+        case ACTION_EVENTS_ALLOW_EDIT_ERROR: {
+            const {id, error} = action.payload;
+            state.allowEditingError[id] = error; 
             return state;
         }
         default: {

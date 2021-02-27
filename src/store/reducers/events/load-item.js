@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import { eventFromDoc } from "./utils";
 
-export const ACTION_EVENTS_ITEM_LOADING = 'events/loading';
+export const ACTION_EVENTS_ITEM_LOADING = 'events/load_item_loading';
 export const ACTION_EVENTS_LOAD_ITEM = 'events/load_item';
 export const ACTION_EVENTS_LOAD_ITEM_ERROR = 'events/load_item_error';
 

@@ -30,15 +30,17 @@ const Events = () => {
         <button onClick={handleLogout} >Logout</button>
         events 
         <button onClick={handleAddEvent}>Add</button>
+        <hr/>
+        {loading && <span>Loading...<br/></span>}
+        {error && <span>{error.message}<br/></span>}
         <br/>
-        {loading && <>{"loading..."} <br/> </> }
         {items && items.map( (item, index) => 
             <div key={index} onClick={ handleClickEvent(item) }>
                 <span >{item.name}</span><br/>
             </div>
         )} 
         {items?.length === 0 && <>No events.<br/></>}
-        {error && error.message}
+        
     </div>;
 }
 export default Events;

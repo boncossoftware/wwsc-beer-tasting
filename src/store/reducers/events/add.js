@@ -22,6 +22,7 @@ export default function add(event) {
             related.push(email); //Add the owner as related.
             
             const docData = eventToDocData({
+                editingAllowed: false, //Default (can be overritten)
                 ...event,
                 owner: uid, //Set the user as the owner.
                 related: related,

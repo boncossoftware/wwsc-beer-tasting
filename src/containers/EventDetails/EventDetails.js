@@ -29,13 +29,14 @@ const EventDetails = () => {
     }
     
     return <>
-        {loading && <span>Loading..</span>}
-        {error && <span>{error.message}</span>}
-        
         <button onClick={handleBackToEvents}>{"< Events"}</button>
         {item?.name}
         {canEdit && <button onClick={handleBackToEvents}>{"Edit"}</button>}
-        <br/><br/>
+        <hr/>
+        {loading && <span>Loading...<br/></span>}
+        {error && <span>{error.message}<br/></span>}
+        <br/>
+        <br/>
         <Switch >
             <Route path="/event/:eventID/tasting" render={ () => <Tasting /> }/>
             <Route path="/event/:eventID/beers" render={ () => <Beers />}/>
@@ -44,6 +45,7 @@ const EventDetails = () => {
             <Redirect to={`${basePath}/tasting`} />
         </Switch>
         <br/>
+        <hr/>
         <nav>
             <ul>
                 <li><NavLink to={`${basePath}/tasting`}>Tasting</NavLink></li>

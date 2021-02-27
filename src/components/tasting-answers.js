@@ -1,15 +1,32 @@
+import TastingAnswerItem from "./tasting-answer-item";
 
 
-const TastingAnswers = ({answers, beers}) => {
-    const beerSelected = answers?.beers || [];
+const TastingAnswers = ({answers, beers=[], showForBartender, editingAllowed, onClickItemAtIndex}) => {
+    const beersSelected = answers?.beers || [];
+    const ratingsSelected = answers?.ratings || [];
+    const asterisksSelected = answers?.asterisks || [];
+    const showAsPoured = showForBartender || false;
     const rounds = answers?.rounds || 10;
-    console.log(beers);
 
     const renderItems = () => {
-        let i, items=[];
-        for (i = 0; i < rounds; i++) {
-            let beer =  beers[beerSelected[i]]
-            items.push( <div key={i}> {`Round ${i}`}<br/></div> );
+        let index, items=[];
+        for (index = 0; index < rounds; index++) {
+            const selectedBeer = beers[beersSelected[index]];
+            const rating = ratingsSelected[index];
+            const asterisk = asterisksSelected[index];
+            const round = index;
+            const onClick = () => (onClickItemAtIndex && onClickItemAtIndex(round));
+            items.push( <TastingAnswerItem 
+                    key={index} 
+                    roundIndex={index} 
+                    selectedBeer={selectedBeer} 
+                    rating={rating} 
+                    hasAsterisk={asterisk} 
+                    showAsPoured={showAsPoured}
+                    canEdit={editingAllowed}
+                    onClick={ onClick }
+                />
+            );
         }
         return items;
     }
