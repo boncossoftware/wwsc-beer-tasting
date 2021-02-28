@@ -1,5 +1,6 @@
-
 import _firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/functions';
 
 _firebase.initializeApp({
     apiKey: "AIzaSyBU513psjNFlHImdwLP6oUDzzz7_V5NiT8",
@@ -10,5 +11,12 @@ _firebase.initializeApp({
     messagingSenderId: "59351899973",
     appId: "1:59351899973:web:7f0c8f45bab68966daa82c"
 });
+
+const db = _firebase.firestore();
+const fns = _firebase.functions();
+if (window.location.hostname === "localhost") {
+  db.useEmulator("localhost", 8080);
+  fns.useEmulator("localhost", 5001);
+}
 
 export const firebase = _firebase;

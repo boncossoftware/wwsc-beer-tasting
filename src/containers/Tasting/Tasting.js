@@ -27,6 +27,7 @@ const Tasting = () => {
     
     const isBartender = bartender === user?.email;
     const canEdit = (owner === user?.uid);
+    const resultsAvailable = Boolean(tastingResults?.lastUpdated);
 
     useEffect( () => {
         dispatch( answers.loadItem(eventID) );
@@ -44,8 +45,12 @@ const Tasting = () => {
         } 
     }
 
-    const handleClickItemAtIndex = () => {
+    const handleClickItemAtIndex = (index) => {
 
+    }
+
+    const handleCalculateResults = () => {
+        dispatch( results.calculate(eventID) );
     }
 
     return <>
@@ -66,6 +71,10 @@ const Tasting = () => {
         <TastingResults 
             results={tastingResults}
         />
+        <br/>
+        <button onClick={handleCalculateResults}>
+            {resultsAvailable ? 'Rec' : 'C'}alculate Results
+        </button>
     </>
 }
 export default Tasting;
