@@ -5,7 +5,7 @@ export const resultsFromDoc = (doc, eventID) => {
     return {
         id: eventID,
         beerSelection: doc?.data()?.beerSelection,
-        tasteScrore: doc?.data()?.tasteScrore,
+        tasteScore: doc?.data()?.tasteScore,
         beerLover: doc?.data()?.beerLover,
         beerHater: doc?.data()?.beerHater,
         lastUpdated: doc?.data()?.lastUpdated?.toDate(),
@@ -15,7 +15,7 @@ export const resultsFromDoc = (doc, eventID) => {
 export const resultsToDocData = (results) => {
     return {
         beerSelection: results?.beerSelection,
-        tasteScrore: results?.tasteScrore,
+        tasteScore: results?.tasteScore,
         beerLover: results?.beerLover,
         beerHater: results?.beerHater,
         lastUpdated: results?.lastUpdated ? firebase.firestore.Timestamp.fromDate(results?.lastUpdated) : null,

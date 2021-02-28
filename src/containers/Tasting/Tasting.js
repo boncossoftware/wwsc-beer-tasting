@@ -17,6 +17,9 @@ const Tasting = () => {
     const resultsLoading = useSelector( s => s?.results?.itemsLoading[eventID] );
     const resultsError = useSelector( s => s?.results?.itemsError[eventID] );
     const tastingResults = useSelector( s => s?.results?.items?.find( i => i.id === eventID ) );
+
+    const resultsCalculating = useSelector( s => s?.results?.itemsCalculating[eventID] );
+    const resultsCalculationError = useSelector( s => s?.results?.itemsCalculationError[eventID] );
     
     const {
         beers, 
@@ -68,9 +71,17 @@ const Tasting = () => {
         <h3>Results</h3>
         {resultsLoading && <span>Loading...<br/></span>}
         {resultsError && <span>{resultsError.message}<br/></span>}
-        <TastingResults 
-            results={tastingResults}
-        />
+        {resultsCalculating ?
+            <span>Calculating...</span>
+            :
+            (resultsCalculationError ?
+                <span>{resultsCalculationError.message}</span>
+                :
+                <TastingResults 
+                    results={tastingResults}
+                />
+            )
+        }
         <br/>
         <button onClick={handleCalculateResults}>
             {resultsAvailable ? 'Rec' : 'C'}alculate Results
