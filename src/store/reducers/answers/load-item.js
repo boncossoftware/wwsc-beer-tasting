@@ -13,14 +13,17 @@ export default function loadItem(id) {
             const { auth } = getState();
             const eventDocRef = firebase.firestore().collection('events').doc(id);
             const itemRef = eventDocRef.collection('answers').doc(auth?.user?.uid);
-            const doc = await itemRef.get();
+            const [doc, event] = await Promise.all([
+                itemRef.get(),
+                eventDocRef.get()
+            ]);
             if (!doc.exists) {
                 doc.data = () => ({
                     beers: [],
                     asterisks: [],
                     ratings: [],
                     changes: [],
-                    rounds: 10, //Fixed for now.
+                    rounds: event?.data().rounds || 0,
                 });
                 await itemRef.set(doc.data());
             }

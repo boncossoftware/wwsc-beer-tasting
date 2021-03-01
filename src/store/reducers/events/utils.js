@@ -15,6 +15,7 @@ export const eventFromDoc = (doc) => {
         beers: doc?.data().beers,
         asterisksAllowed: doc?.data().asterisksAllowed,
         editingAllowed: doc?.data().editingAllowed,
+        rounds: doc?.data().rounds,
     }
 }
 
@@ -31,5 +32,6 @@ export const eventToDocData = (event) => {
         beers: event?.beers,
         asterisksAllowed: event?.asterisksAllowed,
         editingAllowed: event?.editingAllowed,
+        rounds: event?.rounds,
     }   
 }

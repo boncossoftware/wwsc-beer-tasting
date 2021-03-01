@@ -23,6 +23,7 @@ export default function add(event) {
             
             const docData = eventToDocData({
                 editingAllowed: false, //Default (can be overritten)
+                rounds: 10,
                 ...event,
                 owner: uid, //Set the user as the owner.
                 related: related,
