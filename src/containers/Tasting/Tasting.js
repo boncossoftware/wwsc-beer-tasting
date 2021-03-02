@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import TastingAnswers from "../../components/tasting-answers";
 import TastingResults from "../../components/tasting-results";
 import { answers, events, results } from "../../store";
 
 const Tasting = () => {    
+    const history = useHistory();
     const {eventID} = useParams();
     const dispatch = useDispatch();
     const user = useSelector( s => s?.auth?.user);
@@ -49,7 +50,7 @@ const Tasting = () => {
     }
 
     const handleClickItemAtIndex = (index) => {
-
+        (index !==undefined && history.push(`tasting/round/${index + 1}`));
     }
 
     const handleCalculateResults = () => {

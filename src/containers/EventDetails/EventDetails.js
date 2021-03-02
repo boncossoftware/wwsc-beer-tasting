@@ -38,10 +38,10 @@ const EventDetails = () => {
         <br/>
         <br/>
         <Switch >
-            <Route path="/event/:eventID/tasting" render={ () => <Tasting /> }/>
-            <Route path="/event/:eventID/beers" render={ () => <Beers />}/>
-            <Route path="/event/:eventID/tasters" render={ () => <Tasters />}/>
-            <Route path="/event/:eventID/venue" render={ () => <Venue />}/>
+            <Route path="/event/:eventID/tasting" exact render={ () => <Tasting /> }/>
+            <Route path="/event/:eventID/beers" exact render={ () => <Beers />}/>
+            <Route path="/event/:eventID/tasters" exact render={ () => <Tasters />}/>
+            <Route path="/event/:eventID/venue" exact render={ () => <Venue />}/>
             <Redirect to={`${basePath}/tasting`} />
         </Switch>
         <br/>
