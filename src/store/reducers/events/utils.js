@@ -21,17 +21,17 @@ export const eventFromDoc = (doc) => {
 
 export const eventToDocData = (event) => {
     return {
-        name: event?.name,
-        owner: event?.owner,
-        venue: event?.venue,
+        name: event?.name || null,
+        owner: event?.owner || null,
+        venue: event?.venue || null,
         date: event?.date ? firebase.firestore.Timestamp.fromDate(event.date) : null,
-        related: event?.related,
-        bartender: event?.bartender,
-        tasters: event?.tasters,
-        ownerAddedAsTaster: event?.ownerAddedAsTaster,
-        beers: event?.beers,
-        asterisksAllowed: event?.asterisksAllowed,
-        editingAllowed: event?.editingAllowed,
-        rounds: event?.rounds,
+        related: event?.related || null,
+        bartender: event?.bartender || null,
+        tasters: event?.tasters || null,
+        ownerAddedAsTaster: Boolean(event?.ownerAddedAsTaster),
+        beers: event?.beers || null,
+        asterisksAllowed: event?.asterisksAllowed || null,
+        editingAllowed: Boolean(event?.editingAllowed),
+        rounds: event?.rounds || null,
     }   
 }

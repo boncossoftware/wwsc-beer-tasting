@@ -111,7 +111,7 @@ const EventEditForm = ({event, onChange}) => {
         <br/>
         <input type="checkbox" id="added_as_taster" name="added_as_taster" onChange={ e => {
             const ownerAddedAsTaster = e.target.value === 'on';
-            handleChange('ownerAddedAsTaster', {target: {value: ownerAddedAsTaster}}) 
+            handleChange('ownerAddedAsTaster', {target: {value: Boolean(ownerAddedAsTaster)}}) 
         }}/>
         <label htmlFor="added_as_taster">Include me as taster</label> <br/>
         <br/>
