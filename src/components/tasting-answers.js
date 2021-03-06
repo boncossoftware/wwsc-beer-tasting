@@ -11,7 +11,7 @@ const TastingAnswers = ({answers, beers=[], showForBartender, editingAllowed, on
     const renderItems = () => {
         let index, items=[];
         for (index = 0; index < rounds; index++) {
-            const selectedBeer = beers[beersSelected[index]];
+            const selectedBeer = beersSelected[index];
             const rating = ratingsSelected[index];
             const asterisk = asterisksSelected[index];
             const round = index;

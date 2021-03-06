@@ -10,9 +10,9 @@ export const answerFromDoc = (doc, eventID) => {
 
 export const answerToDocData = (answer) => {
     return {
-        beers: answer.beers,
-        asterisks: answer.asterisks,
-        ratings: answer.ratings,
-        changes: answer.changes
+        ...(answer.beers ? {beers: answer.beers} : {}),
+        ...(answer.asterisks ? {asterisks: answer.asterisks} : {}),
+        ...(answer.ratings ? {ratings: answer.ratings} : {}),
+        ...(answer.changes ? {changes: answer.changes} : {}),
     }   
 }

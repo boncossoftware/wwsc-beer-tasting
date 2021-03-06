@@ -6,6 +6,11 @@ export const ACTION_EVENT_ANSWERS_ITEM_LOADING = 'event_answers/loading';
 export const ACTION_EVENT_ANSWERS_LOAD_ITEM = 'event_answers/load_item';
 export const ACTION_EVENT_ANSWERS_LOAD_ITEM_ERROR = 'event_answers/load_item_error';
 
+const emptyList = function*(i=0) { 
+    for(i; i >= 0; i--)
+        yield null;
+};
+
 export default function loadItem(id) {
     return async (dispatch, getState) => {
         dispatch({ type: ACTION_EVENT_ANSWERS_ITEM_LOADING, payload: {id, loading: true }});
@@ -18,12 +23,13 @@ export default function loadItem(id) {
                 eventDocRef.get()
             ]);
             if (!doc.exists) {
+                const rounds = event?.data().rounds || 0;
                 doc.data = () => ({
-                    beers: [],
-                    asterisks: [],
-                    ratings: [],
-                    changes: [],
-                    rounds: event?.data().rounds || 0,
+                    beers: [...emptyList(rounds)],
+                    asterisks: [...emptyList(rounds)],
+                    ratings: [...emptyList(rounds)],
+                    changes: [...emptyList(rounds)],
+                    rounds,
                 });
                 await itemRef.set(doc.data());
             }

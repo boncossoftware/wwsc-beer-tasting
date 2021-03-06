@@ -53,8 +53,15 @@ export default function eventsReducer(state = initialState, action) {
             return state;
         }
         case ACTION_EVENTS_LOAD_ITEM: {
+            
             const item = action.payload;
-            state.items = state.items?.map( i => (i.id !== item.id) ? i : item ) || [item];
+            const index = state.items?.find( i => i.id === item.id);
+            if (index >= 0) {
+                state.items[index] = item;
+            }
+            else {
+                state.items = [ ...(state.items || []), item];
+            }
             return state;
         }
         case ACTION_EVENTS_LOAD_ITEM_ERROR: {
