@@ -34,8 +34,9 @@ const AddEvent = () => {
 
     return <div>
         <button onClick={handleCancel} >Cancel</button>
-        Add Event <br />
+        Add Event
         <button disabled={adding} onClick={handleSave}>{adding ? 'Saving...' : 'Save'}</button>
+        <hr/>
         {error && <>{error.message}<br/></>}
         <EventEditForm event={event} onChange={handleEventChange} />
         <br />
