@@ -38,9 +38,9 @@ interface ResultSummary {
 }
 
 interface TastingResults {
-    winner: string,
-    second: string,
-    third: string,
+    winner: string
+    second: string
+    third: string
     beerLovers: [string, number][]
     beerHaters: [string, number][]
     bestBeers: [string, number][]
@@ -48,56 +48,117 @@ interface TastingResults {
     results: ResultSummary[]
 }
 
+interface ResultsError {
+    error: {
+        message: string,
+        code: number
+    }
+}
+
+type ContestantRoundResults = ResultSummary[];
+type BeerScoreResults = {[id:string]: number};
+
+
+const docToObject = (doc: admin.firestore.QueryDocumentSnapshot) => ({id: doc.id, ...(doc.data() || {}) }) as ContestantAnswers;
+
 export const calculateResults = onCall(async (data, context) => {
     //Get all answers.
     const eventID = data;
-    const eventRef = admin.firestore().collection('events').doc(eventID);
+    
+    try {
+        const [correctBeers,contestantAnswers] = await Promise.all([
+            fetchCorrectBeers(eventID),
+            fetchContestantAnswers(eventID)
+        ]);
+        
+        const contestantRoundResults = calculateContestantRoundResults(correctBeers, contestantAnswers)
+        functions.logger.debug(`results calculated (${eventID})`);
+        
+        const beerScoreResults = calculateBeerScoreResults(correctBeers, contestantAnswers);
+        functions.logger.debug(`beer score totals calculated (${eventID})`);
+    
+        const tastingResults = createTastingResutls(contestantRoundResults, beerScoreResults);
+        functions.logger.debug(`tasting results calculated (${eventID})`);
+        
+        await admin.firestore().collection('results').doc(eventID).set(tastingResults);
+        functions.logger.debug(`tasting saved (${eventID})`);
+    
+        return tastingResults;
 
-    //Get all of the event and answer data. 
-    const [
-        eventDoc,
-        answersQuery,
-    ] = await Promise.all([
+    } catch (error) {
+        const message = (error as ResultsError).error.message;
+        const code = (error as ResultsError).error.code;
+        functions.logger.error(`Error: ${message} (${code})`);
+        return error;
+    }
+});
+
+export const fetchCorrectBeers = async (eventID: string): Promise<string[]> => {
+    const eventRef = admin.firestore().collection('events').doc(eventID);
+    const [eventDoc, bartenderUID] = await Promise.all([
         eventRef.get(),
-        eventRef.collection('answers').get(),
+        fetchEventBarTenderUID(eventID)
     ]);
     
     //Make sure the event exists.
     if (!eventDoc.exists) {
-        throw new Error(`No event found with ID "${eventID}".`);
+        throw {error: {message: `No event found with ID (${eventID}).`, code: 1500}} as ResultsError;
     }
     
-    //Make sure the bartender is set.
-    const event = (eventDoc?.data() || {});
-    if (!event?.bartender) {
-        throw new Error(`No event found with ID "${eventID}".`);
-    }
-    
-    //Find the bartender user account to get the uid.
-    let bartenderUser: admin.auth.UserRecord;
-    try {
-        bartenderUser = await admin.auth().getUserByEmail(event?.bartender);
-    }
-    catch (error) {
-        throw new Error(`Error fetching bar tender account. No account found or email incorrect.`);
-    }
-
-    const answers = (answersQuery?.docs?.map( d => ({id:d.id, ...(d.data() || {}) }) ) || []);
-
     //Check if we have bartender answers.
-    const bartenderAnswers = answers.find( a => a.id === bartenderUser?.uid ) as BarTenderAnswers;
-    if (!bartenderAnswers) {
-        throw new Error(`No answers found for bartender.`);
+    const answersDoc = await eventRef.collection('answers').doc(bartenderUID).get();
+    if (!answersDoc.exists) {
+        throw {error: {message: `No answers found for bartender.`, code: 1500}} as ResultsError;
     }
+    functions.logger.debug(`bartender has answers (${bartenderUID})`);
+
+    const bartenderAnswers = {id: answersDoc.id, beers: (answersDoc.data()?.beers || [])} as BarTenderAnswers;
+
     //Make sure every beer is set.
     const allBeersSet = bartenderAnswers?.beers?.map( b => b?.length > 0 )?.every( set => set );
     if (!allBeersSet) {
-        throw new Error(`Bar tender has not set all beers yet.`);
+        throw {error: {message: `Bar tender has not set all beers yet.`, code: 1500}} as ResultsError;
     }
+    functions.logger.debug(`bartender has all beers set (${bartenderUID})`);
     
-    const correctBeers = bartenderAnswers?.beers || [];
-    const contestantAnswers = (answers?.filter( a => a.id !== bartenderUser?.uid )) as ContestantAnswers[];
-    const contestantRoundResults = contestantAnswers?.map( 
+    return bartenderAnswers?.beers || [];
+}
+
+export const fetchContestantAnswers = async (eventID: string): Promise<ContestantAnswers[]> => {
+    const eventRef = admin.firestore().collection('events').doc(eventID);
+    const [answersQuery, bartenderUID] = await Promise.all([
+        eventRef.collection('answers').get(),
+        fetchEventBarTenderUID(eventID)
+    ]);
+
+    const answers: ContestantAnswers[] = (answersQuery?.docs?.map( docToObject ) || []);
+    return answers.filter( a => a.id !== bartenderUID);
+}
+
+export const fetchEventBarTenderUID = async (eventID: string): Promise<string> => {
+    const eventRef = admin.firestore().collection('events').doc(eventID);
+    const eventDoc = await eventRef.get();
+
+     //Make sure the bartender is set.
+     const event = (eventDoc?.data() || {});
+     if (!event?.bartender) {
+         throw {error: {message: `Event does not have a bartender (${eventID})`, code: 1500}} as ResultsError;
+     }
+     
+     //Find the bartender user account to get the uid.
+     let bartenderUser: admin.auth.UserRecord;
+     try {
+         bartenderUser = await admin.auth().getUserByEmail(event?.bartender);
+     }
+     catch (error) {
+         throw {error: {message: `Error fetching bar tender account. No account found or email incorrect. (${event?.bartender})`, code: 1500}} as ResultsError;
+     }
+    return bartenderUser.uid;
+}
+
+export const calculateContestantRoundResults = (correctBeers: string[], contestantAnswers: ContestantAnswers[]): ContestantRoundResults => {
+    const rounds = correctBeers.length;
+    return (contestantAnswers||[]).map( 
         contestantAnswers => {
             const summary: ResultSummary = {
                 totalPoints: 0,
@@ -111,18 +172,18 @@ export const calculateResults = onCall(async (data, context) => {
 
             summary.roundResults = contestantAnswers?.beers.map( (roundAnswer, roundIndex) => {
                 const correctBeer = correctBeers[roundIndex];
-                const asterisked = contestantAnswers?.asterisks[roundIndex];
-                const tasteScore = Math.max(0, (4 - contestantAnswers?.ratings[roundIndex]));
+                const asterisked = contestantAnswers?.asterisks[roundIndex] || false;
+                const tasteScore = Math.max(0, (4 - (contestantAnswers?.ratings[roundIndex]||0) ));
                 const changes = contestantAnswers?.changes[roundIndex];
                 const correct = (roundAnswer === correctBeer);
-                const points = (correct?1:0) + ((correct && asterisked)?1:0);
+                const points = (correct?1:0) + ((correct && asterisked)?1:0) + ((!correct && asterisked)?-1:0);
 
-                const isSecondHalf = roundIndex >= (event?.rounds / 2);
+                const isSecondHalf = roundIndex >= (rounds / 2);
                 summary.totalPoints += points;
                 summary.totalTaste += tasteScore;
                 summary.totalAsterisks += asterisked?1:0;
                 summary.totalAsterisksSecondHalf += (asterisked && isSecondHalf)?1:0;
-                summary.beerScores[correctBeer] += tasteScore;
+                summary.beerScores[correctBeer] = (summary.beerScores[correctBeer]||0) + tasteScore;
 
                 return {
                     index: roundIndex,
@@ -138,19 +199,25 @@ export const calculateResults = onCall(async (data, context) => {
             
             return summary;
         }
-    );
+    ) as ContestantRoundResults;
+}
 
-    const beers = contestantRoundResults.reduce( (b,r) => {
-        Object.keys(r.beerScores).forEach( beer => {
-            b[beer] += r.beerScores[beer]}
-        );
-        return b;
-    }, {} as {[id:string]: number});
+export const calculateBeerScoreResults = (correctBeers: string[], contestantAnswers: ContestantAnswers[]): BeerScoreResults => {
+    return (correctBeers||[]).reduce( (results, beer, roundIndex) => {
+        const roundTotalScore = contestantAnswers?.reduce( (t, a) => t + a.ratings[roundIndex], 0);
+        const beerCurrentScore = results[beer] || 0;
+        results[beer] = beerCurrentScore + roundTotalScore;
+        return results;
+    }, {} as BeerScoreResults);
+}
 
+export const createTastingResutls = (contestantRoundResults: ContestantRoundResults, beerScoreResults: BeerScoreResults): TastingResults => {
     const rankedPoints = contestantRoundResults.sort( (r1,r2) => r1.totalPoints - r2.totalPoints);
     const rankedTaste = contestantRoundResults.sort( (r1,r2) => r2.totalTaste - r1.totalTaste);
-    const rankedBeerTaste: [string, number][] = Object.keys(beers).sort( (k1,k2) => beers[k1] - beers[k2] ).map( k => [k, beers[k]] );
-    const tastingResults: TastingResults = {
+    const rankedBeerTaste: [string, number][] = Object.keys(beerScoreResults)
+        .sort( (k1,k2) => beerScoreResults[k1] - beerScoreResults[k2] )
+        .map( k => [k, beerScoreResults[k]] );
+    return {
         winner: rankedPoints[0]?.userUID || 'None',
         second: rankedPoints[1]?.userUID || 'None',
         third: rankedPoints[3]?.userUID || 'None',
@@ -159,12 +226,5 @@ export const calculateResults = onCall(async (data, context) => {
         bestBeers: rankedBeerTaste.slice(0, 3),
         worstBeers: rankedBeerTaste.reverse().slice(0, 3),
         results: contestantRoundResults
-    } 
-
-    
-    functions.logger.debug(`eventID = ${eventID}`);
-
-    await admin.firestore().collection('results').doc(eventID).set(tastingResults);
-
-    return tastingResults;
-});
+    } as TastingResults;
+}
