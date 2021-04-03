@@ -2,6 +2,7 @@ import _firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/functions';
+import { eventFromDoc } from './reducers/events/utils';
 
 _firebase.initializeApp({
     apiKey: "AIzaSyBU513psjNFlHImdwLP6oUDzzz7_V5NiT8",

@@ -15,6 +15,7 @@ import {
 } from "./load";
 import { ACTION_EVENTS_ITEM_LOADING, ACTION_EVENTS_LOAD_ITEM, ACTION_EVENTS_LOAD_ITEM_ERROR } from "./load-item";
 import { ACTION_EVENTS_ADD_RESET } from "./reset-add";
+import { ACTION_EVENTS_LISTEN_CHANGE } from './listen-change'; //Also listens for event changes
 
 const initialState = {
     loading: false,
@@ -102,8 +103,14 @@ export default function eventsReducer(state = initialState, action) {
             state.allowEditingError[id] = error; 
             return state;
         }
+        case ACTION_EVENTS_LISTEN_CHANGE: {
+            const event = action.payload;
+            state.items = state.items?.map( i => (i.id !== event.id) ? i : event) ;
+            return state;
+        }
         default: {
             return state;
         }
     }
 };
+
