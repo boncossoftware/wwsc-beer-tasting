@@ -5,15 +5,15 @@ admin.initializeApp();
 
 const onCall = functions.https.onCall;
 
-interface BarTenderAnswers {   
+export interface BarTenderAnswers {   
     id: string, 
-    beers: [string]
+    beers: string[]
 }
 
-interface ContestantAnswers extends BarTenderAnswers {
-    asterisks: boolean[],
-    ratings: number[],
-    changes: number[],
+export interface ContestantAnswers extends BarTenderAnswers {
+    asterisks: (boolean|null)[],
+    ratings: (number|null)[],
+    changes: (number|null)[],
 }   
 
 interface RoundResult {
@@ -33,6 +33,7 @@ interface ResultSummary {
     totalTaste: number,
     totalAsterisks: number,
     totalAsterisksSecondHalf: number,
+    totalChanges: number,
     roundResults: RoundResult[],
     beerScores: {[id:string]: number};
 }
@@ -77,7 +78,7 @@ export const calculateResults = onCall(async (data, context) => {
         const beerScoreResults = calculateBeerScoreResults(correctBeers, contestantAnswers);
         functions.logger.debug(`beer score totals calculated (${eventID})`);
     
-        const tastingResults = createTastingResutls(contestantRoundResults, beerScoreResults);
+        const tastingResults = createTastingResults(contestantRoundResults, beerScoreResults);
         functions.logger.debug(`tasting results calculated (${eventID})`);
         
         await admin.firestore().collection('results').doc(eventID).set(tastingResults);
@@ -165,6 +166,7 @@ export const calculateContestantRoundResults = (correctBeers: string[], contesta
                 totalTaste: 0,
                 totalAsterisks: 0,
                 totalAsterisksSecondHalf: 0,
+                totalChanges: 0,
                 roundResults:[],
                 userUID: contestantAnswers.id,
                 beerScores: {}
@@ -183,6 +185,7 @@ export const calculateContestantRoundResults = (correctBeers: string[], contesta
                 summary.totalTaste += tasteScore;
                 summary.totalAsterisks += asterisked?1:0;
                 summary.totalAsterisksSecondHalf += (asterisked && isSecondHalf)?1:0;
+                summary.totalChanges += changes||0;
                 summary.beerScores[correctBeer] = (summary.beerScores[correctBeer]||0) + tasteScore;
 
                 return {
@@ -204,27 +207,69 @@ export const calculateContestantRoundResults = (correctBeers: string[], contesta
 
 export const calculateBeerScoreResults = (correctBeers: string[], contestantAnswers: ContestantAnswers[]): BeerScoreResults => {
     return (correctBeers||[]).reduce( (results, beer, roundIndex) => {
-        const roundTotalScore = contestantAnswers?.reduce( (t, a) => t + a.ratings[roundIndex], 0);
+        const toTasteScore = (rating:number) => Math.max(0, 4 - rating);
+        const roundTotalScore = contestantAnswers?.reduce( (t, a) => t + toTasteScore((a.ratings[roundIndex]||0)), 0);
         const beerCurrentScore = results[beer] || 0;
         results[beer] = beerCurrentScore + roundTotalScore;
         return results;
     }, {} as BeerScoreResults);
 }
 
-export const createTastingResutls = (contestantRoundResults: ContestantRoundResults, beerScoreResults: BeerScoreResults): TastingResults => {
-    const rankedPoints = contestantRoundResults.sort( (r1,r2) => r1.totalPoints - r2.totalPoints);
-    const rankedTaste = contestantRoundResults.sort( (r1,r2) => r2.totalTaste - r1.totalTaste);
-    const rankedBeerTaste: [string, number][] = Object.keys(beerScoreResults)
+export const rankedPointsSorting = (contestantRoundResults: ContestantRoundResults=[]) => 
+    contestantRoundResults.slice().sort( (r1: ResultSummary, r2: ResultSummary): number => {
+        if(r2.totalPoints !== r1.totalPoints) {
+            //Base on points if not tied.
+            return r2.totalPoints - r1.totalPoints;
+        }
+        else {
+            //If points are tied than base on total asterisks (less wins)
+            if (r2.totalAsterisks !== r1.totalAsterisks) {
+                return r1.totalAsterisksSecondHalf - r2.totalAsterisksSecondHalf;
+            }
+            else {
+                //If points and total asterisks are tied than base on total asterisks second half (less wins).
+                if (r2.totalAsterisksSecondHalf !== r1.totalAsterisksSecondHalf) {
+                    return r1.totalAsterisksSecondHalf - r2.totalAsterisksSecondHalf;
+                }
+                else {
+                    //If points and total asterisks (second half) are tied than base on total changes (less wins).
+                    if (r2.totalChanges !== r1.totalChanges) {
+                        return r1.totalChanges - r2.totalChanges
+                    }
+                    else {
+                        //If all else fails thant base on total warawara taste score (less wins).
+                        return r1.totalTaste - r2.totalTaste;
+                    }
+                }
+            }
+        }
+    });
+
+export const rankedTastScoreSorting = (contestantRoundResults: ContestantRoundResults=[]): [string, number][] => 
+    contestantRoundResults.slice().sort( (r1: ResultSummary, r2: ResultSummary) => {
+        return r1.totalTaste - r2.totalTaste
+    }).map( r => 
+        [r.userUID, r.totalTaste]
+    );
+
+export const rankedBeerTasteSorting = (beerScoreResults: BeerScoreResults={}): [string, number][] => 
+    Object.keys(beerScoreResults)
         .sort( (k1,k2) => beerScoreResults[k1] - beerScoreResults[k2] )
         .map( k => [k, beerScoreResults[k]] );
+
+
+export const createTastingResults = (contestantRoundResults: ContestantRoundResults, beerScoreResults: BeerScoreResults): TastingResults => {
+    const rankedPoints = rankedPointsSorting(contestantRoundResults);
+    const rankedTaste = rankedTastScoreSorting(contestantRoundResults);
+    const rankedBeerTaste = rankedBeerTasteSorting(beerScoreResults); 
     return {
         winner: rankedPoints[0]?.userUID || 'None',
         second: rankedPoints[1]?.userUID || 'None',
-        third: rankedPoints[3]?.userUID || 'None',
-        beerLovers: rankedTaste?.slice(0, 3).map( r => [r.userUID, r.totalTaste]),
-        beerHaters: rankedTaste?.reverse().slice(0, 3).map( r => [r.userUID, r.totalTaste]),
+        third: rankedPoints[3]?.userUID || null,
+        beerLovers: rankedTaste?.slice(0, 3),
+        beerHaters: rankedTaste?.reverse().slice(0, 3),
         bestBeers: rankedBeerTaste.slice(0, 3),
         worstBeers: rankedBeerTaste.reverse().slice(0, 3),
-        results: contestantRoundResults
+        results: rankedPoints
     } as TastingResults;
 }

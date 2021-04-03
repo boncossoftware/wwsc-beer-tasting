@@ -1,7 +1,5 @@
 import Events from './containers/Events/Events';
 
-
-
 import { auth } from './store';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -10,8 +8,6 @@ import { useEffect } from 'react';
 import AddEvent from './containers/AddEvent';
 import EventDetails from './containers/EventDetails';
 import TastingDetails from './containers/TastingDetails';
-
-
 
 function App() {
     const dispatch = useDispatch();
@@ -37,7 +33,6 @@ function App() {
                 </Switch>
             }
         </div>
-
     );
 }
 

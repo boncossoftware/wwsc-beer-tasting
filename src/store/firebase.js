@@ -1,4 +1,5 @@
 import _firebase from 'firebase/app';
+import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/functions';
 
@@ -14,9 +15,11 @@ _firebase.initializeApp({
 
 const db = _firebase.firestore();
 const fns = _firebase.functions();
+const ath = _firebase.auth();
 if (window.location.hostname === "localhost") {
   db.useEmulator("localhost", 8080);
   fns.useEmulator("localhost", 5001);
+  ath.useEmulator("http://localhost:9099");
 }
 
 export const firebase = _firebase;
