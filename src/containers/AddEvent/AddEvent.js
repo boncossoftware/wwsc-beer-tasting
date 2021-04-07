@@ -7,7 +7,7 @@ import {events} from '../../store';
 const AddEvent = () => {
     const history = useHistory();
     const dispatch = useDispatch();
-    const adding = useSelector( s => s?.events?.adding );
+    const adding = useSelector( s => s?.events?.add.adding );
     const added = useSelector( s => s?.events?.add.added );
     const error = useSelector( s => s?.events?.add.error );
     const [event, setEvent] = useState({});

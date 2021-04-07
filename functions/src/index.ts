@@ -127,13 +127,20 @@ export const fetchCorrectBeers = async (eventID: string): Promise<string[]> => {
 
 export const fetchContestantAnswers = async (eventID: string): Promise<ContestantAnswers[]> => {
     const eventRef = admin.firestore().collection('events').doc(eventID);
-    const [answersQuery, bartenderUID] = await Promise.all([
+    const [event, answersQuery, bartenderUID] = await Promise.all([
+        eventRef.get(),
         eventRef.collection('answers').get(),
         fetchEventBarTenderUID(eventID)
     ]);
 
-    const answers: ContestantAnswers[] = (answersQuery?.docs?.map( docToObject ) || []);
-    return answers.filter( a => a.id !== bartenderUID);
+    let answers: ContestantAnswers[] = (answersQuery?.docs?.map( docToObject ) || []);
+    answers = answers.filter( a => a.id !== bartenderUID);
+    if ((event as any)?.ownerAddedAsTaster !== true) {
+        //Remove owner answers from results.
+        const owner = (event as any)?.owner;
+        answers = answers.filter( a => a.id !== owner);
+    }
+    return answers;
 }
 
 export const fetchEventBarTenderUID = async (eventID: string): Promise<string> => {

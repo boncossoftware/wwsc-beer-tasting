@@ -27,11 +27,15 @@ const EventDetails = () => {
     const handleBackToEvents = () => {
         history.push('/');
     }
+
+    const handleEditEvent = () => {
+        history.push(`${basePath}/edit`);
+    }
     
     return <>
         <button onClick={handleBackToEvents}>{"< Events"}</button>
         {item?.name}
-        {canEdit && <button onClick={handleBackToEvents}>{"Edit"}</button>}
+        {canEdit && <button onClick={handleEditEvent}>{"Edit"}</button>}
         <hr/>
         {loading && <span>Loading...<br/></span>}
         {error && <span>{error.message}<br/></span>}

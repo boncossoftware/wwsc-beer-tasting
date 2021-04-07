@@ -20,7 +20,6 @@ export default function authReducer(state = initialState, action) {
     switch(action.type) {
         case ACTION_AUTH_INITIALIZED: {
             const user = action.payload;
-            console.log(user);
             return {
                 ...state,
                 user: user,

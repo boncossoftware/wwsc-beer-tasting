@@ -3,6 +3,13 @@ import {
     ACTION_EVENTS_ADDING, 
     ACTION_EVENTS_ADD_ERROR 
 } from "./add";
+import { ACTION_EVENTS_ADD_RESET } from "./reset-add";
+import { 
+    ACTION_EVENTS_UPDATE, 
+    ACTION_EVENTS_UPDATE_ERROR, 
+    ACTION_EVENTS_UPDATING 
+} from "./update";
+import { ACTION_EVENTS_UPDATE_RESET } from "./reset-update";
 import { 
     ACTION_EVENTS_ALLOW_EDIT_ALLOWING,
     ACTION_EVENTS_ALLOW_EDIT,
@@ -13,8 +20,12 @@ import {
     ACTION_EVENTS_LOADING, 
     ACTION_EVENTS_LOAD_ERROR 
 } from "./load";
-import { ACTION_EVENTS_ITEM_LOADING, ACTION_EVENTS_LOAD_ITEM, ACTION_EVENTS_LOAD_ITEM_ERROR } from "./load-item";
-import { ACTION_EVENTS_ADD_RESET } from "./reset-add";
+import { 
+    ACTION_EVENTS_ITEM_LOADING, 
+    ACTION_EVENTS_LOAD_ITEM, 
+    ACTION_EVENTS_LOAD_ITEM_ERROR 
+} from "./load-item";
+
 import { ACTION_EVENTS_LISTEN_CHANGE } from './listen-change'; //Also listens for event changes
 
 const initialState = {
@@ -27,6 +38,11 @@ const initialState = {
     add: {
         adding: false,
         added: null,
+        error: null,
+    },
+    update: {
+        updating: false,
+        updated: null,
         error: null,
     },
     allowEditingAllowing: {},
@@ -86,6 +102,24 @@ export default function eventsReducer(state = initialState, action) {
             state.add.adding = false;
             state.add.added = null;
             state.add.error = null;
+            return state;
+        }
+        case ACTION_EVENTS_UPDATING: {
+            state.update.updating = action.payload; 
+            return state;
+        }
+        case ACTION_EVENTS_UPDATE: {
+            state.update.updated = action.payload; 
+            return state;
+        }
+        case ACTION_EVENTS_UPDATE_ERROR: {
+            state.update.error = action.payload; 
+            return state;
+        }
+        case ACTION_EVENTS_UPDATE_RESET: {
+            state.update.updating = false;
+            state.update.updated = null;
+            state.update.error = null;
             return state;
         }
         case ACTION_EVENTS_ALLOW_EDIT_ALLOWING: {

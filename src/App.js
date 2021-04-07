@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import AddEvent from './containers/AddEvent';
 import EventDetails from './containers/EventDetails';
 import TastingDetails from './containers/TastingDetails';
+import EditEvent from './containers/EditEvent';
 
 function App() {
     const dispatch = useDispatch();
@@ -28,6 +29,7 @@ function App() {
                     {!user && <Redirect to="/login" />}
                     <Route path="/" exact render={() => <Events />} />
                     <Route path="/event/add" exact render={ () => <AddEvent /> } />
+                    <Route path="/event/:id/edit" exact render={ () => <EditEvent /> } />
                     <Route path="/event/:id/:section?" exact render={ () => <EventDetails /> } />
                     <Route path="/event/:id/tasting/round/:round"  render={ () => <TastingDetails /> } />
                 </Switch>

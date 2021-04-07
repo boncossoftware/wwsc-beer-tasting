@@ -11,8 +11,17 @@ export default function calculate(id) {
         try {
             const calculateResults = firebase.functions().httpsCallable('calculateResults');
             const response = await calculateResults(id);
-            const results = {id, ...(response?.data || {}) };
-            dispatch({ type: ACTION_EVENT_RESULTS_CALCULATED, payload: results});
+            const data = response?.data || {};
+            if (data?.error) {
+                const error = new Error(data.error?.message);
+                error.code = data.error?.code;
+                throw error;
+            }
+            else {
+                console.log(response);
+                const results = {id, ...data };
+                dispatch({ type: ACTION_EVENT_RESULTS_CALCULATED, payload: results});
+            }
         }
         catch (error) {
             dispatch({ type: ACTION_EVENT_RESULTS_CALCULATE_ERROR, payload: {id, error }});

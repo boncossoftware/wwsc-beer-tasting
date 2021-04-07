@@ -1,7 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-import { eventFromDoc, eventToDocData } from "./utils";
+import { eventFromDoc, eventToDocData, propsForEvent } from "./utils";
 
 export const ACTION_EVENTS_ADDING = 'events/adding';
 export const ACTION_EVENTS_ADD = 'events/add';
@@ -14,22 +14,8 @@ export default function add(event) {
         try {
             const uid = firebase.auth().currentUser.uid; 
             const email = firebase.auth().currentUser.email; 
-            const related = Array.from( new Set([
-                ...(event?.bartender ? [event?.bartender] : []),
-                ...(event?.related || []),
-                ...(event?.tasters || []),
-            ].filter( r => r !== email )));
-            related.push(email); //Add the owner as related.
-            
-            const docData = eventToDocData({
-                editingAllowed: false, //Default (can be overritten)
-                rounds: 10,
-                asterisksAllowed: 2, //Default (can be overritten)
-                ...event,
-                owner: uid, //Set the user as the owner.
-                related: related,
-                tasters: [...(event?.tasters || []), ...(event?.ownerAddedAsTaster ? [email] : []) ],
-            });
+            const props = propsForEvent(uid, email, event); //Add the owner as related.
+            const docData = eventToDocData(props);
             const docRef = await firebase.firestore().collection('events').add(docData);
             const doc = await docRef.get();
             event = eventFromDoc(doc);
