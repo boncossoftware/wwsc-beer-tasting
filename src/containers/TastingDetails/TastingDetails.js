@@ -13,6 +13,7 @@ const TastingDetails = () => {
     
     const roundIndex = round ? (round - 1) : -1;
 
+    const user = useSelector( s => s?.auth?.user);
     const event = useSelector( s => s?.events?.items?.find( e => e.id === id));
     const eventLoading = useSelector( s => s?.events?.itemsLoading[id] );
     const answer = useSelector( s => s?.answers?.items?.find( e => e.id === id));
@@ -37,7 +38,9 @@ const TastingDetails = () => {
         ||
         initialAsterisked !== selectedAsterisked
     );
+
     const loading = eventLoading || answerLoading;
+    const isBartender = (event?.bartender && (event.bartender === user?.email));
 
     //Load the event (if needed)
     useEffect( () => {
@@ -149,18 +152,20 @@ const TastingDetails = () => {
         )}
         
         <p>Already selected beers are greyed out but can still be selected</p>
-
-        <h3>Rating</h3>
-        <Rating rating={selectedRating} onChange={handleRatingChange} />
-        <br/><br/>
+            
+        {!isBartender && <>
+            <h3>Rating</h3>
+            <Rating rating={selectedRating} onChange={handleRatingChange} />
+            <br/><br/>
+            
+            <h3>Asterisk</h3>
+            <input type="checkbox" checked={selectedAsterisked} onChange={handleAsteriskedChange} disabled={ !selectedAsterisked && asterisksLeft() <= 0} />
+            <span>{asterisksLeft()} Left</span>
+            <br/><br/>
         
-        <h3>Asterisk</h3>
-        <input type="checkbox" checked={selectedAsterisked} onChange={handleAsteriskedChange} disabled={ !selectedAsterisked && asterisksLeft() <= 0} />
-        <span>{asterisksLeft()} Left</span>
-        <br/><br/>
-    
-        <h3>Round Changes Made</h3>
-        <p>{ changesMade }</p>
+            <h3>Round Changes Made</h3>
+            <p>{ changesMade }</p>
+        </>}
     </>;
 }
 export default TastingDetails
