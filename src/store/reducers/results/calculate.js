@@ -18,7 +18,6 @@ export default function calculate(id) {
                 throw error;
             }
             else {
-                console.log(response);
                 const results = {id, ...data };
                 dispatch({ type: ACTION_EVENT_RESULTS_CALCULATED, payload: results});
             }

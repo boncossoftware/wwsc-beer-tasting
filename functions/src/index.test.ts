@@ -353,7 +353,7 @@ test('createTastingResults()', () => {
 
     expect(tastingResults.beerHaters[0][0]).toBe(CONTESTANT_ANSWERS[1].id);
     expect(tastingResults.beerHaters[1][0]).toBe(CONTESTANT_ANSWERS[0].id);
-    console.log(tastingResults.bestBeers);
+
     expect(tastingResults.bestBeers[0][0]).toBe(CORRECT_BEERS[0]);
     expect(tastingResults.bestBeers[1][0]).toBe(CORRECT_BEERS[1]);
     expect(tastingResults.bestBeers[2][0]).toBe(CORRECT_BEERS[2]);
@@ -393,6 +393,5 @@ test('createTastingResults() on BBT Vitrual event', () => {
     const tastingResults = createTastingResults(roundResults, beerScoreResults);
 
     console.log(tastingResults);
-
 
 });

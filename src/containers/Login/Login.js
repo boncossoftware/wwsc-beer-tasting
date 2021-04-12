@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { NavLink, Redirect } from 'react-router-dom';
 import { auth } from '../../store';
 
 
@@ -39,6 +39,10 @@ const Login = () => {
             <label htmlFor="password">Password:</label>
             <input type="password" id="password" name="password" />
             <input type="submit" value="Login" onClick={handleLogin} />
+            <br/>
+            <br/>
+            <NavLink to={`/forgot`}>Forgot Password?</NavLink><br/>
+            <NavLink to={`/account`}>Create Account</NavLink><br/>
         </form>
     );
 }

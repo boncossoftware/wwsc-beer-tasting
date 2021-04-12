@@ -8,12 +8,38 @@ import {
 import { 
     ACTION_AUTH_LOGOUT 
 } from './logout';
+import {
+    ACTION_AUTH_SENDING_PASSWORD_RESET_EMAIL,
+    ACTION_AUTH_SEND_PASSWORD_RESET_EMAIL_SENT,
+    ACTION_AUTH_SEND_PASSWORD_RESET_EMAIL_ERROR
+} from './send-password-reset-email';
+import {
+    ACTION_AUTH_RESET_SEND_PASSWORD_RESET_EMAIL
+} from './reset-send-password-reset-email.js';
+import {
+    ACTION_AUTH_CONFIRMING_RESET_PASSWORD,
+    ACTION_AUTH_CONFIRM_RESET_PASSWORD_CONFIRMED,
+    ACTION_AUTH_CONFIRM_RESET_PASSWORD_ERROR
+} from './confirm-password-reset';
+import {
+    ACTION_AUTH_RESET_CONFIRM_PASSWORD_RESET
+} from './reset-confirm-password-reset';
 
 const initialState = {
     user: null,
     token: null,
     loginError: null,
     initialized: false,
+    sendPasswordResetEmail: {
+        sending: false,
+        sent: false,
+        error: null,
+    },
+    confirmPasswordReset: {
+        confirming: false,
+        confirmed: false,
+        error: null,
+    }
 }
 
 export default function authReducer(state = initialState, action) {
@@ -47,6 +73,86 @@ export default function authReducer(state = initialState, action) {
                 user: null,
                 token: null,
             };
+        }
+        case ACTION_AUTH_SENDING_PASSWORD_RESET_EMAIL: {
+            return {
+                ...state,
+                sendPasswordResetEmail: {
+                    ...state.sendPasswordResetEmail,
+                    sending: action.payload
+                }
+            }
+        }
+        case ACTION_AUTH_SEND_PASSWORD_RESET_EMAIL_ERROR: {
+            return {
+                ...state,
+                sendPasswordResetEmail: {
+                    ...state.sendPasswordResetEmail,
+                    sent: false,
+                    error: action.payload
+                }
+            }
+        }
+        case ACTION_AUTH_SEND_PASSWORD_RESET_EMAIL_SENT: {
+            return {
+                ...state,
+                sendPasswordResetEmail: {
+                    ...state.sendPasswordResetEmail,
+                    sent: true,
+                    error: null
+                }
+            }
+        }
+        case ACTION_AUTH_RESET_SEND_PASSWORD_RESET_EMAIL: {
+            return {
+                ...state,
+                sendPasswordResetEmail: {
+                    ...state.sendPasswordResetEmail,
+                    resetting: false,
+                    sent: false,
+                    error: null
+                }
+            }
+        }
+        case ACTION_AUTH_CONFIRMING_RESET_PASSWORD: {
+            return {
+                ...state,
+                confirmPasswordReset: {
+                    ...state.confirmPasswordReset,
+                    confirming: action.payload
+                }
+            }
+        }
+        case ACTION_AUTH_CONFIRM_RESET_PASSWORD_CONFIRMED: {
+            return {
+                ...state,
+                confirmPasswordReset: {
+                    ...state.confirmPasswordReset,
+                    confirmed: true,
+                    error: null
+                }
+            }
+        }
+        case ACTION_AUTH_CONFIRM_RESET_PASSWORD_ERROR: {
+            return {
+                ...state,
+                confirmPasswordReset: {
+                    ...state.confirmPasswordReset,
+                    confirmed: false,
+                    error: action.payload
+                }
+            }
+        }
+        case ACTION_AUTH_RESET_CONFIRM_PASSWORD_RESET: {
+            return {
+                ...state,
+                confirmPasswordReset: {
+                    ...state.confirmPasswordReset,
+                    confirming: false,
+                    confirmed: false,
+                    error: null
+                }
+            }
         }
         default:
             return state;
