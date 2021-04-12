@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from "react-router";
+import BeerList from "../../components/beer-list";
 import Rating from "../../components/rating";
 import { events, answers} from '../../store';
 
@@ -138,19 +139,11 @@ const TastingDetails = () => {
         {updateError && <span>{updateError.message}<br/></span>}
         <br/>
         <h3>Select Beer</h3>
-        {(event?.beers || [])?.map( (beer, i) => 
-            <div key={i} onClick={ _ => handleClickBeer(beer)}>
-                { isOtherBeerSelected(beer) ? 
-                    <span style={{color: "gray"}}><i>{beer}</i></span>
-                    :
-                    <span>{beer}</span>                   
-                }
-                {selectedBeer === beer && <span style={{float:'right'}}>&#10003;</span>}
-                <br/>
-                <hr/>
-            </div>
-        )}
-        
+        <BeerList 
+            beers={event?.beers} 
+            isBeerDisabled={isOtherBeerSelected} 
+            isBeerSelected={ b => selectedBeer === b }
+        />
         <p>Already selected beers are greyed out but can still be selected</p>
             
         {!isBartender && <>
