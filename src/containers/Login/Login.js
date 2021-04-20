@@ -8,16 +8,19 @@ import AuthenticationForm from '../../components/authentication-form';
 const Login = () => {
     const dispatch = useDispatch();
     const user = useSelector( s => s.auth.user );
-    const error = useSelector( s => s.auth.loginError );
-    const [loading, setLoading] = useState(false);
+    const error = useSelector( s => s.auth.login.error );
+    const loading = useSelector( s => s.auth.login.loggingIn );
 
     useEffect( () => {
-        (loading && setLoading(false)); //Clear if user or error of these change.
-    }, [user, error, loading]);
+        dispatch( auth.resetLogin() );
+    }, [user]);
 
     const handleLogin = (email, password) => {
         dispatch( auth.login(email, password) );
-        setLoading(true);
+    }
+
+    const handleMoveToOtherPage = () => {
+        dispatch( auth.resetLogin() );
     }
     
     return (
@@ -34,8 +37,8 @@ const Login = () => {
             />
             <br/>
             <br/>
-            <NavLink to={`/forgot`}>Forgot Password?</NavLink><br/>
-            <NavLink to={`/create-account`}>Create Account</NavLink><br/>
+            <NavLink onClick={handleMoveToOtherPage} to={`/forgot`}>Forgot Password?</NavLink><br/>
+            <NavLink onClick={handleMoveToOtherPage} to={`/create-account`}>Create Account</NavLink><br/>
         </div>
     );
 }

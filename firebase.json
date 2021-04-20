@@ -35,7 +35,7 @@
       "port": 5000
     },
     "auth": {
-        "port": "9099"
+      "port": "9099"
     },
     "ui": {
       "enabled": true

@@ -2,16 +2,15 @@ import _firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/functions';
-import { eventFromDoc } from './reducers/events/utils';
 
 _firebase.initializeApp({
-    apiKey: "AIzaSyBU513psjNFlHImdwLP6oUDzzz7_V5NiT8",
-    authDomain: "beer-tasting-e1530.firebaseapp.com",
-    databaseURL: "https://beer-tasting-e1530.firebaseio.com",
-    projectId: "beer-tasting-e1530",
-    storageBucket: "beer-tasting-e1530.appspot.com",
-    messagingSenderId: "59351899973",
-    appId: "1:59351899973:web:7f0c8f45bab68966daa82c"
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGE_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID
 });
 
 const db = _firebase.firestore();
