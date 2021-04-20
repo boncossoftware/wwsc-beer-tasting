@@ -40,7 +40,7 @@ const Forgot = () => {
             }
             <br/>
             <br/>
-            <NavLink onClick={handleBackToLogin} to={`/login`}>Back to Login</NavLink><br/>
+            <NavLink onClick={handleBackToLogin} to={`/login`}>Back to login</NavLink><br/>
         </form>
     );
 }

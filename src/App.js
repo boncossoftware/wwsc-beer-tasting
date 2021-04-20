@@ -11,6 +11,7 @@ import TastingDetails from './containers/TastingDetails';
 import EditEvent from './containers/EditEvent';
 import Forgot from './containers/Forgot';
 import Reset from './containers/Reset';
+import CreateAccount from './containers/CreateAccount/CreateAccount';
 
 function App() {
     const dispatch = useDispatch();
@@ -30,6 +31,7 @@ function App() {
                     <Route path="/login" exact render={() => <Login />} />
                     <Route path="/forgot" exact render={() => <Forgot />} />
                     <Route path="/reset" exact render={() => <Reset />} />
+                    <Route path="/create-account" exact render={() => <CreateAccount />} />
                     {!user && <Redirect to="/login" />}
                     <Route path="/" exact render={() => <Events />} />
                     <Route path="/event/add" exact render={ () => <AddEvent /> } />

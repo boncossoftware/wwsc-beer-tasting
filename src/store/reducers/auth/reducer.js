@@ -24,6 +24,8 @@ import {
 import {
     ACTION_AUTH_RESET_CONFIRM_PASSWORD_RESET
 } from './reset-confirm-password-reset';
+import { ACTION_AUTH_CREATE_ACCOUNT_CREATED, ACTION_AUTH_CREATE_ACCOUNT_ERROR, ACTION_AUTH_CREATING_ACCOUNT } from './create-account';
+import { ACTION_AUTH_RESET_CREATE_ACCOUNT } from './reset-create-account';
 
 const initialState = {
     user: null,
@@ -38,6 +40,11 @@ const initialState = {
     confirmPasswordReset: {
         confirming: false,
         confirmed: false,
+        error: null,
+    },
+    createAccount: {
+        creating: false,
+        created: false,
         error: null,
     }
 }
@@ -151,6 +158,49 @@ export default function authReducer(state = initialState, action) {
                     confirming: false,
                     confirmed: false,
                     error: null
+                }
+            }
+        }
+        case ACTION_AUTH_CREATING_ACCOUNT: {
+            return {
+                ...state,
+                createAccount: {
+                    ...state.createAccount,
+                    creating: action.payload
+                }
+            }
+        }
+        case ACTION_AUTH_CREATE_ACCOUNT_CREATED: {
+            const {user, token} = action.payload;
+            return {
+                ...state,
+                user: user,
+                token: token,
+                createAccount: {
+                    ...state.createAccount,
+                    created: true,
+                    error: null,
+                }
+            }
+        }
+        case ACTION_AUTH_CREATE_ACCOUNT_ERROR: {
+            return {
+                ...state,
+                createAccount: {
+                    ...state.createAccount,
+                    created: false,
+                    error: action.payload,
+                }
+            }
+        }
+        case ACTION_AUTH_RESET_CREATE_ACCOUNT: {
+            return {
+                ...state,
+                createAccount: {
+                    ...state.createAccount,
+                    creating: false,
+                    created: false,
+                    error: null,
                 }
             }
         }
