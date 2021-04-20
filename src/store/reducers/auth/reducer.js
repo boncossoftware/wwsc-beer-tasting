@@ -2,9 +2,13 @@ import {
     ACTION_AUTH_INITIALIZED 
 } from './initialize';
 import {
-    ACTION_AUTH_AUTHENTICATED, 
-    ACTION_AUTH_AUTHENTICATION_ERROR
+    ACTION_AUTH_LOGGING_IN,
+    ACTION_AUTH_LOG_IN_LOGGED_IN,
+    ACTION_AUTH_LOG_IN_ERROR
 } from './login';
+import {
+    ACTION_AUTH_RESET_LOGIN
+} from './reset-login';
 import { 
     ACTION_AUTH_LOGOUT 
 } from './logout';
@@ -24,12 +28,23 @@ import {
 import {
     ACTION_AUTH_RESET_CONFIRM_PASSWORD_RESET
 } from './reset-confirm-password-reset';
-import { ACTION_AUTH_CREATE_ACCOUNT_CREATED, ACTION_AUTH_CREATE_ACCOUNT_ERROR, ACTION_AUTH_CREATING_ACCOUNT } from './create-account';
-import { ACTION_AUTH_RESET_CREATE_ACCOUNT } from './reset-create-account';
+import { 
+    ACTION_AUTH_CREATE_ACCOUNT_CREATED, 
+    ACTION_AUTH_CREATE_ACCOUNT_ERROR, 
+    ACTION_AUTH_CREATING_ACCOUNT 
+} from './create-account';
+import { 
+    ACTION_AUTH_RESET_CREATE_ACCOUNT 
+} from './reset-create-account';
 
 const initialState = {
     user: null,
     token: null,
+    login: {
+        loggingIn: false,
+        loggedIn: false,
+        error: null 
+    },
     loginError: null,
     initialized: false,
     sendPasswordResetEmail: {
@@ -59,20 +74,50 @@ export default function authReducer(state = initialState, action) {
                 initialized: true,
             };
         }
-        case ACTION_AUTH_AUTHENTICATED: {
+        case ACTION_AUTH_LOGGING_IN: {
+            return {
+                ...state,
+                login: {
+                    ...state.login,
+                    logginIn: action.payload
+                }
+            }
+        }
+        case ACTION_AUTH_LOG_IN_LOGGED_IN: {
             const {user, token} = action.payload;
             return {
                 ...state,
-                user: user,
+                user: user, 
                 token: token,
-                loginError: null,
-            };
+                login: {
+                    ...state.login,
+                    loggedIn: true,
+                    error: false,
+                }
+            }
         }
-        case ACTION_AUTH_AUTHENTICATION_ERROR: {
+        case ACTION_AUTH_LOG_IN_ERROR: {
             return {
                 ...state,
-                loginError: action.payload,
-            };
+                user: null,
+                token: null,
+                login: {
+                    ...state.login,
+                    loggedIn: false,
+                    error: action.payload,
+                }
+            }
+        }
+        case ACTION_AUTH_RESET_LOGIN: {
+            return {
+                ...state,
+                login: {
+                    ...state.login,
+                    loggingIn: false,
+                    loggedIn: false,
+                    error: null 
+                },
+            }
         }
         case ACTION_AUTH_LOGOUT: {
             return {
