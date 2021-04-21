@@ -1,7 +1,7 @@
 import TastingAnswerItem from "./tasting-answer-item";
 
 
-const TastingAnswers = ({answers, beers=[], showForBartender, editingAllowed, onClickItemAtIndex}) => {
+const TastingAnswers = ({answers, showForBartender, editingAllowed, onClickItemAtIndex}) => {
     const beersSelected = answers?.beers || [];
     const ratingsSelected = answers?.ratings || [];
     const asterisksSelected = answers?.asterisks || [];
