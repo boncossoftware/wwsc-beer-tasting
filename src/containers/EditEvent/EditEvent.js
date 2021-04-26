@@ -52,7 +52,7 @@ const EditEvent = () => {
         Edit Event
         <button disabled={updating} onClick={handleSave}>{updating ? 'Updating...' : 'Save'}</button>
         <hr/>
-        <p>Warning: Editing an event clears all results.</p>
+        <p>Warning: Editing an event clears all answers and results.</p>
         {loading && <span>Loading...<br/></span>}
         {error && <>{error.message}<br/></>}
         {event && <EventEditForm event={event} onChange={handleEventChange} />}
