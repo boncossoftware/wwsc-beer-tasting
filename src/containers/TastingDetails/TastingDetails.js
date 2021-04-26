@@ -143,6 +143,7 @@ const TastingDetails = () => {
             beers={event?.beers} 
             isBeerDisabled={isOtherBeerSelected} 
             isBeerSelected={ b => selectedBeer === b }
+            onClickBeer={handleClickBeer}
         />
         <p>Already selected beers are greyed out but can still be selected</p>
             

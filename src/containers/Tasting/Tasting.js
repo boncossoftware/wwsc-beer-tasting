@@ -23,7 +23,6 @@ const Tasting = () => {
     const resultsCalculationError = useSelector( s => s?.results?.itemsCalculationError[eventID] );
     
     const {
-        beers, 
         bartender, 
         owner,
         editingAllowed=false
@@ -64,7 +63,6 @@ const Tasting = () => {
         <hr/>
         <TastingAnswers 
             answers={userAnswers} 
-            beers={beers} 
             showForBartender={isBartender} 
             editingAllowed={editingAllowed} 
             onClickItemAtIndex={ handleClickItemAtIndex }
