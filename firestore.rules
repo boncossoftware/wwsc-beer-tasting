@@ -1,42 +1,43 @@
+rules_version = '2';
+
 service cloud.firestore {
     match /databases/{database}/documents {
 
-        function relatedToEventResource() {
-            //Use this method if the resource is an event (to save on get operations)
+        function relatedToEventWithID(eventId) {
             return (
-                (request.auth.token.email in resource.data.related)
+                (request.auth.token.email in get(/databases/$(database)/documents/events/$(eventId)).data.related)
                 ||
-                (request.auth.uid == resource.data.owner)
-            ); 
-        }
-        
-        function relatedToEventWithID(eventID) {
-            return (
-                (request.auth.token.email in get(/databases/$(database)/documents/events/$(eventID)).data.related)
-                ||
-                (request.auth.uid == get(/databases/$(database)/documents/events/$(eventID)).data.owner)
+                ownerOfEventWithID(eventId)
             ); 
         }
 
-        match /events/{eventID} {
+        function ownerOfEventWithID(eventId) {
+            return (
+                (request.auth.uid == get(/databases/$(database)/documents/events/$(eventId)).data.owner)
+            ); 
+        }
+
+        match /events/{eventId} {
             //Anybody can create an event.
             allow create: if true;
             //Related people can create an event.
-            allow get,list: if relatedToEventResource();
+            allow get,list: if (request.auth.token.email in resource.data.related);
             //Owners can edit or detele the event.
             allow update,delete: if (request.auth.uid == resource.data.owner);
         }
 
-        match /events/{eventId}/answers/{answerID} {
+        match /events/{eventId}/answers/{answerId} {
             //Each user can only edit their own answers.
-            allow get,list,create,update: if (request.auth.uid == answerID);
-            allow delete: if false;
+            allow list: if ownerOfEventWithID(eventId);
+            allow get,create,update: if (request.auth.uid == answerId);
+            allow delete: if ownerOfEventWithID(eventId);
         }
 
-        match /results/{resultID} {
+        match /results/{eventId} {
             //The results Id and event Id should be the same.
-            allow get,list: if relatedToEventWithID(resultID);
-            allow create,update, delete: if false;
+            allow get,list: if relatedToEventWithID(eventId);
+            allow create,update: if false;
+            allow delete: if ownerOfEventWithID(eventId);
         }
     }
 }
