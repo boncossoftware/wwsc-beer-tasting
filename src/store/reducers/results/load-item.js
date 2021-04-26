@@ -13,14 +13,7 @@ export default function loadItem(id) {
             const itemRef = firebase.firestore().collection('results').doc(id);
             const doc = await itemRef.get();
             if (!doc.exists) {
-                doc.data = () => ({
-                    beerSelection: [],
-                    tasteScrore: [],
-                    beerLover: null,
-                    beerHater: null,
-                    lastUpdated: null, 
-                });
-                await itemRef.set(doc.data());
+                doc.data = () => ({}); //No results.
             }
             const item = resultsFromDoc(doc, id);
             dispatch({ type: ACTION_EVENT_RESULTS_LOAD_ITEM, payload: item});
