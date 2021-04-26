@@ -17,6 +17,10 @@ service cloud.firestore {
             ); 
         }
 
+        function canEditEventWithID(eventId) {
+            return (get(/databases/$(database)/documents/events/$(eventId)).data.editingAllowed == true); 
+        }
+
         match /events/{eventId} {
             //Anybody can create an event.
             allow create: if true;
@@ -29,7 +33,11 @@ service cloud.firestore {
         match /events/{eventId}/answers/{answerId} {
             //Each user can only edit their own answers.
             allow list: if ownerOfEventWithID(eventId);
-            allow get,create,update: if (request.auth.uid == answerId);
+            allow get,create,update: if (
+                (request.auth.uid == answerId)
+                &&
+                canEditEventWithID(eventId)
+            );
             allow delete: if ownerOfEventWithID(eventId);
         }
 
