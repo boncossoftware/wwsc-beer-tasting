@@ -113,7 +113,7 @@ export const calculateResults = onCall(async (data, context) => {
     const message = (error as ResultsError).message;
     const code = (error as ResultsError).code;
     functions.logger.error(`Error: ${message} (${code})`);
-    return {error};
+    return {error: {message, code}};
   }
 });
 
