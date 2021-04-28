@@ -1,11 +1,17 @@
 import { MouseEventHandler } from "react";
+import {
+    Container,
+    EmailField,
+    PasswordField,
+    SubmitButton
+} from './authentication-form.styles';
 
-type AuthenticationFormOnSubmitCallback = (
+export type AuthenticationFormOnSubmitCallback = (
     email:FormDataEntryValue|null, 
     password: FormDataEntryValue|null
 ) => void;
 
-interface AuthenticationFormProps {
+export interface AuthenticationFormProps {
     id?: string,
     submitButtonTitle?: string,
     onSubmit?: AuthenticationFormOnSubmitCallback
@@ -17,6 +23,7 @@ const AuthenticationForm = (
         onSubmit
     }: AuthenticationFormProps
 ) => {
+    
     const handleSubmit: MouseEventHandler = (event) => {
         event.preventDefault();
 
@@ -29,14 +36,17 @@ const AuthenticationForm = (
         
         (onSubmit && onSubmit(emailValue, passwordValue));
     }
+
     return (
-        <form id={id}>
-            <label htmlFor="email">Email:</label>
-            <input type="email" id="email" name="email"/>
-            <label htmlFor="password">Password:</label>
-            <input type="password" id="password" name="password" />
-            <input type="submit" value={submitButtonTitle} onClick={handleSubmit} />
-        </form>
+        <Container id={id}>
+            <EmailField />
+            <PasswordField />
+            <SubmitButton
+                onClick={handleSubmit}
+            >
+                {submitButtonTitle}
+            </SubmitButton>
+        </Container>
     );
 }
 export default AuthenticationForm;
