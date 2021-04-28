@@ -1,5 +1,5 @@
 import Events from './containers/Events/Events';
-
+import CssBaseline from '@material-ui/core/CssBaseline';
 import { auth } from './store';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -25,6 +25,7 @@ function App() {
 
     return (
         <div className="App">
+            <CssBaseline />
             {!initialized && "loading..."}
             {initialized &&
                 <Switch>
