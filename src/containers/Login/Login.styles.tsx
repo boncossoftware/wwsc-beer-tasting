@@ -81,9 +81,9 @@ export const ErrorMessage = styled(p=>
         severity="error" 
         {...p}
     />
-)({
-    
-});
+)(({theme}) => ({
+    marginBottom: theme.spacing(3)
+}));
 
 export const MadeByBoncos = styled(p=> 
     <BaseMadeByBoncos {...p} />

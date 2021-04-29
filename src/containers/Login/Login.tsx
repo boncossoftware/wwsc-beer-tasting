@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { auth } from '../../store';
 import AuthenticationForm, {
@@ -47,7 +47,7 @@ const Login = () => {
 
             <Title>The Beer Tasting App</Title>
             <Subtitle>
-                Log in...the beer is nice and cold!
+                Log in...the beer is nice and cold!🍻
             </Subtitle>
             
             <FormContainer>

@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import firebase from "../../firebase";
 import "firebase/auth";
 
 export const ACTION_AUTH_CREATING_ACCOUNT = 'auth/creating_account';

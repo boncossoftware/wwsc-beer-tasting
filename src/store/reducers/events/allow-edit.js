@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import firebase from "../../firebase";
 import "firebase/firestore";
 
 export const ACTION_EVENTS_ALLOW_EDIT_ALLOWING = 'events/allow_edit_allowing';

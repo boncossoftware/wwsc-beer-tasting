@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import firebase from "../../firebase";
 import "firebase/functions";
 
 export const ACTION_EVENT_RESULTS_CALCULATING = 'event_results/calulating';
