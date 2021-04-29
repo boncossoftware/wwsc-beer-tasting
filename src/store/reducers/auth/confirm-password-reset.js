@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import firebase from "../../firebase";
 import "firebase/auth";
 
 export const ACTION_AUTH_CONFIRMING_RESET_PASSWORD = 'auth/confirming_reset_password';

@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import firebase from "../../firebase";
 import "firebase/auth";
 
 export const ACTION_AUTH_SENDING_PASSWORD_RESET_EMAIL = 'auth/sending_password_reset_email';
