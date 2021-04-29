@@ -8,11 +8,11 @@ import { Provider } from 'react-redux'
 import reducer from '../store/reducer';
 import { BrowserRouter } from 'react-router-dom';
 
-function render(ui, renderOptions: any={} ) {
+function render(ui: any, renderOptions: any={} ) {
     const initialState: any = renderOptions?.initialState || {};
     const composedEnhancers = composeWithDevTools(applyMiddleware(thunkMiddleware));
 
-    const wrapStore: any = renderOptions?.wrapStore || ((s) => s);
+    const wrapStore: any = renderOptions?.wrapStore || ((s: any) => s);
     const store = wrapStore(
         createStore(
             reducer, 
@@ -21,7 +21,7 @@ function render(ui, renderOptions: any={} ) {
         )
     );
 
-    function Wrapper({ children }) {
+    function Wrapper({ children }: {children: any}) {
         return (
             <BrowserRouter>
                 <Provider store={store}>{children}</Provider>
@@ -35,9 +35,9 @@ function render(ui, renderOptions: any={} ) {
     })
 }
 
-async function getActionRedutions(action) {
-    let reductions = []; 
-    const mockDispatch = (r) => {
+async function getActionRedutions(action: (d: any) => void) {
+    let reductions: any[] = []; 
+    const mockDispatch = (r: any) => {
         reductions.push(r);
     }
     await action( mockDispatch );
