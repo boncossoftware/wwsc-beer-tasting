@@ -1,23 +1,24 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { auth } from '../../store';
+import { auth, RootState, StoreError } from '../../store';
 import './Forgot.styles';
 
 const Forgot = () => {
     const dispatch = useDispatch();
-    const sent = useSelector( s => s.auth.sendPasswordResetEmail.sent );
-    const error = useSelector( s => s.auth.sendPasswordResetEmail.error );
-    const resetting = useSelector( s => s.auth.sendPasswordResetEmail.resetting );
+    const sent = useSelector<RootState, boolean>( s => s.auth.sendPasswordResetEmail.sent );
+    const error = useSelector<RootState, StoreError|null>( s => s.auth.sendPasswordResetEmail.error );
+    const resetting = useSelector<RootState, boolean>( s => s.auth.sendPasswordResetEmail.resetting );
 
-    const handleReset = (event) => {
+    const handleReset = (event: MouseEvent) => {
         event.preventDefault();
 
-        const form = document.getElementById('reset-form');
+        const form = document.getElementById('reset-form') as HTMLFormElement|undefined;
         const data = new FormData(form);
 
-        dispatch( auth.sendPasswordResetEmail(
-            data.get('email')
-        ));
+        const email: FormDataEntryValue | null = data.get('email');
+        if (email !== null) {
+            dispatch( auth.sendPasswordResetEmail(email as string) );
+        }
     }
 
     const handleBackToLogin = () => {

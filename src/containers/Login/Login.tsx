@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { Redirect } from 'react-router-dom';
-import { auth } from '../../store';
+import { auth, RootState } from '../../store';
 import AuthenticationForm, {
     AuthenticationFormOnSubmitCallback
 } from '../../components/authentication-form';
@@ -16,12 +16,13 @@ import {
     ErrorMessage,
     MadeByBoncos
 } from './Login.styles';
+import { StoreError, UserInfo } from 'store/reducer';
 
 const Login = () => {
     const dispatch = useDispatch();
-    const user = useSelector( (s:any) => s.auth.user );
-    const error = useSelector( (s:any) => s.auth.login.error );
-    const loading = useSelector( (s:any) => s.auth.login.loggingIn );
+    const user = useSelector<RootState, UserInfo|null>( s => s.auth.user );
+    const error = useSelector<RootState, StoreError|null>( s => s.auth.login.error );
+    const loading = useSelector<RootState, boolean>( s => s.auth.login.loggingIn );
 
     useEffect( () => {
         dispatch( auth.resetLogin() );
@@ -30,7 +31,7 @@ const Login = () => {
 
     const handleLogin: AuthenticationFormOnSubmitCallback = (
         (email, password) => {
-            dispatch( auth.login(email, password) );
+            dispatch( auth.login(email as string, password as string) );
         }
     );
 

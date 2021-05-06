@@ -50,7 +50,7 @@ export type AuthState = {
     loginError: StoreError|null,
     initialized: boolean,
     sendPasswordResetEmail: {
-        sending: boolean,
+        resetting: boolean,
         sent: boolean,
         error: StoreError|null,
     },
@@ -77,7 +77,7 @@ const initialState = {
     loginError: null,
     initialized: false,
     sendPasswordResetEmail: {
-        sending: false,
+        resetting: false,
         sent: false,
         error: null,
     },
@@ -163,7 +163,7 @@ export default function authReducer(
                 ...state,
                 sendPasswordResetEmail: {
                     ...state.sendPasswordResetEmail,
-                    sending: action.payload
+                    resetting: action.payload
                 }
             }
         }
@@ -192,7 +192,7 @@ export default function authReducer(
                 ...state,
                 sendPasswordResetEmail: {
                     ...state.sendPasswordResetEmail,
-                    sending: false,
+                    resetting: false,
                     sent: false,
                     error: null
                 }
