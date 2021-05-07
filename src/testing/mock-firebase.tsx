@@ -1,6 +1,7 @@
 const auth = {
     onAuthStateChanged: jest.fn(),
-    signInWithEmailAndPassword: jest.fn()
+    signInWithEmailAndPassword: jest.fn(),
+    sendPasswordResetEmail: jest.fn()
 }
 
 const mockFirebase = {

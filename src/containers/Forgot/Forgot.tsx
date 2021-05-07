@@ -31,7 +31,9 @@ const Forgot = () => {
     }
     
     return (
-        <Container>
+        <Container
+            id="forgot" 
+        >
             <FormContainer>
                 {resetting ? 
                     <CircularProgress />

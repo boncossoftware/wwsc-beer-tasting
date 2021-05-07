@@ -5,6 +5,7 @@ import {
     ACTION_AUTH_LOG_IN_LOGGED_IN,
     ACTION_AUTH_LOG_IN_ERROR
 } from '../../store/reducers/auth/login';
+import { RootState, StoreError } from 'store';
 
 const createLoginMockState = () => ({ 
     auth: { 
@@ -15,7 +16,7 @@ const createLoginMockState = () => ({
             error: null 
         },
     } 
-});
+} as RootState);
 
 test('renders correctly', () => {
     render( <Login />);
@@ -27,7 +28,7 @@ test('renders correctly', () => {
 
 test('renders errors correctly', () => {
     const mockState = createLoginMockState();
-    const error = {message: 'error', code: 1};
+    const error = new StoreError('error', 1);
     mockState.auth.login.error = error;
     
     const mockDispatch = jest.fn();
@@ -76,8 +77,6 @@ test('renders handle login', async () => {
 
     const login = screen.getByText(/login/gi);
     fireEvent.click(login);
-
-    
 
     const loginAction = dispatch.mock.calls[0][0];
     const reductions = await getActionRedutions(loginAction);

@@ -40,7 +40,6 @@ const Login = () => {
     return (
         <Container 
             id="login" 
-            
         >
             {user && <Redirect to="/" />}
 
