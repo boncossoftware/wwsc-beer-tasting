@@ -1,8 +1,12 @@
-import { MouseEventHandler } from 'react';
+import { Typography } from '@material-ui/core';
+import { EmailField, SubmitButton } from 'components/authentication-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import FormContainer, {CircularProgress} from 'components/form-container';
 import { auth, RootState, StoreError } from '../../store';
 import './Forgot.styles';
+import { Container, Form } from './Forgot.styles';
+import OptionLink, {OptionsContainer} from 'components/option-link';
+import ErrorMessage from 'components/error-message';
 
 const Forgot = () => {
     const dispatch = useDispatch();
@@ -27,24 +31,45 @@ const Forgot = () => {
     }
     
     return (
-        <form id="reset-form">
-            {error && `${error.message}(${error.code})`}
-
-            {!sent ? 
-                <>
-                    <label htmlFor="email">Email:</label>
-                    <input type="email" id="email" name="email" disabled={resetting}/>
-                    <input type="submit" value="Reset Password" disabled={resetting} onClick={handleReset} />
-                </>
-                :
-                <>
-                    <p>Password reset email sent. Check your email inbox (or junk).</p>  
-                </>
-            }
-            <br/>
-            <br/>
-            <NavLink onClick={handleBackToLogin} to={`/login`}>Back to login</NavLink><br/>
-        </form>
+        <Container>
+            <FormContainer>
+                {resetting ? 
+                    <CircularProgress />
+                    :
+                    <>
+                        { error && 
+                            <ErrorMessage>
+                                {`${error.message}(${error.code})`}
+                            </ErrorMessage>
+                        }
+                        <Form id="reset-form">
+                            {!sent ? 
+                                <>
+                                    <EmailField/>
+                                    <SubmitButton
+                                        onClick={handleReset}
+                                    >
+                                        Reset Password
+                                    </SubmitButton>
+                                </>
+                                :
+                                <>
+                                    <Typography>Password reset email sent. Check your email inbox (or junk).</Typography>  
+                                </>
+                            }
+                        </Form>
+                        <OptionsContainer>
+                            <OptionLink 
+                                onClick={handleBackToLogin} 
+                                to={`/login`}
+                            >
+                                Back to login
+                            </OptionLink>
+                        </OptionsContainer>
+                    </>
+                }
+            </FormContainer>
+        </Container>
     );
 }
 

@@ -9,13 +9,11 @@ import {
     Container,
     Title,
     Subtitle,
-    FormContainer,
-    CircularProgress,
-    OptionsContainer,
-    OptionLink,
-    ErrorMessage,
     MadeByBoncos
 } from './Login.styles';
+import ErrorMessage from 'components/error-message';
+import OptionLink, {OptionsContainer} from 'components/option-link';
+import FormContainer, {CircularProgress} from 'components/form-container';
 import { StoreError, UserInfo } from 'store/reducer';
 
 const Login = () => {

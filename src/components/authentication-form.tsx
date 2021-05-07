@@ -11,6 +11,12 @@ export type AuthenticationFormOnSubmitCallback = (
     password: FormDataEntryValue|null
 ) => void;
 
+export {
+    EmailField as EmailField,
+    PasswordField as PasswordField,
+    SubmitButton as SubmitButton
+} from './authentication-form.styles';
+
 export interface AuthenticationFormProps {
     id?: string,
     submitButtonTitle?: string,
