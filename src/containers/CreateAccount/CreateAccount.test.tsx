@@ -1,9 +1,9 @@
-import { render, screen, fireEvent, getActionRedutions} from '../../testing/test-utils';
+import { render, screen, fireEvent, getActionRedutions} from 'testing/test-utils';
 import CreateAccount from './CreateAccount';
 import {
     ACTION_AUTH_CREATING_ACCOUNT,
     ACTION_AUTH_CREATE_ACCOUNT_CREATED
-} from '../../store/reducers/auth/create-account';
+} from 'store/reducers/auth/create-account';
 import { RootState, StoreError } from 'store';
 
 const createLoginMockState = () => ({ 

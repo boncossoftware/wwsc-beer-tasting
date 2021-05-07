@@ -1,9 +1,9 @@
-import { render, screen, fireEvent, getActionRedutions} from '../../testing/test-utils';
+import { render, screen, fireEvent, getActionRedutions} from 'testing/test-utils';
 import Forgot from './Forgot';
 import {
     ACTION_AUTH_SENDING_PASSWORD_RESET_EMAIL,
     ACTION_AUTH_SEND_PASSWORD_RESET_EMAIL_SENT
-} from '../../store/reducers/auth/send-password-reset-email';
+} from 'store/reducers/auth/send-password-reset-email';
 import { RootState, StoreError } from 'store';
 
 const createLoginMockState = () => ({ 
