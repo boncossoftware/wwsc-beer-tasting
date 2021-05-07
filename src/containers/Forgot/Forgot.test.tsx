@@ -1,37 +1,37 @@
 import { render, screen, fireEvent, getActionRedutions} from 'testing/test-utils';
-import Login from './Login';
+import Forgot from './Forgot';
 import {
-    ACTION_AUTH_LOGGING_IN,
-    ACTION_AUTH_LOG_IN_LOGGED_IN,
-} from 'store/reducers/auth/login';
+    ACTION_AUTH_SENDING_PASSWORD_RESET_EMAIL,
+    ACTION_AUTH_SEND_PASSWORD_RESET_EMAIL_SENT
+} from 'store/reducers/auth/send-password-reset-email';
 import { RootState, StoreError } from 'store';
 
 const createLoginMockState = () => ({ 
     auth: { 
-        user: null,
-        login: {
-            loggingIn: false,
-            loggedIn: false,
-            error: null 
-        },
+        sendPasswordResetEmail: {
+            resetting: false,
+            sent: false,
+            error: null,
+        }
     } 
 } as RootState);
 
-test('renders correctly', () => {
-    render( <Login />);
 
-    const loginContainer = document.getElementById('login');
-    expect(loginContainer).toBeInTheDocument();
+test('renders correctly', () => {
+    render( <Forgot />);
+
+    const forgotContainer = document.getElementById('forgot');
+    expect(forgotContainer).toBeInTheDocument();
 });
 
 
 test('renders errors correctly', () => {
     const mockState = createLoginMockState();
     const error = new StoreError('error', 1);
-    mockState.auth.login.error = error;
+    mockState.auth.sendPasswordResetEmail.error = error;
     
     const mockDispatch = jest.fn();
-    render( <Login />, {
+    render( <Forgot />, {
         initialState: mockState,
         wrapStore: (s:any) => ({
             ...s, 
@@ -45,12 +45,13 @@ test('renders errors correctly', () => {
     expect(errorElement).toBeInTheDocument();
 });
 
+
 test('renders loading correctly', () => {
     const mockState = createLoginMockState();
-    mockState.auth.login.loggingIn = true;
+    mockState.auth.sendPasswordResetEmail.resetting = true;
     
     const mockDispatch = jest.fn();
-    render( <Login />, {
+    render( <Forgot />, {
         initialState: mockState,
         wrapStore: (s:any) => ({
             ...s, 
@@ -61,35 +62,30 @@ test('renders loading correctly', () => {
     expect(progress).toBeInTheDocument();
 });
 
-test('renders handle login', async () => {
+test('renders handle reset', async () => {
     const dispatch = jest.fn();
-    render( <Login />, {
+    render( <Forgot />, {
         wrapStore: (s:any) => ({ ...s, dispatch})
     });
     dispatch.mock.calls = []; //Reset any initial calls to dispatch.
 
     const email = document.getElementById('email') as HTMLInputElement;
     email.value = 'test@test.com';
-    
-    const password = document.getElementById('password') as HTMLInputElement;
-    password.value = 'password';
 
-    const login = screen.getByText(/login/gi);
-    fireEvent.click(login);
+    const reset = screen.getByText(/reset password/gi);
+    fireEvent.click(reset);
 
-    const loginAction = dispatch.mock.calls[0][0];
-    const reductions = await getActionRedutions(loginAction);
+    const resetAction = dispatch.mock.calls[0][0];
+    const reductions = await getActionRedutions(resetAction);
     expect(reductions).toStrictEqual([
-        {type: ACTION_AUTH_LOGGING_IN, payload: true},
-        //We can't check the payload of user cred.
-        {type: ACTION_AUTH_LOG_IN_LOGGED_IN, payload: undefined},
-        {type: ACTION_AUTH_LOGGING_IN, payload: false},
+        {type: ACTION_AUTH_SENDING_PASSWORD_RESET_EMAIL, payload: true},
+        {type: ACTION_AUTH_SEND_PASSWORD_RESET_EMAIL_SENT},
+        {type: ACTION_AUTH_SENDING_PASSWORD_RESET_EMAIL, payload: false},
     ]);
     
     const mockFirebase = require('../../store/firebase').default;
-    const loginCalls = mockFirebase.auth().signInWithEmailAndPassword.mock.calls; 
-    expect(loginCalls.length).toBe(1);
+    const resetCalls = mockFirebase.auth().sendPasswordResetEmail.mock.calls; 
+    expect(resetCalls.length).toBe(1);
 
-    expect(loginCalls[0][0]).toBe(email.value);
-    expect(loginCalls[0][1]).toBe(password.value);
+    expect(resetCalls[0][0]).toBe(email.value);
 });
