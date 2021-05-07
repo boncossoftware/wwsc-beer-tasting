@@ -4,8 +4,9 @@ import 'firebase/firestore';
 import 'firebase/functions';
 import { StoreError } from './reducer';
 
-
+console.log('loaded');
 export function initializeFirebaseApp() {
+    console.log('initialized');
     const TEST_ENV = (process.env.NODE_ENV === 'test');
     if (TEST_ENV) {
         

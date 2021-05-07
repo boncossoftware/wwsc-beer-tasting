@@ -3,10 +3,6 @@ import firebase from "firebase/app";
 import 'firebase/auth';
 
 var initialized = false;
-firebase.auth().onAuthStateChanged( (user) => {
-    if (initialized) return;
-    initialized = true;
-});
 
 export const ACTION_AUTH_INITIALIZED = 'auth/initialized';
 

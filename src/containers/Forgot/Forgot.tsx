@@ -1,3 +1,4 @@
+import { MouseEventHandler } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { auth, RootState, StoreError } from '../../store';
@@ -9,7 +10,7 @@ const Forgot = () => {
     const error = useSelector<RootState, StoreError|null>( s => s.auth.sendPasswordResetEmail.error );
     const resetting = useSelector<RootState, boolean>( s => s.auth.sendPasswordResetEmail.resetting );
 
-    const handleReset = (event: MouseEvent) => {
+    const handleReset = (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
 
         const form = document.getElementById('reset-form') as HTMLFormElement|undefined;
