@@ -1,7 +1,7 @@
-import firebase from "firebase/app";
+import { DocumentSnapshot, Timestamp } from 'store/firebase';
 import { Result } from "./reducer";
 
-export const resultsFromDoc = (doc: firebase.firestore.DocumentSnapshot): Result => {
+export const resultsFromDoc = (doc: DocumentSnapshot): Result => {
     return {
         id: doc.id,
         beerSelection: doc?.data()?.beerSelection,
@@ -18,6 +18,6 @@ export const resultsToDocData = (results: Result): any => {
         tasteScore: results?.tasteScore,
         beerLover: results?.beerLover,
         beerHater: results?.beerHater,
-        lastUpdated: results?.lastUpdated ? firebase.firestore.Timestamp.fromDate(results?.lastUpdated) : null,
+        lastUpdated: results?.lastUpdated ? Timestamp.fromDate(results?.lastUpdated) : null,
     }   
 }

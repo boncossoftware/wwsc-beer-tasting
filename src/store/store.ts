@@ -3,10 +3,7 @@ import thunkMiddleware, {ThunkDispatch} from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension'
 import rootReducer, { RootState, StoreError } from "./reducer";
 import { EVENT_MODIFIED_EVENT, listenChange } from './reducers/events';
-import {initializeFirebaseApp} from './firebase'; //Setup firebase.
 import { TastingEvent } from './reducers/events/reducer';
-
-initializeFirebaseApp();
 
 const composedEnhancers = composeWithDevTools(applyMiddleware(thunkMiddleware));
 

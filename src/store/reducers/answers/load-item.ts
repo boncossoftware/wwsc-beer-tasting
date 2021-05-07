@@ -1,5 +1,5 @@
 import { AnyAction, Dispatch } from "redux";
-import firebase from "firebase/app";
+import firebase, {DocumentData} from "store/firebase";
 import "firebase/firestore";
 import { answerFromDoc } from "./utils";
 import { RootState } from "store/reducer";
@@ -36,7 +36,7 @@ export default function loadItem(id: string) {
                     rounds,
                 });
                 //NOTE: Casting because data always exits because we created it.
-                await itemRef.set(doc.data() as firebase.firestore.DocumentData); 
+                await itemRef.set(doc.data() as DocumentData); 
             }
             const item = answerFromDoc(doc);
             dispatch({ type: ACTION_EVENT_ANSWERS_LOAD_ITEM, payload: item});

@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import firebase, { QuerySnapshot } from 'store/firebase';
 import "firebase/auth";
 import "firebase/firestore";
 
@@ -26,7 +26,7 @@ export default function update(event: TastingEvent) {
             await Promise.all([
                 docRef.update(eventToDocData(props)),
                 //Delete all answers.
-                docRef.collection('answers').get().then( snaps => 
+                docRef.collection('answers').get().then( (snaps: QuerySnapshot) => 
                     Promise.all(snaps.docs.map( snap => snap.ref.delete() ))
                 ),
                 //Delete all results.

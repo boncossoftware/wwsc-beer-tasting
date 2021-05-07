@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import firebase from 'store/firebase';
 import "firebase/auth";
 import { AnyAction, Dispatch } from "redux";
 

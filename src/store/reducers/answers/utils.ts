@@ -1,8 +1,7 @@
-import firebase from "firebase/app";
-
+import {DocumentSnapshot} from "store/firebase";
 import { TastingAnswer } from "./reducer"
 
-export const answerFromDoc = (doc: firebase.firestore.DocumentSnapshot) => {
+export const answerFromDoc = (doc: DocumentSnapshot) => {
     return {
         id: doc.id,
         beers: doc.data()?.beers,

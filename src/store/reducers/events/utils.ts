@@ -1,9 +1,9 @@
-import firebase from "firebase/app";
+import { DocumentSnapshot, Timestamp } from 'store/firebase';
 import "firebase/firestore";
 
 import { TastingEvent } from "./reducer";
 
-export const eventFromDoc = (doc: firebase.firestore.DocumentSnapshot): TastingEvent => {
+export const eventFromDoc = (doc: DocumentSnapshot): TastingEvent => {
     return {
         id: doc?.id,
         owner: doc?.data()?.owner,
@@ -27,7 +27,7 @@ export const eventToDocData = (event: TastingEvent) => {
         name: event?.name || null,
         owner: event?.owner || null,
         venue: event?.venue || null,
-        date: event?.date ? firebase.firestore.Timestamp.fromDate(event.date) : null,
+        date: event?.date ? Timestamp.fromDate(event.date) : null,
         price: event?.price || null,
         related: event?.related || null,
         bartender: event?.bartender || null,

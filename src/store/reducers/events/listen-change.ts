@@ -1,4 +1,4 @@
-import firebase from "firebase/app";
+import firebase, { QuerySnapshot } from 'store/firebase';
 import "firebase/firestore";
 
 import { eventFromDoc } from "./utils";
@@ -19,7 +19,7 @@ export function subscribe(userEmail: string) {
         .where('related', 'array-contains', userEmail)
     );
 
-    _unsubscribe = relatedEventsCollectionRef.onSnapshot( (snapshot) => {
+    _unsubscribe = relatedEventsCollectionRef.onSnapshot( (snapshot: QuerySnapshot) => {
         snapshot.docChanges().forEach( change => {
             if (change.type !== 'modified') return;
             
