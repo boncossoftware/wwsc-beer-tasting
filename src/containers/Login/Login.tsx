@@ -29,7 +29,7 @@ const Login = () => {
 
     const handleLogin: AuthenticationFormOnSubmitCallback = (
         (email, password) => {
-            dispatch( auth.login((email??'') as string, (password??'') as string) );
+            dispatch( auth.login(email as string|null, password as string|null) );
         }
     );
 

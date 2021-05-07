@@ -6,7 +6,7 @@ export const ACTION_AUTH_SENDING_PASSWORD_RESET_EMAIL = 'auth/sending_password_r
 export const ACTION_AUTH_SEND_PASSWORD_RESET_EMAIL_SENT = 'auth/send_password_reset_email_sent';
 export const ACTION_AUTH_SEND_PASSWORD_RESET_EMAIL_ERROR = 'auth/send_password_reset_email_error';
 
-export default function sendPasswordResetEmail(email: string) {
+export default function sendPasswordResetEmail(email: string|null) {
     return async (dispatch: Dispatch<AnyAction>) => {
         dispatch({ type: ACTION_AUTH_SENDING_PASSWORD_RESET_EMAIL, payload: true});
         try {

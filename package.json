@@ -50,6 +50,7 @@
   },
   "devDependencies": {
     "@testing-library/dom": "^7.30.4",
+    "@types/qs": "^6.9.6",
     "@types/react-router-dom": "^5.1.7"
   }
 }

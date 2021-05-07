@@ -8,7 +8,7 @@ export const ACTION_AUTH_CONFIRM_RESET_PASSWORD_ERROR = 'auth/confirm_reset_pass
 
 export const RESET_PASSWORD_CONFIRM_MODE_RESET_PASSWORD = 'resetPassword';
 
-export default function confirmPasswordReset(code: string, newPassword: string) {
+export default function confirmPasswordReset(code: string|null, newPassword: string|null) {
     return async (dispatch: Dispatch<AnyAction>) => {
         dispatch({ type: ACTION_AUTH_CONFIRMING_RESET_PASSWORD, payload: true});
         try {

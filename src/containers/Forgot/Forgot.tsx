@@ -22,9 +22,7 @@ const Forgot = () => {
         const data = new FormData(form);
 
         const email: FormDataEntryValue | null = data.get('email');
-        if (email !== null) {
-            dispatch( auth.sendPasswordResetEmail(email as string) );
-        }
+        dispatch( auth.sendPasswordResetEmail(email as string|null) );
     }
 
     const handleBackToLogin = () => {
