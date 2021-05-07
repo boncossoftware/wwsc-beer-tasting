@@ -6,11 +6,11 @@ import AuthenticationForm, {
     AuthenticationFormOnSubmitCallback
 } from '../../components/authentication-form';
 import {
-    Container,
     Title,
     Subtitle,
     MadeByBoncos
 } from './Login.styles';
+import Container from 'components/center-container';
 import ErrorMessage from 'components/error-message';
 import OptionLink, {OptionsContainer} from 'components/option-link';
 import FormContainer, {CircularProgress} from 'components/form-container';
@@ -29,7 +29,7 @@ const Login = () => {
 
     const handleLogin: AuthenticationFormOnSubmitCallback = (
         (email, password) => {
-            dispatch( auth.login(email as string, password as string) );
+            dispatch( auth.login((email??'') as string, (password??'') as string) );
         }
     );
 

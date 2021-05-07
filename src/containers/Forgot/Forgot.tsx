@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import FormContainer, {CircularProgress} from 'components/form-container';
 import { auth, RootState, StoreError } from '../../store';
 import './Forgot.styles';
-import { Container, Form } from './Forgot.styles';
+import { Form } from './Forgot.styles';
+import Container from 'components/center-container';
 import OptionLink, {OptionsContainer} from 'components/option-link';
 import ErrorMessage from 'components/error-message';
 
