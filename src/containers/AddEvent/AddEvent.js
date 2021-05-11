@@ -1,8 +1,10 @@
+import { Dialog } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import EventEditForm from "../../components/event-edit-form";
 import {events} from '../../store';
+import SlideUpTransition from 'components/slide-up-transition';
 
 const AddEvent = () => {
     const history = useHistory();
@@ -11,6 +13,7 @@ const AddEvent = () => {
     const added = useSelector( s => s?.events?.add.added );
     const error = useSelector( s => s?.events?.add.error );
     const [event, setEvent] = useState({});
+    const [open, setOpen] = useState(true);
 
     useEffect( () => {
         if (added) {
@@ -21,7 +24,7 @@ const AddEvent = () => {
     
     const handleCancel = () => {
         dispatch(events.resetAdd());
-        history.push('/');
+        setOpen(false);
     }
 
     const handleSave = () => {
@@ -32,7 +35,18 @@ const AddEvent = () => {
         setEvent(event);
     }
 
+    const handleExit = () => {
+        history.push('/');
+    }
+
     return <div>
+        <Dialog 
+            fullScreen 
+            open={open} 
+            onClose={handleCancel}
+            onExited={handleExit} 
+            TransitionComponent={SlideUpTransition}
+        >
         <button onClick={handleCancel} >Cancel</button>
         Add Event
         <button disabled={adding} onClick={handleSave}>{adding ? 'Saving...' : 'Save'}</button>
@@ -40,6 +54,7 @@ const AddEvent = () => {
         {error && <>{error.message}<br/></>}
         <EventEditForm event={event} onChange={handleEventChange} />
         <br />
+        </Dialog>
     </div>;
 }
 export default AddEvent;
