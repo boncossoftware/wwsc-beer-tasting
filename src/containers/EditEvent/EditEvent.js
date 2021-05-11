@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useParams } from "react-router";
+import { useHistory, useParams, useRouteMatch } from "react-router";
 import EventEditForm from "../../components/event-edit-form";
 import {events} from '../../store';
 
 const EditEvent = () => {
     const {id} = useParams();
+    const { url: baseURL } = useRouteMatch();
     const history = useHistory();
     const dispatch = useDispatch();
     const updating = useSelector( s => s?.events?.updating );
@@ -14,6 +15,7 @@ const EditEvent = () => {
     const loading = useSelector( s => s?.events?.itemsLoading[id] );
     const item = useSelector( s => s?.events?.items?.find( i => i.id === id ) );
     const [event, setEvent] = useState(item);
+    const backURL = baseURL.replace('/edit', '');
 
     useEffect( () => {
         dispatch( events.loadItem(id) );
@@ -28,13 +30,13 @@ const EditEvent = () => {
     useEffect( () => {
         if (updated) {
             dispatch(events.resetUpdate());
-            history.push(`/event/${id}`);
+            history.push(backURL);
         }
     }, [updated, history, dispatch]);
     
     const handleCancel = () => {
         dispatch(events.resetUpdate());
-        history.push(`/event/${id}`);
+        history.push(backURL);
     }
 
     const handleSave = () => {

@@ -29,16 +29,30 @@ function App() {
             {!initialized && "loading..."}
             {initialized &&
                 <Switch>
-                    <Route path="/login" exact render={() => <Login />} />
-                    <Route path="/forgot" exact render={() => <Forgot />} />
-                    <Route path="/reset" exact render={() => <Reset />} />
-                    <Route path="/create-account" exact render={() => <CreateAccount />} />
-                    {!user && <Redirect to="/login" />}
-                    <Route path="/" exact render={() => <Events />} />
-                    <Route path="/event/add" exact render={ () => <AddEvent /> } />
-                    <Route path="/event/:id/edit" exact render={ () => <EditEvent /> } />
-                    <Route path="/event/:id/:section?" exact render={ () => <EventDetails /> } />
-                    <Route path="/event/:id/tasting/round/:round"  render={ () => <TastingDetails /> } />
+                    <Route path="/login"> <Login/> </Route>
+                    <Route path="/forgot"> <Forgot/> </Route>
+                    <Route path="/reset"> <Reset/> </Route>
+                    <Route path="/create-account"> <CreateAccount/> </Route>
+                    
+                    {/* following paths are only accessible for authenticated users */ }
+                    {!user && <Redirect to="/login" /> }
+
+                    <Route path="(/|/event/add)">
+                        <Route path="/"> <Events/> </Route>
+                        {/* Shown as a modal */}
+                        <Route path="/event/add"> <AddEvent/> </Route>
+                    </Route>
+                    
+                    <Route path="/event/:id/:section?(/edit)?">
+                        <Route path="/event/:id"> <EventDetails /> </Route>
+                        <Route path="/event/:id/:section/edit">
+                            <EditEvent />
+                        </Route>
+                    </Route>
+                    <Route path="/event/:id/tasting/round/:round">
+                        <TastingDetails />
+                    </Route>
+                    <Redirect to="/" />
                 </Switch>
             }
         </div>
