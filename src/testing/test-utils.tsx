@@ -35,12 +35,12 @@ function render(ui: any, renderOptions: any={} ) {
     })
 }
 
-async function getActionRedutions(action: (d: any) => void) {
+async function getActionRedutions(action: (d: any, s: () => any) => void, state:any = {}) {
     let reductions: any[] = []; 
     const mockDispatch = (r: any) => {
         reductions.push(r);
     }
-    await action( mockDispatch );
+    await action( mockDispatch, (): any => state);
     return reductions;
 }
 

@@ -1,7 +1,7 @@
 import { DocumentSnapshot, Timestamp } from 'store/firebase';
 import "firebase/firestore";
-
 import { TastingEvent } from "./reducer";
+import {formatRelative, format} from 'date-fns';
 
 export const eventFromDoc = (doc: DocumentSnapshot): TastingEvent => {
     return {
@@ -19,6 +19,30 @@ export const eventFromDoc = (doc: DocumentSnapshot): TastingEvent => {
         asterisksAllowed: doc?.data()?.asterisksAllowed,
         editingAllowed: doc?.data()?.editingAllowed,
         rounds: doc?.data()?.rounds,
+
+        formattedDate: function() { 
+            if (!(this as any)._formattedDate) {
+                (this as any)._formattedDate = ( this.date ? 
+                    format(this.date, 'ccc d, h:mm aaaa')
+                    : 
+                    '-'
+                );
+            }
+            return (this as any)._formattedDate;
+        },
+        formattedMonth: function() {
+            if (!(this as any)._formattedMonth) {
+                (this as any)._formattedMonth = ( this.date ? 
+                    format(
+                        this.date, 
+                        'MMMM' + (this.date.getFullYear() === new Date().getFullYear() ? '' : ', YYYY')
+                    )
+                    : 
+                    '-'
+                );
+            }
+            return (this as any)._formattedMonth;
+        }
     } as TastingEvent;
 }
 

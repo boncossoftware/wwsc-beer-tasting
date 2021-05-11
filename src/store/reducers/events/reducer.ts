@@ -45,6 +45,10 @@ export type TastingEvent = {
     asterisksAllowed: number|undefined|null;
     editingAllowed: boolean|undefined|null;
     rounds: number|undefined|null;
+
+    //Helper Methods
+    formattedDate: () => string;
+    formattedMonth: () => string;
 }
 
 export type TastingEventsState = {
