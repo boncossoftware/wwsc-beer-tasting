@@ -38,7 +38,6 @@ export function getCurrentUserInfo(): {uid: string, email: string} {
     if (!(uid && email)) {
         throw new StoreError('No current user.');
     }
-    
     return {uid, email};
 }
 

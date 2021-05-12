@@ -112,6 +112,7 @@ export const DateField = styled(p=>
                 forma
                 ampm={true}
                 minDate={new Date()}
+                fullWidth
                 label={"Date & Time"}
                 disablePast
                 required

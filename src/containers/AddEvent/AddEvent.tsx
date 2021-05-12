@@ -8,7 +8,7 @@ import SlideUpTransition from 'components/slide-up-transition';
 import { TastingEvent } from "store/reducers/events/reducer";
 import AppBar from "components/app-bar";
 import ErrorMessage from "components/error-message";
-import {CancelButton, SaveButton} from './AddEvent.styles';
+import {CancelButton, AddButton} from './AddEvent.styles';
 
 const DEFAULT_EVENT = {
     id: '',
@@ -68,7 +68,7 @@ const AddEvent = () => {
                 } 
                 title="Add Event"
                 renderRightComponent={ () =>
-                    <SaveButton saving={adding} onClick={handleSave} />
+                    <AddButton saving={adding} onClick={handleSave} />
                 } 
             />
             {error && 

@@ -9,6 +9,7 @@ import Tasting from '../Tasting';
 import Venue from "../Venue";
 
 const EventDetails = () => {    
+    
     const {id} = useParams();
     const history = useHistory();
     const { path,url } = useRouteMatch();

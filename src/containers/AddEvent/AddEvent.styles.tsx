@@ -9,9 +9,9 @@ export const CancelButton = styled( (p) =>
 }));
 
 
-export const SaveButton = styled( (p: any) => 
+export const AddButton = styled( (p: any) => 
     <Button {...p} color="inherit" disabled={p.saving || false}>
-        <Typography color="inherit">{p.saving ? 'Saving...' : 'Save'}</Typography>
+        <Typography color="inherit">{p.saving ? 'Adding...' : 'Add'}</Typography>
     </Button>
 )(({theme}) => ({
     marginLeft: theme.spacing(1),
