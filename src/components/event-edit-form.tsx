@@ -17,7 +17,8 @@ import {
     EditBeerList,
     EditBeerItem,
     AddBeerButton,
-    AsterisksAllowedField
+    AsterisksAllowedField,
+    PriceField
 } from './event-edit-form.styles';
 
 export type EventEditFormChangeHandler = (e: TastingEvent) => void;
@@ -81,6 +82,7 @@ const EventEditForm = ({event, onChange}: EventEditFormProps) => {
             <NameField value={event?.name} onChange={handleChange} />
             <VenueField value={event?.venue} onChange={handleChange} />
             <DateField value={event?.date} onChange={handleChange} />
+            <PriceField value={event?.price} onChange={handleChange} />
         </Section>
         
         <Section title="Bartender">

@@ -131,6 +131,27 @@ export const DateField = styled(p=>
 
 });
 
+export const PriceField = styled(p=>
+    <Grid item>
+        <TextField 
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="price"
+            label="Price"
+            name="price"
+            placeholder="Alf. 75"
+            autoComplete="off"
+            {...p}
+            {...wrapOnChange(p)}
+        />
+    </Grid>
+)({
+
+});
+
+
 export const BartenderEmailField = styled(p=>
     <Grid item>
         <TextField
