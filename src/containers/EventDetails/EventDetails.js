@@ -32,7 +32,6 @@ const EventDetails = () => {
     const handleEditEvent = () => {
         history.push(`${url}${activeSection}/edit`);
     }
-
     return <>
         <button onClick={handleBackToEvents}>{"< Events"}</button>
         {item?.name}
@@ -44,7 +43,7 @@ const EventDetails = () => {
         <br/>
         <Switch >
             <Route path={`${path}/tasting`}>
-                <Tasting />
+                <Tasting baseURL={`${url}/tasting`}/>
             </Route>
             <Route path={`${path}/beers`}>
                 <Beers />

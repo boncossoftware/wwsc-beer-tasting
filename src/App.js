@@ -37,22 +37,22 @@ function App() {
                     {/* following paths are only accessible for authenticated users */ }
                     {!user && <Redirect to="/login" /> }
 
-                    <Route path="(/|/event/add)">
+                    <Route path="/(event/add)?" exact>
                         <Route path="/"> <Events/> </Route>
                         {/* Shown as a modal */}
                         <Route path="/event/add"> <AddEvent/> </Route>
                     </Route>
                     
-                    <Route path="/event/:id/:section?(/edit)?">
+                    <Route path="/event/:id/:section?/(edit)?">
                         <Route path="/event/:id"> <EventDetails /> </Route>
                         <Route path="/event/:id/:section/edit">
                             <EditEvent />
                         </Route>
-                    </Route>
-                    <Route path="/event/:id/tasting/round/:round">
+                        <Route path="/event/:id/tasting/round/:round">
                         <TastingDetails />
                     </Route>
-                    <Redirect to="/" />
+                    </Route>
+                    <Redirect to="/login" />
                 </Switch>
             }
         </div>

@@ -5,16 +5,16 @@ import TastingAnswers from "../../components/tasting-answers";
 import TastingResults from "../../components/tasting-results";
 import { answers, events, results } from "../../store";
 
-const Tasting = () => {    
+const Tasting = ({baseURL}) => {    
     const history = useHistory();
     const {id} = useParams();
 
     const dispatch = useDispatch();
     const user = useSelector( s => s?.auth?.user);
     
-    const answersLoading = useSelector( s => s?.answers?.itemsLoading[id] );
-    const answersError = useSelector( s => s?.answers?.itemsError[id] );
-    const userAnswers = useSelector( s => s?.answers?.items?.find( i => i.id === id ) );
+    const answersLoading = useSelector( s => s?.answers?.itemsLoading[user.uid] );
+    const answersError = useSelector( s => s?.answers?.itemsError[user.uid] );
+    const userAnswers = useSelector( s => s?.answers?.items?.find( i => i.id === user.uid ) );
 
     const resultsLoading = useSelector( s => s?.results?.itemsLoading[id] );
     const resultsError = useSelector( s => s?.results?.itemsError[id] );
@@ -50,7 +50,7 @@ const Tasting = () => {
     }
 
     const handleClickItemAtIndex = (index) => {
-        (index !==undefined && history.push(`tasting/round/${index + 1}`));
+        (index !==undefined && history.push(`${baseURL}/round/${index + 1}`));
     }
 
     const handleCalculateResults = () => {
