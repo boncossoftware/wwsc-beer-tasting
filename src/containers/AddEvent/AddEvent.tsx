@@ -1,4 +1,4 @@
-import { Button, Dialog } from "@material-ui/core";
+import { Dialog } from "@material-ui/core";
 import { MouseEventHandler, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
@@ -54,7 +54,7 @@ const AddEvent = () => {
         history.push('/');
     }
 
-    return <div>
+    return <div id="add-event">
         <Dialog 
             fullScreen 
             open={open} 
@@ -68,7 +68,7 @@ const AddEvent = () => {
                 } 
                 title="Add Event"
                 renderRightComponent={ () =>
-                    <AddButton saving={adding} onClick={handleSave} />
+                    <AddButton isSaving={adding} onClick={handleSave} />
                 } 
             />
             {error && 

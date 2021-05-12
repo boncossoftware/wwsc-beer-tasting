@@ -106,17 +106,17 @@ export const DateField = styled(p=>
     <Grid item>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDateTimePicker 
+                id="date"
                 margin="normal"
                 variant="inline"
                 inputVariant="outlined"
-                forma
                 ampm={true}
                 minDate={new Date()}
                 fullWidth
                 label={"Date & Time"}
                 disablePast
                 required
-                format="dd-MM-yyyy  h:mm aaa"
+                format={"dd-MM-yyyy  h:mm aaa"}
                 {...p} 
                 {...(p.onChange ? 
                     //Fake an onChange as a change event.
@@ -188,7 +188,7 @@ const RemoveButtonAdornment = styled(p=>
     </InputAdornment>
 )({});
 
-export const EditTasterItem = styled(({className, ...p})=>
+export const EditTasterItem = styled(({className, onRemove, ...p})=>
     <ListItem disableGutters dense className={className} >
         <TextField
             variant="outlined"
@@ -201,10 +201,9 @@ export const EditTasterItem = styled(({className, ...p})=>
             autoComplete="off"
             InputProps={{
                 endAdornment: (
-                    <RemoveButtonAdornment onRemove={p?.onRemove} />
+                    <RemoveButtonAdornment onRemove={onRemove} />
                 )
             }}
-            onChange={p?.onChange}
             {...p}
         />
     </ListItem>
@@ -247,7 +246,7 @@ export const EditBeerList = styled(p=>
     paddingTop: 0
 });
 
-export const EditBeerItem = styled(({className, ...p})=>
+export const EditBeerItem = styled(({className, onRemove, ...p})=>
     <ListItem disableGutters dense className={className} >
         <TextField
             variant="outlined"
@@ -259,11 +258,10 @@ export const EditBeerItem = styled(({className, ...p})=>
             placeholder="Beer Name"
             InputProps={{
                 endAdornment: (
-                    <RemoveButtonAdornment onRemove={p?.onRemove} />
+                    <RemoveButtonAdornment onRemove={onRemove} />
                 )
             }}
             autoComplete="off"
-            onChange={p?.onChange}
             {...p}
             
         />
