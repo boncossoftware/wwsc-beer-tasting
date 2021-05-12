@@ -31,7 +31,6 @@ const Events = () => {
     }
     
     const handleClickEvent = (item: TastingEvent): MouseEventHandler => () => {
-        alert(`/event/${item.id}/`);
         history.push(`/event/${item.id}/`);
     }
 
