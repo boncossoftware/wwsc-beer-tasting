@@ -11,7 +11,7 @@ export const AppBar = styled(p=>
 });
 
 export const AppBarTitle = styled(p=>
-    <Typography variant="h6" {...p} />
+    <Typography variant="h6" {...p} align="center" />
 )({
     flexGrow: 1,
 });
