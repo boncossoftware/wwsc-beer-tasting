@@ -22,12 +22,13 @@ import DateFnsUtils from '@date-io/date-fns';
 
 export type InputChangeEventHandler = (id: string, value: any) => void;
 
-const wrapOnChange = (p: any) => {
+const wrapOnChange = (p: any, parseValue?:((v:any) => any)) => {
+    const pV = parseValue || (v => v);
     return (p.onChange ? 
         //Fake an onChange as a change event.
         { 
             onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-                p.onChange(event?.target?.id, event?.target?.value)
+                p.onChange(event?.target?.id, pV(event?.target?.value))
             }
         }    
         :
@@ -189,12 +190,12 @@ const RemoveButtonAdornment = styled(p=>
     </InputAdornment>
 )({});
 
-export const EditTasterItem = styled(({className, onRemove, ...p})=>
+export const EditTasterItem = styled(({className, onRemove, id, ...p})=>
     <ListItem disableGutters dense className={className} >
         <TextField
+            id={id}
             variant="outlined"
             margin="normal"
-            id={p?.email}
             name={p?.email}
             value={p?.email} 
             fullWidth
@@ -216,25 +217,29 @@ export const AddTasterButton = styled(p=>
     <Button variant="outlined" {...p} color="primary">Add Taster</Button>
 )({});
 
-export const AddMeAsTasterField = styled(p=>
+export const AddMeAsTasterField = styled(({onChange, checked, ...p})=>
     <FormControl
         margin="normal"
     >
         <FormControlLabel
             control={
                 <Checkbox 
-                    checked={p?.checked} 
-                    {...(p.onChange ? 
+                    checked={checked} 
+                    inputProps={{
+                        id: "ownerAddedAsTaster"
+                    }}
+                    {...(onChange ? 
                         //Fake an onChange as a change event.
                         { 
                             onChange: e => {
-                                p.onChange("ownerAddedAsTaster", e?.target?.checked) 
+                                onChange("ownerAddedAsTaster", e?.target?.checked) 
                             }
                         }    
                         :
                         {}
                     )}
                     name="ownerAddedAsTaster"
+                    {...p}
                 />}
             label="Include me as taster"
         />
@@ -247,12 +252,12 @@ export const EditBeerList = styled(p=>
     paddingTop: 0
 });
 
-export const EditBeerItem = styled(({className, onRemove, ...p})=>
+export const EditBeerItem = styled(({className, onRemove, id, ...p})=>
     <ListItem disableGutters dense className={className} >
         <TextField
             variant="outlined"
             margin="normal"
-            id={p?.name}
+            id={id}
             name={p?.name}
             value={p?.name} 
             fullWidth
@@ -286,7 +291,7 @@ export const AsterisksAllowedField = styled(p=>
             name="asterisksAllowed"
             placeholder="2"
             {...p}
-            {...wrapOnChange(p)}
+            {...wrapOnChange(p, parseInt)}
         />
     </Grid>
 )({});

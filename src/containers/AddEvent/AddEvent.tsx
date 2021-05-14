@@ -2,24 +2,13 @@ import { Dialog } from "@material-ui/core";
 import { MouseEventHandler, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import EventEditForm, { EventEditFormChangeHandler } from "../../components/event-edit-form";
+import EventEditForm, { EventEditFormChangeHandler, DEFAULT_EVENT } from "../../components/event-edit-form";
 import {events, RootState, StoreError} from '../../store';
 import SlideUpTransition from 'components/slide-up-transition';
 import { TastingEvent } from "store/reducers/events/reducer";
 import AppBar from "components/app-bar";
 import ErrorMessage from "components/error-message";
 import {CancelButton, AddButton} from './AddEvent.styles';
-
-const DEFAULT_EVENT = {
-    id: 'Event',
-    name: '',
-    venue: '',
-    price: '',
-    date: null,
-    tasters: [''],
-    beers: [''],
-    asterisksAllowed: 2
-} as TastingEvent;
 
 const AddEvent = () => {
     const history = useHistory();

@@ -27,7 +27,20 @@ export type EventEditFormProps = {
     onChange?: EventEditFormChangeHandler;
 }
 
-const EventEditForm = ({event, onChange}: EventEditFormProps) => {
+export const DEFAULT_EVENT = {
+    id: 'Event',
+    name: '',
+    venue: '',
+    price: '',
+    bartender: '',
+    ownerAddedAsTaster: false,
+    date: null,
+    tasters: [''],
+    beers: [''],
+    asterisksAllowed: 2
+} as TastingEvent;
+
+const EventEditForm = ({event=DEFAULT_EVENT, onChange}: EventEditFormProps) => {
     const [autoFocus, setAutoFocus] = useState(false);
 
     const handleChange: InputChangeEventHandler = (field, value) => {
@@ -77,7 +90,7 @@ const EventEditForm = ({event, onChange}: EventEditFormProps) => {
         handleChange('beers', beers);
     }
     
-    return <Container>
+    return <Container id={'event-edit-form'}>
         <Section title="Event">
             <NameField value={event?.name} onChange={handleChange} />
             <VenueField value={event?.venue} onChange={handleChange} />
@@ -94,6 +107,7 @@ const EventEditForm = ({event, onChange}: EventEditFormProps) => {
                 {(event?.tasters||[]).map( (email, index) => 
                     <EditTasterItem
                         key={index}
+                        id={`taster-${index}`}
                         email={email} 
                         onChange={ (e: ChangeEvent<HTMLInputElement>) => 
                             handleChangeTaster(index, e) 
@@ -113,6 +127,7 @@ const EventEditForm = ({event, onChange}: EventEditFormProps) => {
                 <EditBeerItem
                     key={index}
                     name={name}
+                    id={`beer-${index}`}
                     onChange={ (e: ChangeEvent<HTMLInputElement>) => 
                         handleChangeBeer(index, e) 
                     }
