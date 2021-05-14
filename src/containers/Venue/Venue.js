@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 
 const Venue = () => {    
-    const {eventID} = useParams();
-    const { venue, date, price } = useSelector( s => s?.events?.items?.find( i => i.id === eventID ) ) || {};
+    const {id} = useParams();
+    const { venue, date, price } = useSelector( s => s?.events?.items?.find( i => i.id === id ) ) || {};
     const loading = useSelector( s => s?.events?.loading );
 
     const renderTime = () => {

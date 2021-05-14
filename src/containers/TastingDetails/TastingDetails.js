@@ -1,3 +1,4 @@
+import { ContactlessOutlined } from "@material-ui/icons";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from "react-router";
@@ -17,8 +18,8 @@ const TastingDetails = () => {
     const user = useSelector( s => s?.auth?.user);
     const event = useSelector( s => s?.events?.items?.find( e => e.id === id));
     const eventLoading = useSelector( s => s?.events?.itemsLoading[id] );
-    const answer = useSelector( s => s?.answers?.items?.find( e => e.id === id));
-    const answerLoading = useSelector( s => s?.answers?.itemsLoading[id] );
+    const answer = useSelector( s => s?.answers?.items?.find( e => e.id === user.uid));
+    const answerLoading = useSelector( s => s?.answers?.itemsLoading[user.uid] );
     const updating = useSelector( s => s?.answers?.update.updating);
     const updated = useSelector( s => s?.answers?.update.updated);
     const updateError = useSelector( s => s?.answers?.update.error);
@@ -42,6 +43,8 @@ const TastingDetails = () => {
 
     const loading = eventLoading || answerLoading;
     const isBartender = (event?.bartender && (event.bartender === user?.email));
+
+    console.log(answer);
 
     //Load the event (if needed)
     useEffect( () => {
@@ -81,7 +84,7 @@ const TastingDetails = () => {
         if (changes && !window.confirm(CONFIRM_MESSAGE) ) {
             return;
         }
-        history.goBack();
+        history.push(`/event/${id}/tasting`);
     }
 
     const handleSave = () => {

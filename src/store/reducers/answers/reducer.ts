@@ -67,7 +67,9 @@ export default function answersReducer(
             return state;
         }
         case ACTION_EVENT_ANSWERS_UPDATED: {
-            state.update.updated = action.payload; 
+            const item = action.payload;
+            state.update.updated = item; 
+            state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
             return state;
         }
         case ACTION_EVENT_ANSWERS_UPDATE_ERROR: {

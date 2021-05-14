@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, getActionRedutions} from 'testing/test-utils';
+import { render, screen, getActionRedutions} from 'testing/test-utils';
 import Events from './Events';
 import {
     ACTION_EVENTS_LOADING,
