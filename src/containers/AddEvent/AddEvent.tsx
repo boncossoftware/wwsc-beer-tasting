@@ -11,9 +11,10 @@ import ErrorMessage from "components/error-message";
 import {CancelButton, AddButton} from './AddEvent.styles';
 
 const DEFAULT_EVENT = {
-    id: '',
+    id: 'Event',
     name: '',
     venue: '',
+    price: '',
     date: null,
     tasters: [''],
     beers: [''],

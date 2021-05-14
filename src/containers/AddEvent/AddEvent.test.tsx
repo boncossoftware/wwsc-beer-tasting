@@ -1,12 +1,10 @@
-import { render, screen } from 'testing/test-utils';
+import ReactDOM from 'react-dom';
+import { getActionRedutions, render, screen } from 'testing/test-utils';
 import AddEvent from './AddEvent';
-import {
-    ACTION_EVENTS_LOADING,
-    ACTION_EVENTS_LOAD
-} from 'store/reducers/events/load';
 import { RootState, StoreError } from 'store';
 import { act, fireEvent } from '@testing-library/react';
 import {resetFirebaseMock} from 'testing/mock-firebase';
+import { ACTION_EVENTS_ADD, ACTION_EVENTS_ADDING } from 'store/reducers/events/add';
 
 const createMockState = () => ({ 
     auth: {
@@ -20,7 +18,6 @@ const createMockState = () => ({
         },
     }
 } as RootState);
-
 
 test('renders correctly', () => {
     render( <AddEvent />);
@@ -70,7 +67,7 @@ test('renders handle add', async () => {
     resetFirebaseMock();
 
     const mockState = createMockState();
-    let dispatch;
+    let dispatch: any;
     render( <AddEvent />, {
         initialState: mockState,
         wrapStore: (s:any) => {
@@ -81,35 +78,51 @@ test('renders handle add', async () => {
     });
     
     const name = document.getElementById('name') as HTMLInputElement;
-    name.value = 'Event';
+    await act( async () => { 
+        fireEvent.change(name, {target:{ value: 'Event'}}) 
+    });
     
     const venue = document.getElementById('venue') as HTMLInputElement;
-    venue.value = 'Place';
+    await act( async () => { 
+        fireEvent.change(venue, {target:{ value: 'Place'}}) 
+    });
 
     const date = document.getElementById('date') as HTMLInputElement;
-    date.value = '12-05-2021  12:00 pm';
+    await act( async () => { 
+        fireEvent.change(date, {target:{ value: '12-05-2021 12:00 pm'}}) 
+    });
 
     const price = document.getElementById('price') as HTMLInputElement;
-    price.value = 'Afl. 75';
-
+    await act( async () => { 
+        fireEvent.change(price, {target:{ value: 'Afl. 75'}}) 
+    });
+    
     const addButton = screen.getByText("Add");
-    console.log(addButton);
-    await act( async () => fireEvent.click(addButton) );
+    await act( async () => { fireEvent.click(addButton) } );
 
-    screen.debug();
-
-    return
     const mockFirebase = require('../../store/firebase').default;
     const collectionCall = mockFirebase.firestore().collection.mock.calls; 
-    //Once the the load and once for onSnapshot (in subscribe).
-    expect(collectionCall.length).toBe(2); 
+    
+    //Once during add.
+    expect(collectionCall.length).toBe(1); 
     expect(collectionCall[0][0]).toBe('events');
 
-    const resetAction = dispatch.mock.calls[0][0];
-    const reductions = await getActionRedutions(resetAction, mockState);
-    expect(reductions).toStrictEqual([
-        {type: ACTION_EVENTS_LOADING, payload: true},
-        {type: ACTION_EVENTS_LOAD, payload:[]},
-        {type: ACTION_EVENTS_LOADING, payload: false},
-    ]);
+    expect(dispatch).toBeTruthy();
+    const addAction = dispatch.mock.calls[0][0];
+    const reductions = await getActionRedutions(addAction, mockState);
+    expect(reductions[0]).toStrictEqual(
+        {type: ACTION_EVENTS_ADDING, payload: true}
+    );
+
+    expect(reductions[1].type).toStrictEqual(ACTION_EVENTS_ADD);
+    const payload = reductions[1].payload;
+    expect(payload.name).toStrictEqual(name.value);
+    expect(payload.venue).toStrictEqual(venue.value);
+    expect(payload.date).toStrictEqual(new Date('2021-05-12 12:00'));
+    expect(payload.price).toStrictEqual('Afl. 75');
+
+    expect(reductions[2]).toStrictEqual(
+        {type: ACTION_EVENTS_ADDING, payload: false}
+    );
 });
+

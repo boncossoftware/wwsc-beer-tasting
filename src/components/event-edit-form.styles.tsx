@@ -116,7 +116,8 @@ export const DateField = styled(p=>
                 label={"Date & Time"}
                 disablePast
                 required
-                format={"dd-MM-yyyy  h:mm aaa"}
+                mask={"__-__-____  __:__ _m"}
+                format={"dd-MM-yyyy  hh:mm aaa"}
                 {...p} 
                 {...(p.onChange ? 
                     //Fake an onChange as a change event.
