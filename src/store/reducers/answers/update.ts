@@ -23,6 +23,7 @@ export default function update(id: string, answer: TastingAnswer) {
             
             const doc = await itemRef.get();
             answer = answerFromDoc(doc);
+            
             dispatch({ type: ACTION_EVENT_ANSWERS_UPDATED, payload: answer});
         }
         catch (error) {

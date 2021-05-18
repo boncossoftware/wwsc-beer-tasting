@@ -11,17 +11,19 @@ export const ACTION_EVENTS_LOAD = 'events/load';
 export const ACTION_EVENTS_LOAD_ERROR = 'events/load_error';
 
 export default function load() {
-    return async (dispatch: Dispatch<AnyAction>, getState: (() => RootState)) => {
+    return async (dispatch: Dispatch<AnyAction>, getState: (() => RootState), ...p:any[]) => {
         dispatch({ type: ACTION_EVENTS_LOADING, payload: true});
         try {
             const { auth } = getState();
             if (!auth.user?.email) {
                 throw new StoreError('No current user.')
             }
+            
             const relatedEventsColRef = (
                 firebase.firestore()
                 .collection('events')
                 .where('related', 'array-contains', auth.user?.email)
+                .orderBy('date', 'desc')
             );
             const result = await relatedEventsColRef.get();
             const items = result.docs.map( eventFromDoc );

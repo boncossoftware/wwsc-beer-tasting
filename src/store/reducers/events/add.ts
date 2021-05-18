@@ -1,11 +1,10 @@
-import firebase from 'store/firebase';
+import firebase, { getCurrentUserInfo } from 'store/firebase';
 import "firebase/auth";
 import "firebase/firestore";
 
 import { TastingEvent } from "./reducer";
 import { AnyAction, Dispatch } from "redux";
 import { eventFromDoc, eventToDocData, propsForEvent } from "./utils";
-import { getCurrentUserInfo } from "store/firebase";
 
 export const ACTION_EVENTS_ADDING = 'events/adding';
 export const ACTION_EVENTS_ADD = 'events/add';
@@ -25,6 +24,7 @@ export default function add(event: TastingEvent) {
             dispatch({ type: ACTION_EVENTS_ADD, payload: event});
         }
         catch (error) {
+            console.log('ERROR', error);
             dispatch({ type: ACTION_EVENTS_ADD_ERROR, payload: error});
         }
         dispatch({ type: ACTION_EVENTS_ADDING, payload: false});

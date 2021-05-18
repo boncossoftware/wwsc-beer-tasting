@@ -3,8 +3,8 @@ import { useParams } from "react-router";
 import TasterList from "../../components/taster-list";
 
 const Tasters = () => {    
-    const {eventID} = useParams();
-    const { tasters } = useSelector( s => s?.events?.items?.find( i => i.id === eventID ) ) || {};
+    const {id} = useParams();
+    const { tasters } = useSelector( s => s?.events?.items?.find( i => i.id === id ) ) || {};
     const loading = useSelector( s => s?.events?.loading );
     return <>
         {loading && "loading..."}

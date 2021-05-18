@@ -30,7 +30,7 @@ if (!TEST_ENV && (firebase.apps.length === 0)) {
 }
 
 export function getCurrentUserInfo(): {uid: string, email: string} {
-    const user: (firebase.User | null) = firebase.auth()?.currentUser;
+    const user: (firebase.User | null) = _firebase.auth()?.currentUser;
     if (!user) {
         throw new StoreError('No current user.');
     }
@@ -38,7 +38,6 @@ export function getCurrentUserInfo(): {uid: string, email: string} {
     if (!(uid && email)) {
         throw new StoreError('No current user.');
     }
-    
     return {uid, email};
 }
 
