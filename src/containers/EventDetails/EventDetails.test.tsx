@@ -1,43 +1,51 @@
 import { render, screen, getActionRedutions} from 'testing/test-utils';
-import Events from './Events';
+import EventDetails from './EventDetails';
 import {
-    ACTION_EVENTS_LOADING,
-    ACTION_EVENTS_LOAD
-} from 'store/reducers/events/load';
-import { RootState, StoreError } from 'store';
+    ACTION_EVENTS_ITEM_LOADING,
+    ACTION_EVENTS_ITEM_LOAD
+} from 'store/reducers/events/load-item';
+import { RootState } from 'store';
 import { act } from '@testing-library/react';
 import {resetFirebaseMock} from 'testing/mock-firebase';
+import { StoreError } from '../../store';
+
+const TEST_ID = 'test-id';
+
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'),
+    useParams: () =>({ id: TEST_ID }),
+}));
 
 const createMockState = () => ({ 
     auth: {
         user: {email:'test', uid: 'test'}
     },
     events: { 
-        loading: false,
-        itemsLoading: {},
-        itemsError: {},
-        loaded: false,
-        items: null,
-        error: null,
+        itemsLoading: {[TEST_ID]: false },
+        itemsError: {[TEST_ID]: false }
     } 
 } as RootState);
 
 
 test('renders correctly', () => {
-    render( <Events />);
+    resetFirebaseMock();
 
-    const container = document.getElementById('events');
+    render( <EventDetails />);
+
+    const container = document.getElementById('event-details');
     expect(container).toBeInTheDocument();
 });
 
 
 test('renders errors correctly', () => {
+    resetFirebaseMock();
+
     const mockState = createMockState();
     const error = new StoreError('error', 1);
-    mockState.events.error = error;
+    mockState.events.itemsError[TEST_ID] = error;
     
     const mockDispatch = jest.fn();
-    render( <Events />, {
+    render( <EventDetails />, {
         initialState: mockState,
         wrapStore: (s:any) => ({
             ...s, 
@@ -53,11 +61,13 @@ test('renders errors correctly', () => {
 
 
 test('renders loading correctly', () => {
+    resetFirebaseMock();
+
     const mockState = createMockState();
-    mockState.events.loading = true;
+    mockState.events.itemsLoading[TEST_ID] = true;
     
     const mockDispatch = jest.fn();
-    render( <Events />, {
+    render( <EventDetails />, {
         initialState: mockState,
         wrapStore: (s:any) => ({
             ...s, 
@@ -70,12 +80,12 @@ test('renders loading correctly', () => {
 });
 
 
-test('renders handle reset', async () => {
+test('renders handle load', async () => {
     resetFirebaseMock();
 
     const mockState = createMockState();
     let dispatch;
-    render( <Events />, {
+    render( <EventDetails />, {
         initialState: mockState,
         wrapStore: (s:any) => {
             dispatch = jest.fn(s.dispatch)
@@ -88,15 +98,28 @@ test('renders handle reset', async () => {
 
     const mockFirebase = require('../../store/firebase').default;
     const collectionCall = mockFirebase.firestore().collection.mock.calls; 
-    //Once the the load and once for onSnapshot (in subscribe).
-    expect(collectionCall.length).toBe(2); 
+    const docCall = mockFirebase.firestore().doc.mock.calls; 
+
+    //Once the the load.
+    expect(collectionCall.length).toBe(1); 
     expect(collectionCall[0][0]).toBe('events');
 
-    const resetAction = dispatch.mock.calls[0][0];
-    const reductions = await getActionRedutions(resetAction, mockState);
-    expect(reductions).toStrictEqual([
-        {type: ACTION_EVENTS_LOADING, payload: true},
-        {type: ACTION_EVENTS_LOAD, payload:[]},
-        {type: ACTION_EVENTS_LOADING, payload: false},
-    ]);
+    expect(docCall.length).toBe(1); 
+    expect(docCall[0][0]).toBe(TEST_ID);
+
+    const loadItemAction = dispatch.mock.calls[0][0];
+    const reductions = await getActionRedutions(loadItemAction, mockState);
+    expect(reductions[0]).toStrictEqual({
+        type: ACTION_EVENTS_ITEM_LOADING, 
+        payload: {id: TEST_ID, loading: true}
+    });
+    expect(reductions[1].type).toEqual(ACTION_EVENTS_ITEM_LOAD);
+    expect(reductions[1].payload).toBeTruthy();
+    expect(reductions[1].payload.id).toEqual(TEST_ID);
+    expect(reductions[2]).toStrictEqual({
+        type: ACTION_EVENTS_ITEM_LOADING, 
+        payload: {id: TEST_ID, loading: false}
+    });
+    
 });
+

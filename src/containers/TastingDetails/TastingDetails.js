@@ -44,8 +44,6 @@ const TastingDetails = () => {
     const loading = eventLoading || answerLoading;
     const isBartender = (event?.bartender && (event.bartender === user?.email));
 
-    console.log(answer);
-
     //Load the event (if needed)
     useEffect( () => {
         dispatch( events.loadItem(id) );

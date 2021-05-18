@@ -22,8 +22,8 @@ import {
 } from "./load";
 import { 
     ACTION_EVENTS_ITEM_LOADING, 
-    ACTION_EVENTS_LOAD_ITEM, 
-    ACTION_EVENTS_LOAD_ITEM_ERROR 
+    ACTION_EVENTS_ITEM_LOAD, 
+    ACTION_EVENTS_ITEM_LOAD_ERROR 
 } from "./load-item";
 import {StoreError} from '../../reducer';
 
@@ -54,7 +54,7 @@ export type TastingEvent = {
 export type TastingEventsState = {
     loading: boolean;
     itemsLoading: {[key: string]: boolean};
-    itemsError: {[key: string]: Error};
+    itemsError: {[key: string]: StoreError};
     loaded: boolean;
     items: TastingEvent[]|null;
     error: StoreError|null;
@@ -69,7 +69,7 @@ export type TastingEventsState = {
         error: StoreError|null,
     },
     allowEditingAllowing: {[key: string]: boolean};
-    allowEditingError: {[key: string]: Error};
+    allowEditingError: {[key: string]: StoreError};
 }
 
 const initialState: TastingEventsState = {
@@ -116,12 +116,12 @@ export default function eventsReducer(
             state.itemsLoading[id] = loading;
             return state;
         }
-        case ACTION_EVENTS_LOAD_ITEM: {
+        case ACTION_EVENTS_ITEM_LOAD: {
             const item = action.payload;
             state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
             return state;
         }
-        case ACTION_EVENTS_LOAD_ITEM_ERROR: {
+        case ACTION_EVENTS_ITEM_LOAD_ERROR: {
             const {id, error} = action.payload;
             state.itemsError[id] = error;
             return state;

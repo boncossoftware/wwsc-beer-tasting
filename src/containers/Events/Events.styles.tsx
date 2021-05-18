@@ -8,7 +8,6 @@ import {
     ListItemSecondaryAction,
     Typography,
     ListSubheader,
-    Divider
 } from "@material-ui/core";
 import { 
     AddCircleOutline,

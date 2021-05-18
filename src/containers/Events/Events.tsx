@@ -49,22 +49,20 @@ const Events = () => {
                 {error && <ErrorMessage>{`${error.message}(${error.code})`}</ErrorMessage>}
                 {items && items.map( (item, index) => {
                     const newMonth = items[index-1]?.date?.getMonth() != item.date?.getMonth();
-                    return <>
+                    return <div key={index}>
                         {newMonth && 
-                            <EventListSectionHeader 
-                                key={'header-'+index} 
-                            >
+                            <EventListSectionHeader>
                                 {item.formattedMonth()}
                             </EventListSectionHeader>
                         }
-                        <EventListItem key={index} onClick={ handleClickEvent(item) }>
+                        <EventListItem onClick={ handleClickEvent(item) }>
                             <EventListItemDetails 
                                 name={item.name} 
                                 venue={item.venue} 
                                 date={item.formattedDate()}
                             />
                         </EventListItem>
-                    </>
+                    </div>
                 })} 
                 {items?.length === 0 && <>No events.<br/></>}
             </>
