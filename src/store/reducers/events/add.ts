@@ -24,7 +24,6 @@ export default function add(event: TastingEvent) {
             dispatch({ type: ACTION_EVENTS_ADD, payload: event});
         }
         catch (error) {
-            console.log('ERROR', error);
             dispatch({ type: ACTION_EVENTS_ADD_ERROR, payload: error});
         }
         dispatch({ type: ACTION_EVENTS_ADDING, payload: false});
