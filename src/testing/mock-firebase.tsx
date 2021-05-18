@@ -13,6 +13,7 @@ const auth = {
 const createMockDocument = (ref: any, ) => {
     if (!ref._document) {
         ref._document = {
+            id: ref.id,
             data: () => ref._data
         }
     }
@@ -25,8 +26,14 @@ const createMockDocumentRef = (data: any) => ({
     get: function (){ return createMockDocument(this) },
 });
 
-const createMockFireStore = () => ({
+const createMockFireStore = (options?: any) => ({
     collection: jest.fn().mockReturnThis(),
+    doc: jest.fn( function(this: any, id: string) {
+        const docData = options?.getDocDataForID(id) || {};
+        delete this.get;
+        this.get = () => createMockDocument({id, _data: docData});
+        return this;
+    }),
     where: jest.fn().mockReturnThis(),
     orderBy: jest.fn().mockReturnThis(),
     add: (d: any) => createMockDocumentRef(d),
@@ -42,6 +49,6 @@ const mockFirebase = {
 };
 export default mockFirebase;
 
-export const resetFirebaseMock = () => {
-    firestore = createMockFireStore();
+export const resetFirebaseMock = (options?: any) => {
+    firestore = createMockFireStore(options);
 }

@@ -32,8 +32,7 @@ const AppBar = ({title,
                     <AccountButton onClickLogout={handleLogout} />
                 }
                 <AppBarTitle>{title}</AppBarTitle>
-                {renderRightComponent()}
-                
+                {renderRightComponent()}    
             </Toolbar>
         </BaseAppBar>
     );
