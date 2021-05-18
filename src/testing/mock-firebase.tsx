@@ -24,15 +24,25 @@ const createMockDocumentRef = (data: any) => ({
     _data: data,
     id: '12345678910', 
     get: function (){ return createMockDocument(this) },
+    update: function (){ return this }
 });
 
 const createMockFireStore = (options?: any) => ({
     collection: jest.fn().mockReturnThis(),
     doc: jest.fn( function(this: any, id: string) {
         const docData = options?.getDocDataForID(id) || {};
-        delete this.get;
-        this.get = () => createMockDocument({id, _data: docData});
-        return this;
+        const updateData = options?.updateDocDataForID || (() => null);
+        return {
+            ...this,
+            delete: async () => createMockDocumentRef({id, _data: docData}),
+            update: async (d: any) => {
+                updateData(id, d);
+                return createMockDocumentRef({id, _data: d})
+            },
+            get: async () => {
+                return createMockDocument({id, _data: docData})
+            },
+        };
     }),
     where: jest.fn().mockReturnThis(),
     orderBy: jest.fn().mockReturnThis(),

@@ -92,14 +92,14 @@ const EventEditForm = ({event=DEFAULT_EVENT, onChange}: EventEditFormProps) => {
     
     return <Container id={'event-edit-form'}>
         <Section title="Event">
-            <NameField value={event?.name} onChange={handleChange} />
-            <VenueField value={event?.venue} onChange={handleChange} />
+            <NameField value={event?.name || DEFAULT_EVENT.name} onChange={handleChange} />
+            <VenueField value={event?.venue || DEFAULT_EVENT.venue} onChange={handleChange} />
             <DateField value={event?.date} onChange={handleChange} />
-            <PriceField value={event?.price} onChange={handleChange} />
+            <PriceField value={event?.price || DEFAULT_EVENT.price} onChange={handleChange} />
         </Section>
         
         <Section title="Bartender">
-            <BartenderEmailField value={event?.bartender} onChange={handleChange} />
+            <BartenderEmailField value={event?.bartender || DEFAULT_EVENT.bartender} onChange={handleChange} />
         </Section>
 
         <Section title="Tasters">
@@ -140,7 +140,7 @@ const EventEditForm = ({event=DEFAULT_EVENT, onChange}: EventEditFormProps) => {
         </Section>
         <Section title="Options">
             <AsterisksAllowedField 
-                value={event?.asterisksAllowed} 
+                value={event?.asterisksAllowed || DEFAULT_EVENT.asterisksAllowed} 
                 onChange={handleChange}
             />
         </Section>
