@@ -93,6 +93,10 @@ const initialState: TastingEventsState = {
     allowEditingError: {}
 }
 
+const sortItems = (i1: TastingEvent, i2: TastingEvent): number => {
+    return (i2?.date?.getTime()||0) - (i1?.date?.getTime()||0);
+}
+
 export default function eventsReducer(
     state:TastingEventsState=initialState, 
     action: AnyAction
@@ -103,7 +107,7 @@ export default function eventsReducer(
             return state;
         }
         case ACTION_EVENTS_LOAD: {
-            state.items = action.payload; 
+            state.items = action.payload?.sort(sortItems); 
             return state;
         }
         case ACTION_EVENTS_LOAD_ERROR: {
@@ -118,7 +122,7 @@ export default function eventsReducer(
         }
         case ACTION_EVENTS_ITEM_LOAD: {
             const item = action.payload;
-            state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
+            state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ].sort(sortItems);
             return state;
         }
         case ACTION_EVENTS_ITEM_LOAD_ERROR: {
@@ -131,7 +135,9 @@ export default function eventsReducer(
             return state;
         }
         case ACTION_EVENTS_ADD: {
-            state.add.added = action.payload; 
+            const item = action.payload;
+            state.add.added = item; 
+            state.items = [ item, ...(state.items||[]) ].sort(sortItems);
             return state;
         }
         case ACTION_EVENTS_ADD_ERROR: {
@@ -149,7 +155,9 @@ export default function eventsReducer(
             return state;
         }
         case ACTION_EVENTS_UPDATE: {
-            state.update.updated = action.payload; 
+            const item = action.payload;
+            state.update.updated = item;
+            state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
             return state;
         }
         case ACTION_EVENTS_UPDATE_ERROR: {

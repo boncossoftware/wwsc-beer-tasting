@@ -34,13 +34,16 @@ const createMockFireStore = (options?: any) => ({
         const updateData = options?.updateDocDataForID || (() => null);
         return {
             ...this,
-            delete: async () => createMockDocumentRef({id, _data: docData}),
+            id: id,
+            _data: docData,
+            delete: async () => this,
             update: async (d: any) => {
                 updateData(id, d);
-                return createMockDocumentRef({id, _data: d})
+                this._data = d;
+                return this;
             },
             get: async () => {
-                return createMockDocument({id, _data: docData})
+                return createMockDocument({id, _data: this._data})
             },
         };
     }),

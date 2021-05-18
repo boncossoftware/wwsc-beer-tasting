@@ -20,6 +20,7 @@ export default function update(event: TastingEvent) {
             if (!event?.id) {
                 throw new StoreError('Event does not have an ID');
             }
+            
             const props = propsForEvent(uid, email, event); //Add the owner as related.
             const docRef = firebase.firestore().collection('events').doc(event.id);
             const resultsRef = firebase.firestore().collection('results').doc(event.id);
