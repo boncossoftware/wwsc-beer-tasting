@@ -22,8 +22,16 @@ import {
     VenueBarItem
  } from './EventDetails.styles';
 
+const getBaseURL = (routeMatchURL: string) => {
+    return routeMatchURL.endsWith('/') ? routeMatchURL.slice(0, routeMatchURL.length - 1 ) : routeMatchURL;
+}
+
+const getActiveSection = (routeMatchURL: string) => {
+    const fullURL = window.location.pathname;
+    return fullURL.replace(routeMatchURL,'').replace('/', '');
+}
+
 const EventDetails = () => {    
-    
     const {id} = useParams<{id: string}>();
     const history = useHistory();
     const { path, url } = useRouteMatch();
@@ -33,8 +41,8 @@ const EventDetails = () => {
     const error = useSelector<RootState, StoreError|null>( s => s?.events?.itemsError[id] );
     const item = useSelector<RootState, TastingEvent|undefined>( s => s?.events?.items?.find( i => i.id === id ) );
     const canEdit = (item?.owner === user?.uid);
-    const activeSection = history.location.pathname.replace(url,'');
-    const baseURL = url.endsWith('/') ? url.slice(0, url.length - 2 ) : url;
+    const baseURL = getBaseURL(url);
+    const activeSection = getActiveSection(url);
 
     useEffect( () => {
         dispatch( events.loadItem(id) );
@@ -50,9 +58,9 @@ const EventDetails = () => {
 
     const handleChangeActiveSection = (_: object, section: any) => {
         if (section === activeSection) return; //Already at section.
-        history.push(`${url}/${section}`);
+        history.push(`${baseURL}/${section}`);
+        
     }
-
     return (
         <Container 
             id="event-details"
@@ -93,10 +101,10 @@ const EventDetails = () => {
                 value={activeSection} 
                 onChange={handleChangeActiveSection}
             >
-                <TastingBarItem value={'/tasting'} />
-                <BeersBarItem value={'/beers'} />
-                <TastersBarItem value={'/tasters'} />
-                <VenueBarItem value={'/venue'} />
+                <TastingBarItem value={'tasting'} />
+                <BeersBarItem value={'beers'} />
+                <TastersBarItem value={'tasters'} />
+                <VenueBarItem value={'venue'} />
             </BottomNavigationBar>
         </Container>
     )
