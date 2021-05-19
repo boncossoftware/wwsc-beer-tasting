@@ -2,11 +2,11 @@ import {
     Button, 
     styled, 
     Typography, 
-    CircularProgress as BaseCircularProgress
 } from "@material-ui/core";
 import {
     Alert
 } from '@material-ui/lab';
+import FullPageCircularProgress from "components/full-page-circular-progress";
 
 export const CancelButton = styled( (p) => 
     <Button {...p} color="inherit" >
@@ -26,12 +26,7 @@ export const UpdateButton = styled( ({isSaving, ...p}: any) =>
     fontWeight: 'bold'
 }));
 
-export const CircularProgress = styled(p=> 
-    <BaseCircularProgress {...p} size={40} />    
-)(({theme}) => ({
-    marginLeft: 'calc(50% - 20px)',
-    marginTop: `calc(50vh - ${theme.mixins.toolbar.minHeight}px - 20px)`
-}));
+export const CircularProgress = FullPageCircularProgress;
 
 export const InformationMessage = styled(p=>
     <Alert 

@@ -1,6 +1,5 @@
 import { 
     IconButton, 
-    CircularProgress as BaseCircularProgress,
     styled, 
     List,
     ListItem,
@@ -13,6 +12,7 @@ import {
     AddCircleOutline,
     LocationCity
 } from "@material-ui/icons";
+import FullPageCircularProgress from "components/full-page-circular-progress";
 
 export const AddButton = styled(p=> 
     <IconButton color="inherit" {...p}><AddCircleOutline/></IconButton>
@@ -20,12 +20,7 @@ export const AddButton = styled(p=>
 
 });
 
-export const CircularProgress = styled(p=> 
-    <BaseCircularProgress {...p} size={40} />    
-)(({theme}) => ({
-    marginLeft: 'calc(50% - 20px)',
-    marginTop: `calc(50vh - ${theme.mixins.toolbar.minHeight}px - 20px)`
-}));
+export const CircularProgress = FullPageCircularProgress;
 
 export const EventList = styled(p=>
     <List {...p}/>

@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
@@ -8,6 +9,7 @@ import { Result } from "store/reducers/results/reducer";
 import TastingAnswers from "../../components/tasting-answers";
 import TastingResults from "../../components/tasting-results";
 import { answers, events, results } from "../../store";
+import { CircularProgress } from './Tasting.styles';
 
 export type TastingProps = {
     baseURL : string
@@ -73,8 +75,10 @@ const Tasting = ({baseURL}: TastingProps) => {
         dispatch( results.calculate(id) );
     }
 
+    if (answersLoading) {
+        return <CircularProgress />
+    }
     return <>
-        {answersLoading && <span>Loading...<br/></span>}
         {answersError && <span>{answersError.message}<br/></span>}
         {canEdit && <div><span>Allow Editing</span> <input type="checkbox" onChange={handleAllowEditing} checked={Boolean(editingAllowed)} /></div> }
         <hr/>
