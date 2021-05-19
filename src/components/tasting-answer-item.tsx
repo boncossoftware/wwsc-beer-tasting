@@ -1,5 +1,7 @@
 import Rating from "./rating"
 import { MouseEventHandler } from "react";
+import { ListItem, ListItemText, ListSubheader, Typography } from "@material-ui/core";
+import { Asterisks, DisclosureIndicator } from './tasting-answer-item.styles';
 
 export type TastingAnswerItemProps = {
     roundIndex: number, 
@@ -20,14 +22,30 @@ const TastingAnswerItem = ({
     canEdit=false, 
     onClick
 }: TastingAnswerItemProps) => {
-    return <div onClick={ (canEdit ? onClick : undefined) } > 
-        {showAsPoured ? <> {roundIndex + 1}{roundIndex % 5 ? 'th' : 'st'} Poured </> : <> Round {roundIndex + 1} </>}
-        - {selectedBeer || 'Choose Beer'} 
-        { !showAsPoured && <> - Rating: <Rating rating={rating} /> </> } 
-        { !showAsPoured && <>- Asterisk: { hasAsterisk ? 'yes' : 'no'} </> }
-        { canEdit && <> {">"} </>}
-        <br/>
-        <hr/>
-    </div>
+    return <>
+        <ListSubheader>
+            {showAsPoured ? <> {roundIndex + 1}{roundIndex % 5 ? 'th' : 'st'} Poured </> : <> Round {roundIndex + 1} </>}
+        </ListSubheader>
+        <ListItem 
+            onClick={ (canEdit ? onClick : undefined) } 
+            divider
+            button
+            disabled={!canEdit}
+        >
+            <ListItemText
+                primary={<>
+                    {selectedBeer || 'Choose Beer'}
+                    { hasAsterisk && <Asterisks />}
+                </>}
+                secondary={ !showAsPoured && <>
+                        <Typography variant='caption'> 
+                            Rating <Rating rating={rating} /> 
+                        </Typography> 
+                    </>
+                } 
+            />  
+            { canEdit && <DisclosureIndicator />}
+        </ListItem>
+    </>;
 }
 export default TastingAnswerItem;

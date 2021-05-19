@@ -88,7 +88,6 @@ const Tasting = ({baseURL}: TastingProps) => {
                 value={editingAllowed} 
             />
         }
-        <hr/>
         {userAnswers && 
             <TastingAnswers 
                 answers={userAnswers} 
