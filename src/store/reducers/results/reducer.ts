@@ -1,4 +1,5 @@
 import { AnyAction } from "redux";
+import { StoreError } from "store/reducer";
 import { ACTION_EVENT_RESULTS_CALCULATED, ACTION_EVENT_RESULTS_CALCULATE_ERROR, ACTION_EVENT_RESULTS_CALCULATING } from "./calculate";
 import { ACTION_EVENT_RESULTS_LOAD_ITEM_ERROR } from "./load-item";
 import { ACTION_EVENT_RESULTS_LOAD_ITEM } from "./load-item";
@@ -16,10 +17,10 @@ export type Result = {
 export type ResultsState = {
     loading: boolean;
     itemsLoading: {[key: string]: boolean};
-    itemsError: {[key: string]: Error};
+    itemsError: {[key: string]: StoreError};
     items: Result[]|null;
     itemsCalculating: {[key: string]: boolean};
-    itemsCalculationError: {[key: string]: Error};
+    itemsCalculationError: {[key: string]: StoreError};
 }
 
 const initialState: ResultsState = {

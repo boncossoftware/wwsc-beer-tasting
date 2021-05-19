@@ -1,33 +1,49 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
+import { RootState, StoreError, UserInfo } from "store/reducer";
+import { TastingAnswer } from "store/reducers/answers/reducer";
+import { TastingEvent } from "store/reducers/events/reducer";
+import { Result } from "store/reducers/results/reducer";
 import TastingAnswers from "../../components/tasting-answers";
 import TastingResults from "../../components/tasting-results";
 import { answers, events, results } from "../../store";
 
-const Tasting = ({baseURL}) => {    
+export type TastingProps = {
+    baseURL : string
+}
+
+const Tasting = ({baseURL}: TastingProps) => {    
     const history = useHistory();
-    const {id} = useParams();
+    const {id} = useParams<{id: string}>();
 
     const dispatch = useDispatch();
-    const user = useSelector( s => s?.auth?.user);
+    const user = useSelector<RootState, UserInfo|null>( s => s?.auth?.user);
     
-    const answersLoading = useSelector( s => s?.answers?.itemsLoading[user.uid] );
-    const answersError = useSelector( s => s?.answers?.itemsError[user.uid] );
-    const userAnswers = useSelector( s => s?.answers?.items?.find( i => i.id === user.uid ) );
+    const uid = user?.uid || '';
+    const answersLoading = useSelector<RootState, boolean>( s => s?.answers?.itemsLoading[uid] );
+    const answersError = useSelector<RootState, StoreError|undefined>( s => s?.answers?.itemsError[uid] );
+    const userAnswers = useSelector<RootState, TastingAnswer|undefined>( 
+        s => s?.answers?.items?.find( i => i.id === uid ) 
+    );
 
-    const resultsLoading = useSelector( s => s?.results?.itemsLoading[id] );
-    const resultsError = useSelector( s => s?.results?.itemsError[id] );
-    const tastingResults = useSelector( s => s?.results?.items?.find( i => i.id === id ) );
-
-    const resultsCalculating = useSelector( s => s?.results?.itemsCalculating[id] );
-    const resultsCalculationError = useSelector( s => s?.results?.itemsCalculationError[id] );
+    const resultsLoading = useSelector<RootState, boolean>( s => s?.results?.itemsLoading[id] );
+    const resultsError = useSelector<RootState, StoreError|undefined>( s => s?.results?.itemsError[id] );
+    const tastingResults = useSelector<RootState, Result|undefined>( 
+        s => s?.results?.items?.find( i => i.id === id ) 
+    );
+    const resultsCalculating = useSelector<RootState, boolean>( s => s?.results?.itemsCalculating[id] );
+    const resultsCalculationError = useSelector<RootState, StoreError|undefined>( 
+        s => s?.results?.itemsCalculationError[id] 
+    );
     
     const {
         bartender, 
         owner,
         editingAllowed=false
-    } = useSelector( s => s?.events?.items?.find( i => i.id === id ) ) || {};
+    } = useSelector<RootState, TastingEvent>( 
+        s => s?.events?.items?.find( i => i.id === id ) || {} as TastingEvent 
+    );
     
     const isBartender = bartender === user?.email;
     const canEdit = (owner === user?.uid);
@@ -49,7 +65,7 @@ const Tasting = ({baseURL}) => {
         } 
     }
 
-    const handleClickItemAtIndex = (index) => {
+    const handleClickItemAtIndex = (index: number) => {
         (index !==undefined && history.push(`${baseURL}/round/${index + 1}`));
     }
 
@@ -60,7 +76,7 @@ const Tasting = ({baseURL}) => {
     return <>
         {answersLoading && <span>Loading...<br/></span>}
         {answersError && <span>{answersError.message}<br/></span>}
-        {canEdit && <div><span>Allow Editing</span> <input type="checkbox" onChange={handleAllowEditing} checked={editingAllowed} /></div> }
+        {canEdit && <div><span>Allow Editing</span> <input type="checkbox" onChange={handleAllowEditing} checked={Boolean(editingAllowed)} /></div> }
         <hr/>
         <TastingAnswers 
             answers={userAnswers} 
