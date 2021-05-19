@@ -1,6 +1,12 @@
+import { MouseEvent } from "react";
 
-const Rating = ({rating, onChange}) => {
-    const handleRatingClick = (newRating) => (event) => {
+export type RatingProps = {
+    rating: number, 
+    onChange?: (rating: number|null, event: MouseEvent) => void
+}s
+
+const Rating = ({rating, onChange}: RatingProps) => {
+    const handleRatingClick = (newRating: number) => (event: MouseEvent) => {
         if (rating === newRating) {
             //Clear the rating.
             (onChange && onChange(null, event));

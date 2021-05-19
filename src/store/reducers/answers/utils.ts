@@ -7,7 +7,8 @@ export const answerFromDoc = (doc: DocumentSnapshot) => {
         beers: doc.data()?.beers,
         asterisks: doc.data()?.asterisks,
         ratings: doc.data()?.ratings,
-        changes: doc.data()?.changes
+        changes: doc.data()?.changes,
+        rounds: doc.data()?.rounds,
     }
 }
 
@@ -17,5 +18,6 @@ export const answerToDocData = (answer: TastingAnswer) => {
         ...(answer.asterisks ? {asterisks: answer.asterisks} : {}),
         ...(answer.ratings ? {ratings: answer.ratings} : {}),
         ...(answer.changes ? {changes: answer.changes} : {}),
+        ...(answer.rounds ? {rounds: answer.rounds} : {}),
     }   
 }
