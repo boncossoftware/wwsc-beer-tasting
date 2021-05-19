@@ -27,6 +27,18 @@ export const AllowEditField = styled(({onChange, value, ...p})=>
         labelPlacement="start"
     />
     </FormControl>
-)({
+)(({theme})=>({
+    paddingTop: theme.spacing(2),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
 
-});
+    '& .MuiFormControlLabel-root': {
+        marginLeft: 0,
+    },
+
+    [theme.breakpoints.down('xs')]: {
+        '& .MuiTypography-root': {
+            width: '100%',
+        }
+    }
+}));

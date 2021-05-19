@@ -1,6 +1,7 @@
 import { 
     BottomNavigation, 
     BottomNavigationAction, 
+    Box, 
     Button, 
     styled, 
     Typography,
@@ -44,11 +45,16 @@ export const EditButton = styled( ({...p}: any) =>
 export const CircularProgress = FullPageCircularProgress;
 
 
-export const BottomNavigationBar = styled(({...p}: any) => 
-    <BottomNavigation
-        showLabels
-        {...p}
-    />
+export const BottomNavigationBar = styled(({className, ...p}: any) => 
+    <Box 
+        boxShadow={3} 
+        className={className} 
+    >
+        <BottomNavigation
+            showLabels
+            {...p}
+        />
+    </Box>
 )({
     width: '100%',
     position: 'fixed',

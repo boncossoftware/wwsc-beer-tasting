@@ -40,14 +40,13 @@ const Tasting = ({baseURL}: TastingProps) => {
         s => s?.results?.itemsCalculationError[id] 
     );
     
-    const {
-        bartender, 
-        owner,
-        editingAllowed=false
-    } = useSelector<RootState, TastingEvent>( 
+    const tastingEvent = useSelector<RootState, TastingEvent>( 
         s => s?.events?.items?.find( i => i.id === id ) || {} as TastingEvent 
     );
-    
+
+    const bartender = tastingEvent.bartender;
+    const owner = tastingEvent.owner;
+    const editingAllowed = Boolean(tastingEvent.editingAllowed);
     const isBartender = bartender === user?.email;
     const canEdit = (owner === user?.uid);
     const resultsAvailable = Boolean(tastingResults?.lastUpdated);
@@ -86,16 +85,18 @@ const Tasting = ({baseURL}: TastingProps) => {
         {canEdit && 
             <AllowEditField 
                 onChange={handleAllowEditing} 
-                value={Boolean(editingAllowed)} 
+                value={editingAllowed} 
             />
         }
         <hr/>
-        <TastingAnswers 
-            answers={userAnswers} 
-            showForBartender={isBartender} 
-            editingAllowed={editingAllowed} 
-            onClickItemAtIndex={ handleClickItemAtIndex }
-        />
+        {userAnswers && 
+            <TastingAnswers 
+                answers={userAnswers} 
+                showForBartender={isBartender} 
+                editingAllowed={editingAllowed} 
+                onClickItemAtIndex={ handleClickItemAtIndex }
+            />
+        }
         <h3>Results</h3>
         {resultsLoading && <span>Loading...<br/></span>}
         {resultsError && <span>{resultsError.message}<br/></span>}

@@ -3,7 +3,7 @@ import { MouseEvent } from "react";
 export type RatingProps = {
     rating: number, 
     onChange?: (rating: number|null, event: MouseEvent) => void
-}s
+}
 
 const Rating = ({rating, onChange}: RatingProps) => {
     const handleRatingClick = (newRating: number) => (event: MouseEvent) => {

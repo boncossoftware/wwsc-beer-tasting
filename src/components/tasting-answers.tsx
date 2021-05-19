@@ -1,3 +1,4 @@
+import { List } from "@material-ui/core";
 import { TastingAnswer } from "store/reducers/answers/reducer";
 import TastingAnswerItem from "./tasting-answer-item";
 
@@ -43,8 +44,10 @@ const TastingAnswers = ({
         return items;
     }
 
-    return <>
-        {renderItems()}
-    </>
+    return (
+        <List>
+            {renderItems()}
+        </List>
+    );
 }
 export default TastingAnswers;
