@@ -112,10 +112,10 @@ export const DateField = styled(p=>
                 variant="inline"
                 inputVariant="outlined"
                 ampm={true}
-                minDate={new Date()}
+                disablePast
+                minDateMessage={'Date should be in the future'}
                 fullWidth
                 label={"Date & Time"}
-                disablePast
                 required
                 mask={"__-__-____  __:__ _m"}
                 format={"dd-MM-yyyy  hh:mm aaa"}
