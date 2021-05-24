@@ -16,7 +16,7 @@ export type TastingAnswer = {
     asterisks: boolean[]|undefined|null,
     ratings: number[]|undefined|null,
     changes: number[]|undefined|null,
-    rounds: number[]|undefined|null,
+    rounds: number|undefined|null,
 }
 
 export type AnswersState = {

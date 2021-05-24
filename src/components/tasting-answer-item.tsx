@@ -35,7 +35,9 @@ const TastingAnswerItem = ({
             <ListItemText
                 primary={<>
                     {selectedBeer || 'Choose Beer'}
-                    { hasAsterisk && <Asterisks />}
+                    { (!showAsPoured && hasAsterisk) && 
+                        <Asterisks />
+                    }
                 </>}
                 secondary={ !showAsPoured && <>
                         <Typography variant='caption'> 

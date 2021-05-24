@@ -1,7 +1,7 @@
 import { DocumentSnapshot, Timestamp } from 'store/firebase';
 import "firebase/firestore";
 import { TastingEvent } from "./reducer";
-import {formatRelative, format} from 'date-fns';
+import { format } from 'date-fns';
 
 export const eventFromDoc = (doc: DocumentSnapshot): TastingEvent => {
     return {
