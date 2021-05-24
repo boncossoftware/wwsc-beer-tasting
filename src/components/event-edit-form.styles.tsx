@@ -19,6 +19,7 @@ import {
 } from '@material-ui/icons';
 import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import SectionGrid from './section-grid';
 
 export type InputChangeEventHandler = (id: string, value: any) => void;
 
@@ -44,24 +45,7 @@ export const Container = styled(p=>
     paddingBottom: theme.spacing(10),
 }));
 
-export const Section = styled(({children, title, ...p}) => 
-    <div  {...p}>
-        {title && <Typography variant="h5">{title}</Typography>}
-        <Divider />
-        <Grid container direction="column">
-            {children}
-        </Grid>
-    </div>
-)(({theme}) => ({
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(6),
-    minHeight: theme.spacing(10),
-
-    '& .MuiDivider-root': {
-        //Fix the line dissapearing when not alligned properly.
-        height: '1.1px' 
-    }
-}));
+export const Section = SectionGrid;
 
 export const NameField = styled(p=>
     <Grid item>
