@@ -1,11 +1,13 @@
 import { 
+    Button,
     FormControl,
     FormControlLabel,
     styled,
-    Switch
+    Switch,
 } from "@material-ui/core";
-import FullPageCircularProgress from "../../components/full-page-circular-progress";
-
+import ErrorMessage from "components/error-message";
+import FullPageCircularProgress from "components/full-page-circular-progress";
+import SectionGrid from "components/section-grid";
 
 
 export const CircularProgress = FullPageCircularProgress;
@@ -41,4 +43,31 @@ export const AllowEditField = styled(({onChange, value, ...p})=>
             width: '100%',
         }
     }
+}));
+
+export const Section = styled( ({...p}) =>
+    <SectionGrid {...p} />
+)( ({theme}) => ({
+    '& > .MuiTypography-root': {
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2),
+    },
+    '& > .MuiGrid-root': {
+        padding: theme.spacing(2)
+    }
+}));
+
+export const ResultsCircularProgress = styled( ({...p}) =>
+    <FullPageCircularProgress {...p} />
+)(({theme}) => ({
+    marginLeft: 'calc(50% - 20px)',
+    marginTop: `calc(25vh - ${theme.mixins.toolbar.minHeight}px - 20px)`,
+    marginBottom: `calc(25vh - ${theme.mixins.toolbar.minHeight}px - 20px)`
+}));
+
+export const CalculateResultsButton = styled( ({...p}) =>
+    <Button variant="outlined" color="primary" {...p}/>
+)(({theme}) => ({
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(10),
 }));

@@ -78,7 +78,7 @@ const EventDetails = () => {
                 <CircularProgress />
                 :
                 <>
-                    {error && <ErrorMessage>{`${error?.message}(${error?.code})`}</ErrorMessage>}
+                    {error && <ErrorMessage error={error} /> }
                     <Switch >
                         <Route path={`${path}/tasting`}>
                             <Tasting baseURL={`${baseURL}/tasting`}/>

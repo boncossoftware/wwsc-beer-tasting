@@ -41,11 +41,7 @@ const CreateAccount = () => {
                     <CircularProgress />
                     :
                     <>
-                        {error && 
-                            <ErrorMessage>
-                                {`${error.message}(${error.code})`}
-                            </ErrorMessage>
-                        }
+                        {error && <ErrorMessage error={error} />}
                         <AuthenticationForm
                             id="create-account-form"
                             submitButtonTitle="Create Account"

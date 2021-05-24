@@ -62,7 +62,7 @@ const AddEvent = () => {
                 } 
             />
             {error && 
-                <ErrorMessage>{`${error.message}(${error.code})`}</ErrorMessage>
+                <ErrorMessage error={error} />
             }
             <EventEditForm event={event} onChange={handleEventChange} />
         </Dialog>

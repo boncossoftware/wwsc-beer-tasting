@@ -44,12 +44,7 @@ const Login = () => {
                     <CircularProgress />
                     :
                     <>
-                        { error && 
-                            <ErrorMessage>
-                                {`${error.message}(${error.code})`}
-                            </ErrorMessage>
-                        }
-            
+                        { error && <ErrorMessage error={error} />}        
                         <Form id="reset-password-form">
                             {!confirmed ? 
                                 <>

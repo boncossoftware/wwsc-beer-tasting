@@ -4,7 +4,7 @@ import SectionGrid from './section-grid';
 
 test('renders correctly', () => {
     render(
-        <SectionGrid id="section">
+        <SectionGrid id="section" title="Title">
             <Grid item>Test</Grid>
         </SectionGrid>
     );
@@ -12,6 +12,9 @@ test('renders correctly', () => {
     const section = document.getElementById('section');
     expect(section).toBeInTheDocument();
 
+    const title = screen.getByText(/title/gi);
+    expect(title).toBeInTheDocument();
+    
     const item = screen.getByText(/test/gi);
     expect(item).toBeInTheDocument();
 

@@ -13,7 +13,7 @@ const SectionGrid = styled(({children, title, ...p}) =>
             {children}
         </Grid>
     </div>
-)(({theme}) => ({
+)(({theme}) => ({   
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(6),
     minHeight: theme.spacing(10),

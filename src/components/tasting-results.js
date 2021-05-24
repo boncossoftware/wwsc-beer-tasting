@@ -26,7 +26,7 @@ const TastingResults = ({results}) => {
     }
     else {
         return <>
-            <span>No Results available yet.<br/></span>
+            <span>No results available.<br/></span>
         </>
     }
 }

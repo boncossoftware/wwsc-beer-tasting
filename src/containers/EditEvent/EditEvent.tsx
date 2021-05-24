@@ -88,9 +88,7 @@ const EditEvent = () => {
             <InformationMessage>
                     Warning: Editing an event clears all answers and results.
             </InformationMessage>
-            {error &&
-                <ErrorMessage>{`${error.message}(${error.code})`}</ErrorMessage>
-            }
+            {error && <ErrorMessage error={error} /> }
             {loading ?
                 <CircularProgress />
                 : 

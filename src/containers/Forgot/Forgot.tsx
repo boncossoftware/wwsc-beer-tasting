@@ -38,11 +38,7 @@ const Forgot = () => {
                     <CircularProgress />
                     :
                     <>
-                        { error && 
-                            <ErrorMessage>
-                                {`${error.message}(${error.code})`}
-                            </ErrorMessage>
-                        }
+                        { error && <ErrorMessage error={error} />}
                         <Form id="reset-form">
                             {!sent ? 
                                 <>

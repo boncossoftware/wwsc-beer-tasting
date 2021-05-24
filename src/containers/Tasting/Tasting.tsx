@@ -10,7 +10,13 @@ import { Result } from "store/reducers/results/reducer";
 import TastingAnswers from "../../components/tasting-answers";
 import TastingResults from "../../components/tasting-results";
 import { answers, events, results } from "../../store";
-import { AllowEditField, CircularProgress } from './Tasting.styles';
+import { 
+    AllowEditField, 
+    CalculateResultsButton, 
+    CircularProgress, 
+    ResultsCircularProgress, 
+    Section
+} from './Tasting.styles';
 
 export type TastingProps = {
     baseURL : string
@@ -79,9 +85,7 @@ const Tasting = ({baseURL}: TastingProps) => {
         return <CircularProgress />
     }
     return <>
-        {answersError && 
-            <ErrorMessage>{`${answersError.message}(${answersError.code})`}</ErrorMessage>
-        }
+        {answersError && <ErrorMessage error={answersError} />}
         {canEdit && 
             <AllowEditField 
                 onChange={handleAllowEditing} 
@@ -96,24 +100,23 @@ const Tasting = ({baseURL}: TastingProps) => {
                 onClickItemAtIndex={ handleClickItemAtIndex }
             />
         }
-        <h3>Results</h3>
-        {resultsLoading && <span>Loading...<br/></span>}
-        {resultsError && <span>{resultsError.message}<br/></span>}
-        {resultsCalculating ?
-            <span>Calculating...</span>
-            :
-            (resultsCalculationError ?
-                <span>{resultsCalculationError.message}</span>
+        <Section title="Results">
+            {(resultsLoading || resultsCalculating) ? 
+                <ResultsCircularProgress />
                 :
-                <TastingResults 
-                    results={tastingResults}
-                />
-            )
-        }
-        <br/>
-        <button onClick={handleCalculateResults}>
-            {resultsAvailable ? 'Rec' : 'C'}alculate Results
-        </button>
+                <>
+                    {(resultsError || resultsCalculationError) && 
+                        <ErrorMessage error={resultsError || resultsCalculationError } />
+                    }
+                    <TastingResults results={tastingResults} />
+                    <CalculateResultsButton 
+                        onClick={handleCalculateResults}
+                    >
+                        {resultsAvailable ? 'Rec' : 'C'}alculate Results
+                    </CalculateResultsButton>
+                </>
+            }   
+        </Section>
     </>
 }
 export default Tasting;
