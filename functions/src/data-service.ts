@@ -1,8 +1,33 @@
 import * as admin from "firebase-admin";
+import { WSC_VIRTUAL_BBT_CORRECT_BEERS, WSC_VIRTUAL_BBT_ANSWERS } from "./model";
 import {ContestantAnswers, TastingEvent, TastingResults} from './model';
 
 if (admin.apps.length === 0) {
     admin.initializeApp();
+
+    const eventRef = admin.firestore().collection('events').doc('9BrxyRVWNa3JcOXr8gYj');
+    const answersRef = eventRef.collection('answers');
+    
+    //Insert bar tender info.
+    answersRef.doc('bartender@boncos.io').set({
+        beers: WSC_VIRTUAL_BBT_CORRECT_BEERS
+    });
+
+    //Insert all contestants answers
+    const contestantId: string[] = [];
+    WSC_VIRTUAL_BBT_ANSWERS.forEach( anwers => {
+        contestantId.push(anwers.id);
+        answersRef.doc(anwers.id).set(anwers);
+    });
+
+    eventRef.update({
+        related: [
+            ...contestantId,
+            'israel@boncos.io'
+        ],
+        tasters: contestantId,
+        beers: WSC_VIRTUAL_BBT_CORRECT_BEERS
+    });
 }
 
 export const getTastingEvent = (id: string): Promise<TastingEvent> => {

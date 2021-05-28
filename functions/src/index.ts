@@ -4,7 +4,8 @@ import {
     RoundResult,
     ResultSummary,
     BeerRanking,
-    TastingResults
+    TastingResults,
+    ServerError
 } from './model';
 import {
     getTastingEvent,
@@ -48,6 +49,7 @@ export const calculateResults = onCall(async (data, _) => {
     //Get the correct order of beers.
     const barTenderAnswers = answers.find( a => a.id === event.bartender);
     validateBarTenderAnswers(barTenderAnswers);
+
     const correctBeers = barTenderAnswers?.beers;
     functions.logger.debug(`answers valid (${id})`);
     
@@ -78,12 +80,12 @@ export const calculateResults = onCall(async (data, _) => {
     const code = (error as ResultsError).code;
     functions.logger.error(`Error: ${message} (${code})\n ${error.stack}`);
     
-    return {error: {message, code}};
+    return {error: {message, code}} as ServerError;
   }
 });
 
-export const validateBarTenderAnswers = async (anwsers: ContestantAnswers | undefined) => {
-  if(!anwsers?.beers){ 
+export const validateBarTenderAnswers = (anwsers: ContestantAnswers | undefined) => {
+  if(anwsers?.beers === undefined){ 
     throw new ResultsError("No answers found for bartender.", 1500);
   }
   functions.logger.debug(`bartender has answers (${anwsers.id})`);
