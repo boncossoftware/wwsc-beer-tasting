@@ -1,40 +1,53 @@
+import { List } from "@material-ui/core";
 import { Result } from "store/reducers/results/reducer";
+import { AchievementItem, LineItem, RankingResult, Subheader } from './tasting-results.styles';
 
 type TastingResultsProps = {
     results?: Result
 }
 
 const TastingResults = ({results}:TastingResultsProps) => {
-    const {
-        lastUpdated = null,
-        beerSelection = ['None selected'],
-        tasteScore = ['None selected'],
-        beerLover = 'None selected',
-        beerHater = 'None selected',
-    } = {//results || {
-        lastUpdated: new Date(),
-        beerSelection: ['Israel', 'John', 'Jim'],
-        tasteScore: ['Heineken', 'Chill', 'Balashi'],
-        beerLover: 'Israel',
-        beerHater: 'Jim',
-    };
-
-    const available = Boolean(lastUpdated);
+    const available = Boolean(results?.lastUpdated);
+    const lover = results?.roundResults[0];
+    const hater = results?.roundResults?.reverse()[0];
+    const resultsCount = results?.roundResults?.length||0;
     if (available) {
-        return <>
-            <span>Ranking:<br/></span>
-            {beerSelection?.map( (s,i) => 
-                <span key={i}>&emsp; {s}<br/></span>    
+        return <List disablePadding>
+            <Subheader>Ranking</Subheader>
+            {results?.roundResults?.slice(0, 3).map( (s,i) =>
+                <RankingResult 
+                    key={i} 
+                    rank={i + 1} 
+                    name={s.userEmail} 
+                    points={s.totalPoints} 
+                />
             )}
-            <br/>
-            <span>Best Taste scores:<br/></span>
-            {tasteScore?.map( (s: string|number, i: number) => 
-                <span key={i}>&emsp; {s}<br/></span>    
+            {!results?.roundResults?.length && 
+                <LineItem>No ranking results</LineItem>
+            }
+            <Subheader>Best Taste</Subheader>
+            {results?.beerScoreResults?.slice(0,3).map( (s, i) => 
+                <RankingResult 
+                    key={i} 
+                    rank={i + 1} 
+                    name={s.name} 
+                    points={s.points} 
+                />
             )}
-            <br/>
-            <span>Beer Lover: {beerLover} <br/></span>
-            <span>Beer Hater: {beerHater} <br/></span>
-        </>
+            {!results?.beerScoreResults?.length && 
+                <LineItem>No taste score results</LineItem>
+            }
+            {(resultsCount > 1) && <>
+                <AchievementItem
+                    achievement="Beer Lover"
+                    receiver={lover?.userEmail || '-'}
+                />
+                <AchievementItem
+                    achievement="Beer Hater"
+                    receiver={hater?.userEmail || '-'}
+                />
+            </>}
+        </List>
     }
     else {
         return <>

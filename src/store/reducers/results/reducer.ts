@@ -5,12 +5,37 @@ import { ACTION_EVENT_RESULTS_LOAD_ITEM_ERROR } from "./load-item";
 import { ACTION_EVENT_RESULTS_LOAD_ITEM } from "./load-item";
 import { ACTION_EVENT_RESULTS_ITEM_LOADING } from "./load-item";
 
+export interface RoundResult {
+    index: number,
+    selectedBeer: string,
+    correctBeer: string,
+    correct: boolean,
+    tasteScore: number,
+    asterisked: boolean,
+    points: number,
+    changesMade: number,
+}
+
+export interface ResultSummary {
+    userEmail: string,
+    totalPoints: number,
+    totalTaste: number,
+    totalAsterisks: number,
+    totalAsterisksSecondHalf: number,
+    totalChanges: number,
+    roundResults: RoundResult[],
+    beerScores: {[id:string]: number};
+}
+
+export interface BeerRanking {
+    name: string,
+    points: number
+}
+
 export type Result = {
     id: string;
-    beerSelection: string[]|undefined|null;
-    tasteScore: number[]|undefined|null;
-    beerLover: string|undefined|null;
-    beerHater: string|undefined|null;
+    roundResults: ResultSummary[],
+    beerScoreResults: BeerRanking[]
     lastUpdated: Date|undefined|null;
 }
 
