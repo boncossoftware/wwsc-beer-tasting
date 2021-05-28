@@ -16,7 +16,7 @@ export default function update(id: string, answer: TastingAnswer) {
         try {
             const { auth } = getState();
             const eventDocRef = firebase.firestore().collection('events').doc(id);
-            const itemRef = eventDocRef.collection('answers').doc(auth?.user?.uid);
+            const itemRef = eventDocRef.collection('answers').doc(auth?.user?.email);
             
             const docData = answerToDocData(answer);
             itemRef.update(docData);

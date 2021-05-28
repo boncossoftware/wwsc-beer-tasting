@@ -21,7 +21,7 @@ export default function loadItem(id: string) {
         try {
             const { auth } = getState();
             const eventDocRef = firebase.firestore().collection('events').doc(id);
-            const itemRef = eventDocRef.collection('answers').doc(auth?.user?.uid);
+            const itemRef = eventDocRef.collection('answers').doc(auth?.user?.email);
             const [doc, event] = await Promise.all([
                 itemRef.get(),
                 eventDocRef.get()

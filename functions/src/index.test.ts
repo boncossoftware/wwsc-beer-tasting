@@ -1,14 +1,19 @@
 // Set the firebase env variables to silince warnings before loading it in.
 process.env.FIREBASE_CONFIG = "{}";
 process.env.GCLOUD_PROJECT = "";
+console.debug = jest.fn(); //Prevent loggin to console.
 
 import {
-  calculateContestantRoundResults,
-  rankedPointsSorting,
-  calculateBeerScoreResults,
-  createTastingResults,
-  ContestantAnswers, // eslint-disable-line no-unused-vars
+  createContestantRoundResults,
+  //rankedPointsSorting,
+  createBeerScoreResults,
+  sortByRankedPointScores, // eslint-disable-line no-unused-vars,
 } from ".";
+import {
+    ContestantAnswers, TastingResults
+} from "./model";
+
+const firebaseTest = require('firebase-functions-test')();
 
 const CORRECT_BEERS = [
   "Augustiner Helles Lager",
@@ -25,7 +30,7 @@ const CORRECT_BEERS = [
 
 const CONTESTANT_ANSWERS: ContestantAnswers[] = [
   {
-    id: "contestant_1",
+    id: "contestant_1@email.com",
     beers: CORRECT_BEERS, // All correct beeers.
     // All correct asterisks.
     asterisks: [true, true, null, null, null, null, null, null, null, null],
@@ -33,7 +38,7 @@ const CONTESTANT_ANSWERS: ContestantAnswers[] = [
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // All low change counts.
   },
   {
-    id: "contestant_2", // Contestant 1 in reverse.
+    id: "contestant_2@email.com", // Contestant 1 in reverse.
     beers: CORRECT_BEERS.slice().reverse(), // All wrong beers.
     // All incorrect asterisks (in second half).
     asterisks: [null, null, null, null, null, null, null, null, true, true],
@@ -332,8 +337,25 @@ const WSC_VIRTUAL_BBT_ANSWERS = [
   },
 ];
 
+//Mock the tasting event and answers fetched from firebase.
+jest.mock('./data-service', () => ({
+    getTastingEvent: () => ({
+        bartender: 'bartender@email.com'
+    }),
+    getTastingEventAnswers: () => [
+        ...CONTESTANT_ANSWERS,
+        {
+            id: 'bartender@email.com',
+            beers: CORRECT_BEERS
+        }
+    ],
+    setResults: () => null,
+}));
+
+
+
 test("calculateContestantRoundResults()", () => {
-  const results = calculateContestantRoundResults(
+  const results = createContestantRoundResults(
       CORRECT_BEERS,
       CONTESTANT_ANSWERS
   );
@@ -354,87 +376,54 @@ test("calculateContestantRoundResults()", () => {
 });
 
 test("calculateBeerScoreResults()", () => {
-  const results = calculateBeerScoreResults(CORRECT_BEERS, CONTESTANT_ANSWERS);
-  expect(results[CORRECT_BEERS[0]]).toBe(0);
-  expect(results[CORRECT_BEERS[1]]).toBe(1);
-  expect(results[CORRECT_BEERS[2]]).toBe(2);
-  expect(results[CORRECT_BEERS[3]]).toBe(3);
-  expect(results[CORRECT_BEERS[4]]).toBe(4);
-  expect(results[CORRECT_BEERS[5]]).toBe(5);
-  expect(results[CORRECT_BEERS[6]]).toBe(6);
-  expect(results[CORRECT_BEERS[7]]).toBe(7);
-  expect(results[CORRECT_BEERS[8]]).toBe(8);
-  expect(results[CORRECT_BEERS[9]]).toBe(8);
+  const results = createBeerScoreResults(CORRECT_BEERS, CONTESTANT_ANSWERS);
+  expect(results[0].points).toBe(0);
+  expect(results[1].points).toBe(1);
+  expect(results[2].points).toBe(2);
+  expect(results[3].points).toBe(3);
+  expect(results[4].points).toBe(4);
+  expect(results[5].points).toBe(5);
+  expect(results[6].points).toBe(6);
+  expect(results[7].points).toBe(7);
+  expect(results[8].points).toBe(8);
+  expect(results[9].points).toBe(8);
 });
 
-test("createTastingResults()", () => {
-  const roundResults = calculateContestantRoundResults(
-      CORRECT_BEERS,
-      CONTESTANT_ANSWERS
-  );
-  const beerScoreResults = calculateBeerScoreResults(
-      CORRECT_BEERS,
-      CONTESTANT_ANSWERS
-  );
-  const tastingResults = createTastingResults(roundResults, beerScoreResults);
-
-  expect(tastingResults.winner).toBe(CONTESTANT_ANSWERS[0].id);
-  expect(tastingResults.second).toBe(CONTESTANT_ANSWERS[1].id);
-  expect(tastingResults.third).toBe(null);
-
-  expect(tastingResults.beerLovers[0][0]).toBe(CONTESTANT_ANSWERS[0].id);
-  expect(tastingResults.beerLovers[1][0]).toBe(CONTESTANT_ANSWERS[1].id);
-
-  expect(tastingResults.beerHaters[0][0]).toBe(CONTESTANT_ANSWERS[1].id);
-  expect(tastingResults.beerHaters[1][0]).toBe(CONTESTANT_ANSWERS[0].id);
-
-  expect(tastingResults.bestBeers[0][0]).toBe(CORRECT_BEERS[0]);
-  expect(tastingResults.bestBeers[1][0]).toBe(CORRECT_BEERS[1]);
-  expect(tastingResults.bestBeers[2][0]).toBe(CORRECT_BEERS[2]);
-
-  expect(tastingResults.worstBeers[0][0]).toBe(CORRECT_BEERS[9]);
-  expect(tastingResults.worstBeers[1][0]).toBe(CORRECT_BEERS[8]);
-  expect(tastingResults.worstBeers[2][0]).toBe(CORRECT_BEERS[7]);
-});
 
 test("calculateContestantRoundResults() on BBT Vitrual event", () => {
-  const results = calculateContestantRoundResults(
+  const results = createContestantRoundResults(
       WSC_VIRTUAL_BBT_CORRECT_BEERS,
       WSC_VIRTUAL_BBT_ANSWERS
   );
+  sortByRankedPointScores(results);
 
-  const rankedPoints = rankedPointsSorting(results);
+  expect(results[0].totalPoints).toBe(10);
+  expect(results[0].totalAsterisks).toBe(1);
+  expect(results[0].totalAsterisksSecondHalf).toBe(0);
+  expect(results[0].totalTaste).toBe(28);
 
-  expect(rankedPoints[0].totalPoints).toBe(10);
-  expect(rankedPoints[0].totalAsterisks).toBe(1);
-  expect(rankedPoints[0].totalAsterisksSecondHalf).toBe(0);
-  expect(rankedPoints[0].totalTaste).toBe(28);
+  expect(results[1].totalPoints).toBe(8);
+  expect(results[1].totalAsterisks).toBe(2);
+  expect(results[1].totalAsterisksSecondHalf).toBe(0);
+  expect(results[1].totalTaste).toBe(18);
 
-  expect(rankedPoints[1].totalPoints).toBe(8);
-  expect(rankedPoints[1].totalAsterisks).toBe(2);
-  expect(rankedPoints[1].totalAsterisksSecondHalf).toBe(0);
-  expect(rankedPoints[1].totalTaste).toBe(18);
-
-  expect(rankedPoints[2].totalPoints).toBe(8);
-  expect(rankedPoints[2].totalAsterisks).toBe(2);
-  expect(rankedPoints[2].totalAsterisksSecondHalf).toBe(0);
-  expect(rankedPoints[2].totalTaste).toBe(22);
+  expect(results[2].totalPoints).toBe(8);
+  expect(results[2].totalAsterisks).toBe(2);
+  expect(results[2].totalAsterisksSecondHalf).toBe(0);
+  expect(results[2].totalTaste).toBe(22);
+  
 });
 
 
-test("createTastingResults() on BBT Vitrual event", () => {
-  const roundResults = calculateContestantRoundResults(
-      WSC_VIRTUAL_BBT_CORRECT_BEERS,
-      WSC_VIRTUAL_BBT_ANSWERS
-  );
-  const beerScoreResults = calculateBeerScoreResults(
-      CORRECT_BEERS,
-      CONTESTANT_ANSWERS
-  );
-  const tastingResults = createTastingResults(
-      roundResults,
-      beerScoreResults
-  );
+test("createTastingResults() on BBT Vitrual event", async () => {
+    const { calculateResults } = require('.');
+    const wrappedCalculateResults = firebaseTest.wrap(calculateResults);
+    const eventID = '1';
+    const results: TastingResults = await wrappedCalculateResults(eventID);
+    
+    expect(results.roundResults[0].userEmail).toBe(CONTESTANT_ANSWERS[0].id);
+    expect(results.roundResults[1].userEmail).toBe(CONTESTANT_ANSWERS[1].id);
 
-  console.log(tastingResults);
+    expect(results.beerScoreResults[0].name).toBe(CORRECT_BEERS[0]);
+    expect(results.beerScoreResults[1].name).toBe(CORRECT_BEERS[1]);
 });

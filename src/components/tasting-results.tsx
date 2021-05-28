@@ -1,22 +1,34 @@
-const TastingResults = ({results}) => {
+import { Result } from "store/reducers/results/reducer";
+
+type TastingResultsProps = {
+    results?: Result
+}
+
+const TastingResults = ({results}:TastingResultsProps) => {
     const {
         lastUpdated = null,
         beerSelection = ['None selected'],
         tasteScore = ['None selected'],
         beerLover = 'None selected',
         beerHater = 'None selected',
-    } = results || {};
+    } = {//results || {
+        lastUpdated: new Date(),
+        beerSelection: ['Israel', 'John', 'Jim'],
+        tasteScore: ['Heineken', 'Chill', 'Balashi'],
+        beerLover: 'Israel',
+        beerHater: 'Jim',
+    };
 
     const available = Boolean(lastUpdated);
     if (available) {
         return <>
-            <span>Beer selection:<br/></span>
-            {beerSelection.map( (s,i) => 
+            <span>Ranking:<br/></span>
+            {beerSelection?.map( (s,i) => 
                 <span key={i}>&emsp; {s}<br/></span>    
             )}
             <br/>
-            <span>Taste score:<br/></span>
-            {tasteScore.map( (s,i) => 
+            <span>Best Taste scores:<br/></span>
+            {tasteScore?.map( (s: string|number, i: number) => 
                 <span key={i}>&emsp; {s}<br/></span>    
             )}
             <br/>
