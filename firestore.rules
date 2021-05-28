@@ -13,12 +13,8 @@ service cloud.firestore {
 
         function ownerOfEventWithID(eventId) {
             return (
-                (request.auth.email == get(/databases/$(database)/documents/events/$(eventId)).data.owner)
+                (request.auth.token.email == get(/databases/$(database)/documents/events/$(eventId)).data.owner)
             ); 
-        }
-
-        function canEditEventWithID(eventId) {
-            return (get(/databases/$(database)/documents/events/$(eventId)).data.editingAllowed == true); 
         }
 
         match /events/{eventId} {
@@ -27,14 +23,14 @@ service cloud.firestore {
             //Related people can create an event.
             allow get,list: if (request.auth.token.email in resource.data.related);
             //Owners can edit or detele the event.
-            allow update,delete: if (request.auth.email == resource.data.owner);
+            allow update,delete: if (request.auth.token.email == resource.data.owner);
         }
 
         match /events/{eventId}/answers/{answerId} {
             //Each user can only edit their own answers.
             allow list: if ownerOfEventWithID(eventId);
-            allow get: if request.auth.email == answerId;
-            allow create,update: if (request.auth.email == answerId);
+            allow get: if request.auth.token.email == answerId;
+            allow create,update: if (request.auth.token.email == answerId);
             allow delete: if ownerOfEventWithID(eventId);
         }
 

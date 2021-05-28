@@ -39,7 +39,7 @@ export default function loadItem(id: string) {
                 await itemRef.set(doc.data() as DocumentData); 
             }
             const item = answerFromDoc(doc);
-            dispatch({ type: ACTION_EVENT_ANSWERS_LOAD_ITEM, payload: item});
+            dispatch({ type: ACTION_EVENT_ANSWERS_LOAD_ITEM, payload: {...item, id} });
         }
         catch (error) {
             dispatch({ type: ACTION_EVENT_ANSWERS_LOAD_ITEM_ERROR, payload: {id, error }});

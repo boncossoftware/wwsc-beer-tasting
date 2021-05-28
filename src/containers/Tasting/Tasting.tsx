@@ -29,11 +29,10 @@ const Tasting = ({baseURL}: TastingProps) => {
     const dispatch = useDispatch();
     const user = useSelector<RootState, UserInfo|null>( s => s?.auth?.user);
     
-    const uid = user?.uid || '';
-    const answersLoading = useSelector<RootState, boolean>( s => s?.answers?.itemsLoading[uid] );
-    const answersError = useSelector<RootState, StoreError|undefined>( s => s?.answers?.itemsError[uid] );
+    const answersLoading = useSelector<RootState, boolean>( s => s?.answers?.itemsLoading[id] );
+    const answersError = useSelector<RootState, StoreError|undefined>( s => s?.answers?.itemsError[id] );
     const userAnswers = useSelector<RootState, TastingAnswer|undefined>( 
-        s => s?.answers?.items?.find( i => i.id === uid ) 
+        s => s?.answers?.items?.find( i => i.id === id ) 
     );
 
     const resultsLoading = useSelector<RootState, boolean>( s => s?.results?.itemsLoading[id] );
@@ -54,7 +53,7 @@ const Tasting = ({baseURL}: TastingProps) => {
     const owner = tastingEvent.owner;
     const editingAllowed = Boolean(tastingEvent.editingAllowed);
     const isBartender = bartender === user?.email;
-    const canEdit = (owner === user?.uid);
+    const canEdit = (owner === user?.email);
     const resultsAvailable = Boolean(tastingResults?.lastUpdated);
 
     useEffect( () => {

@@ -40,7 +40,7 @@ const EventDetails = () => {
     const loading = useSelector<RootState, boolean>( s => s?.events?.itemsLoading[id] );
     const error = useSelector<RootState, StoreError|null>( s => s?.events?.itemsError[id] );
     const item = useSelector<RootState, TastingEvent|undefined>( s => s?.events?.items?.find( i => i.id === id ) );
-    const canEdit = (item?.owner === user?.uid);
+    const canEdit = (item?.owner === user?.email);
     const baseURL = getBaseURL(url);
     const activeSection = getActiveSection(url);
 

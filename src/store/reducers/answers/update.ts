@@ -24,7 +24,7 @@ export default function update(id: string, answer: TastingAnswer) {
             const doc = await itemRef.get();
             answer = answerFromDoc(doc);
             
-            dispatch({ type: ACTION_EVENT_ANSWERS_UPDATED, payload: answer});
+            dispatch({ type: ACTION_EVENT_ANSWERS_UPDATED, payload: {...answer, id}});
         }
         catch (error) {
             dispatch({ type: ACTION_EVENT_ANSWERS_UPDATE_ERROR, payload: error});

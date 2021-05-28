@@ -18,8 +18,8 @@ const TastingDetails = () => {
     const user = useSelector( s => s?.auth?.user);
     const event = useSelector( s => s?.events?.items?.find( e => e.id === id));
     const eventLoading = useSelector( s => s?.events?.itemsLoading[id] );
-    const answer = useSelector( s => s?.answers?.items?.find( e => e.id === user.uid));
-    const answerLoading = useSelector( s => s?.answers?.itemsLoading[user.uid] );
+    const answer = useSelector( s => s?.answers?.items?.find( e => e.id === id));
+    const answerLoading = useSelector( s => s?.answers?.itemsLoading[id] );
     const updating = useSelector( s => s?.answers?.update.updating);
     const updated = useSelector( s => s?.answers?.update.updated);
     const updateError = useSelector( s => s?.answers?.update.error);
