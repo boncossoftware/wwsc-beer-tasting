@@ -19,6 +19,8 @@ export const getTastingEventAnswers = (id: string): Promise<ContestantAnswers[]>
     );
 }
 
+export const getCurrentTimestamp = () => admin.firestore.Timestamp.now();
+
 export const setResults = (id: string, results: TastingResults) => {
     //Save the results.
     const resultsRef = admin.firestore().collection("results").doc(id)

@@ -8,6 +8,7 @@ import {
     ServerError
 } from './model';
 import {
+    getCurrentTimestamp,
     getTastingEvent,
     getTastingEventAnswers,
     setResults
@@ -52,7 +53,6 @@ export const calculateResults = onCall(async (data, _) => {
 
     const correctBeers = barTenderAnswers?.beers;
     functions.logger.debug(`answers valid (${id})`);
-    
 
     //clear out the bartender's answers and owner answers if needed.
     const exludeEmails = [event.bartender, (event.ownerAddedAsTaster && event.owner)];
@@ -65,7 +65,8 @@ export const calculateResults = onCall(async (data, _) => {
     sortByRankedBeerTasteScores(beerScoreResults);
     const tastingResults = {
         roundResults,
-        beerScoreResults
+        beerScoreResults,
+        lastUpdated: getCurrentTimestamp()
     } as TastingResults
     functions.logger.debug(`results created (${id})`);
 

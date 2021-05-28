@@ -51,7 +51,8 @@ export interface BeerRanking {
 
 export interface TastingResults {
     roundResults: ResultSummary[],
-    beerScoreResults: BeerRanking[]
+    beerScoreResults: BeerRanking[],
+    lastUpdated: {seconds: number, nanoseconds: number}
 }
 
 export interface ServerError {

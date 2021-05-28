@@ -5,7 +5,13 @@ console.debug = jest.fn(); //Prevent loggin to console.
 console.error = jest.fn(); //Prevent loggin to console.
 
 import {
-    ContestantAnswers, CONTESTANT_ANSWERS, CORRECT_BEERS, ServerError, TastingResults, WSC_VIRTUAL_BBT_ANSWERS, WSC_VIRTUAL_BBT_CORRECT_BEERS
+    ContestantAnswers, 
+    CONTESTANT_ANSWERS, 
+    CORRECT_BEERS, 
+    ServerError, 
+    TastingResults, 
+    WSC_VIRTUAL_BBT_ANSWERS, 
+    WSC_VIRTUAL_BBT_CORRECT_BEERS
 } from "./model";
 
 const firebaseTest = require('firebase-functions-test')();
@@ -22,6 +28,7 @@ const dataService = {
             beers: CORRECT_BEERS
         } as ContestantAnswers
     ],
+    getCurrentTimestamp: () => ({seconds: 0, nanoseconds: 0}),
     setResults: () => null,
 };
 jest.mock('./data-service', () => (dataService) );
@@ -54,7 +61,10 @@ test("calculateBeerScoreResults()", () => {
   const {
     createBeerScoreResults,
   } = require('.');
-  const results = createBeerScoreResults(CORRECT_BEERS, CONTESTANT_ANSWERS);
+  const results = createBeerScoreResults(
+    CORRECT_BEERS, 
+    CONTESTANT_ANSWERS
+  );
   expect(results[0].points).toBe(0);
   expect(results[1].points).toBe(1);
   expect(results[2].points).toBe(2);
