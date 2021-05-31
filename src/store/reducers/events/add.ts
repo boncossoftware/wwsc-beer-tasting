@@ -15,8 +15,8 @@ export default function add(event: TastingEvent) {
 
         dispatch({ type: ACTION_EVENTS_ADDING, payload: true});
         try {
-            const {uid, email} = getCurrentUserInfo(); 
-            const props = propsForEvent(uid, email, event); //Add the owner as related.
+            const {email} = getCurrentUserInfo(); 
+            const props = propsForEvent(email, event); //Add the owner as related.
             const docData = eventToDocData(props);
             const docRef = await firebase.firestore().collection('events').add(docData);
             const doc = await docRef.get();

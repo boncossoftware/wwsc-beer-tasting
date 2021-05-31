@@ -20,7 +20,7 @@ const createMockState = () => ({
         items: null,
         error: null,
     } 
-} as RootState);
+} as any as RootState);
 
 
 test('renders correctly', () => {

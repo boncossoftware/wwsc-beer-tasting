@@ -21,7 +21,7 @@ export default function loadItem(id: string) {
         try {
             const { auth } = getState();
             const eventDocRef = firebase.firestore().collection('events').doc(id);
-            const itemRef = eventDocRef.collection('answers').doc(auth?.user?.uid);
+            const itemRef = eventDocRef.collection('answers').doc(auth?.user?.email);
             const [doc, event] = await Promise.all([
                 itemRef.get(),
                 eventDocRef.get()
@@ -39,7 +39,7 @@ export default function loadItem(id: string) {
                 await itemRef.set(doc.data() as DocumentData); 
             }
             const item = answerFromDoc(doc);
-            dispatch({ type: ACTION_EVENT_ANSWERS_LOAD_ITEM, payload: item});
+            dispatch({ type: ACTION_EVENT_ANSWERS_LOAD_ITEM, payload: {...item, id} });
         }
         catch (error) {
             dispatch({ type: ACTION_EVENT_ANSWERS_LOAD_ITEM_ERROR, payload: {id, error }});

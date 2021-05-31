@@ -53,11 +53,7 @@ const Login = () => {
                     <CircularProgress />
                     :
                     <>
-                        { error && 
-                            <ErrorMessage>
-                                {`${error.message}(${error.code})`}
-                            </ErrorMessage>
-                        }
+                        { error && <ErrorMessage error={error} /> }
                         <AuthenticationForm 
                             id="login-form"
                             submitButtonTitle="Login"

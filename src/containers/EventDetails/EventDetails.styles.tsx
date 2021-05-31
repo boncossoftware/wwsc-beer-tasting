@@ -1,10 +1,10 @@
 import { 
     BottomNavigation, 
     BottomNavigationAction, 
+    Box, 
     Button, 
     styled, 
     Typography,
-    CircularProgress as BaseCircularProgress
 } from "@material-ui/core";
 import { 
     ArrowBackIos as BackIcon, 
@@ -13,6 +13,7 @@ import {
     People as TastersIcon,
     LocationCity as VenueIcon,
 } from "@material-ui/icons";
+import FullPageCircularProgress from "components/full-page-circular-progress";
 
 export const Container = styled( ({...p})=> 
     <div {...p} />
@@ -41,19 +42,19 @@ export const EditButton = styled( ({...p}: any) =>
     marginLeft: theme.spacing(1),
 }));
 
-export const CircularProgress = styled(p=> 
-    <BaseCircularProgress {...p} size={40} />    
-)(({theme}) => ({
-    marginLeft: 'calc(50% - 20px)',
-    marginTop: `calc(50vh - ${theme.mixins.toolbar.minHeight}px - 20px)`
-}));
+export const CircularProgress = FullPageCircularProgress;
 
 
-export const BottomNavigationBar = styled(({...p}: any) => 
-    <BottomNavigation
-        showLabels
-        {...p}
-    />
+export const BottomNavigationBar = styled(({className, ...p}: any) => 
+    <Box 
+        boxShadow={3} 
+        className={className} 
+    >
+        <BottomNavigation
+            showLabels
+            {...p}
+        />
+    </Box>
 )({
     width: '100%',
     position: 'fixed',

@@ -24,7 +24,8 @@ const createMockDocumentRef = (data: any) => ({
     _data: data,
     id: '12345678910', 
     get: function (){ return createMockDocument(this) },
-    update: function (){ return this }
+    update: function (){ return this },
+    set: function (){ return this },
 });
 
 const createMockFireStore = (options?: any) => ({
@@ -45,6 +46,7 @@ const createMockFireStore = (options?: any) => ({
             get: async () => {
                 return createMockDocument({id, _data: this._data})
             },
+            set: function (){ return this },
         };
     }),
     where: jest.fn().mockReturnThis(),

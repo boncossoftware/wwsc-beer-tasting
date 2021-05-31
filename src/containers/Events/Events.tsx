@@ -46,7 +46,7 @@ const Events = () => {
             <CircularProgress />
             :
             <>
-                {error && <ErrorMessage>{`${error.message}(${error.code})`}</ErrorMessage>}
+                {error && <ErrorMessage error={error} />}
                 {items && items.map( (item, index) => {
                     const newMonth = items[index-1]?.date?.getMonth() != item.date?.getMonth();
                     return <div key={index}>

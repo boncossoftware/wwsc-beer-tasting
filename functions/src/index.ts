@@ -1,59 +1,26 @@
-import * as admin from "firebase-admin";
 import * as functions from "firebase-functions";
-
-admin.initializeApp();
+import {
+    ContestantAnswers,
+    RoundResult,
+    ResultSummary,
+    BeerRanking,
+    TastingResults,
+    ServerError
+} from './model';
+import {
+    getCurrentTimestamp,
+    getTastingEvent,
+    getTastingEventAnswers,
+    setResults
+} from './data-service';
 
 const onCall = functions.https.onCall;
-
-export interface BarTenderAnswers {
-    id: string,
-    beers: string[]
-}
-
-export interface ContestantAnswers extends BarTenderAnswers {
-    asterisks: (boolean|null)[],
-    ratings: (number|null)[],
-    changes: (number|null)[],
-}
-
-interface RoundResult {
-    index: number,
-    selectedBeer: string,
-    correctBeer: string,
-    correct: boolean,
-    tasteScore: number,
-    asterisked: boolean,
-    points: number,
-    changesMade: number,
-}
-
-interface ResultSummary {
-    userUID: string,
-    totalPoints: number,
-    totalTaste: number,
-    totalAsterisks: number,
-    totalAsterisksSecondHalf: number,
-    totalChanges: number,
-    roundResults: RoundResult[],
-    beerScores: {[id:string]: number};
-}
-
-interface TastingResults {
-    winner: string
-    second: string
-    third: string
-    beerLovers: [string, number][]
-    beerHaters: [string, number][]
-    bestBeers: [string, number][]
-    worstBeers: [string, number][]
-    results: ResultSummary[]
-}
 
 /**
  * ResultsError for an error object
  * with a error code.
  */
-class ResultsError extends Error {
+ export class ResultsError extends Error {
     code: number | undefined;
 
     /**
@@ -67,149 +34,79 @@ class ResultsError extends Error {
     }
 }
 
-type ContestantRoundResults = ResultSummary[];
-type BeerScoreResults = {[id:string]: number};
-
-
-const docToObject = (doc: admin.firestore.QueryDocumentSnapshot) =>
-  ({id: doc.id, ...(doc.data() || {})}) as ContestantAnswers;
-
-export const calculateResults = onCall(async (data, context) => {
+export const calculateResults = onCall(async (data, _) => {
   // Get all answers.
-  const eventID = data;
+  const id = data;
 
   try {
-    const [correctBeers, contestantAnswers] = await Promise.all([
-      fetchCorrectBeers(eventID),
-      fetchContestantAnswers(eventID),
+    //Fetch event & answers
+    functions.logger.debug(`fetching answers (${id})`);
+    let [event, answers] = await Promise.all([
+        getTastingEvent(id),
+        getTastingEventAnswers(id)
     ]);
+    functions.logger.debug(`answers fetched (${id})`);
 
-    const contestantRoundResults = calculateContestantRoundResults(
-        correctBeers,
-        contestantAnswers
-    );
-    functions.logger.debug(`results calculated (${eventID})`);
+    //Get the correct order of beers.
+    const barTenderAnswers = answers.find( a => a.id === event.bartender);
+    validateBarTenderAnswers(barTenderAnswers);
 
-    const beerScoreResults = calculateBeerScoreResults(
-        correctBeers,
-        contestantAnswers
-    );
-    functions.logger.debug(`beer score totals calculated (${eventID})`);
+    const correctBeers = barTenderAnswers?.beers;
+    functions.logger.debug(`answers valid (${id})`);
 
-    const tastingResults = createTastingResults(
-        contestantRoundResults,
-        beerScoreResults
-    );
-    functions.logger.debug(`tasting results calculated (${eventID})`);
+    //clear out the bartender's answers and owner answers if needed.
+    const exludeEmails = [event.bartender, (event.ownerAddedAsTaster && event.owner)];
+    answers = answers.filter( a => !exludeEmails.includes(a.id))
+    
+    // Create the tasting results
+    const roundResults = createContestantRoundResults(correctBeers!, answers);
+    sortByRankedPointScores(roundResults);
+    const beerScoreResults = createBeerScoreResults(correctBeers!, answers);
+    sortByRankedBeerTasteScores(beerScoreResults);
+    const tastingResults = {
+        roundResults,
+        beerScoreResults,
+        lastUpdated: getCurrentTimestamp()
+    } as TastingResults
+    functions.logger.debug(`results created (${id})`);
 
-    await admin.firestore()
-        .collection("results")
-        .doc(eventID)
-        .set(tastingResults);
-    functions.logger.debug(`tasting saved (${eventID})`);
+    //Save the results.
+    setResults(id, tastingResults);
+    functions.logger.debug(`results saved (${id})`);
 
+    //Reply with the results.
     return tastingResults;
   } catch (error) {
     const message = (error as ResultsError).message;
     const code = (error as ResultsError).code;
-    functions.logger.error(`Error: ${message} (${code})`);
-    return {error: {message, code}};
+    functions.logger.error(`Error: ${message} (${code})\n ${error.stack}`);
+    
+    return {error: {message, code}} as ServerError;
   }
 });
 
-export const fetchCorrectBeers = async (eventID: string): Promise<string[]> => {
-  const eventRef = admin.firestore().collection("events").doc(eventID);
-  const [eventDoc, bartenderUID] = await Promise.all([
-    eventRef.get(),
-    fetchEventBarTenderUID(eventID),
-  ]);
-
-  // Make sure the event exists.
-  if (!eventDoc.exists) {
-    throw new ResultsError(`No event found with ID (${eventID}).`, 1500);
-  }
-
-  // Check if we have bartender answers.
-  const answersDoc = await eventRef
-      .collection("answers")
-      .doc(bartenderUID)
-      .get();
-  if (!answersDoc.exists) {
+export const validateBarTenderAnswers = (anwsers: ContestantAnswers | undefined) => {
+  if(anwsers?.beers === undefined){ 
     throw new ResultsError("No answers found for bartender.", 1500);
   }
-  functions.logger.debug(`bartender has answers (${bartenderUID})`);
-
-  const bartenderAnswers = {
-    id: answersDoc.id,
-    beers: (answersDoc.data()?.beers || []),
-  } as BarTenderAnswers;
+  functions.logger.debug(`bartender has answers (${anwsers.id})`);
 
   // Make sure every beer is set.
-  const allBeersSet = bartenderAnswers?.beers
+  const allBeersSet = anwsers?.beers
     ?.map( (b) => b?.length > 0 )
     ?.every( (set) => set );
   if (!allBeersSet) {
     throw new ResultsError("Bar tender has not set all beers yet.", 1500);
   }
-  functions.logger.debug(`bartender has all beers set (${bartenderUID})`);
-
-  return bartenderAnswers?.beers || [];
+  functions.logger.debug(`bartender has all beers set (${anwsers.id})`);
 };
 
-export const fetchContestantAnswers = async (
-    eventID: string
-): Promise<ContestantAnswers[]> => {
-  const eventRef = admin.firestore().collection("events").doc(eventID);
-  const [event, answersQuery, bartenderUID] = await Promise.all([
-    eventRef.get(),
-    eventRef.collection("answers").get(),
-    fetchEventBarTenderUID(eventID),
-  ]);
 
-  let answers: ContestantAnswers[] = (
-      answersQuery?.docs?.map( docToObject
-  ) || []);
-  answers = answers.filter( (a) => a.id !== bartenderUID);
-  if ((event as any)?.ownerAddedAsTaster !== true) {
-    // Remove owner answers from results.
-    const owner = (event as any)?.owner;
-    answers = answers.filter( (a) => a.id !== owner);
-  }
-  return answers;
-};
 
-export const fetchEventBarTenderUID = async (
-    eventID: string
-): Promise<string> => {
-  const eventRef = admin.firestore().collection("events").doc(eventID);
-  const eventDoc = await eventRef.get();
-
-  // Make sure the bartender is set.
-  const event = (eventDoc?.data() || {});
-  if (!event?.bartender) {
-    throw new ResultsError(
-        `Event does not have a bartender (${eventID})`,
-        1500
-    );
-  }
-
-  // Find the bartender user account to get the uid.
-  let bartenderUser: admin.auth.UserRecord;
-  try {
-    bartenderUser = await admin.auth().getUserByEmail(event?.bartender);
-  } catch (error) {
-    throw new ResultsError(
-        "Error fetching bar tender account. No account " +
-        `found or email incorrect. (${event?.bartender})`,
-        1500);
-  }
-  return bartenderUser.uid;
-};
-
-export const calculateContestantRoundResults = (
+export const createContestantRoundResults = (
     correctBeers: string[],
     contestantAnswers: ContestantAnswers[]
-): ContestantRoundResults => {
+): ResultSummary[] => {
   const rounds = correctBeers.length;
   return (contestantAnswers||[]).map(
       (contestantAnswers) => {
@@ -220,7 +117,7 @@ export const calculateContestantRoundResults = (
           totalAsterisksSecondHalf: 0,
           totalChanges: 0,
           roundResults: [],
-          userUID: contestantAnswers.id,
+          userEmail: contestantAnswers.id,
           beerScores: {},
         };
 
@@ -238,9 +135,9 @@ export const calculateContestantRoundResults = (
               const changes = contestantAnswers?.changes[roundIndex];
               const correct = (roundAnswer === correctBeer);
               const points =
-            (correct?1:0) +
-            ((correct && asterisked)?1:0) +
-            ((!correct && asterisked)?-1:0);
+                (correct?1:0) +
+                ((correct && asterisked)?1:0) +
+                ((!correct && asterisked)?-1:0);
 
               const isSecondHalf = roundIndex >= (rounds / 2);
               summary.totalPoints += points;
@@ -269,29 +166,24 @@ export const calculateContestantRoundResults = (
 
         return summary;
       }
-  ) as ContestantRoundResults;
+  ) as ResultSummary[];
 };
 
-export const calculateBeerScoreResults = (
+export const createBeerScoreResults = (
     correctBeers: string[],
     contestantAnswers: ContestantAnswers[]
-): BeerScoreResults => {
-  return (correctBeers||[]).reduce( (results, beer, roundIndex) => {
-    const toTasteScore = (rating:number) => Math.max(0, 4 - rating);
-    const roundTotalScore = contestantAnswers?.reduce(
-        (t, a) => t + toTasteScore((a.ratings[roundIndex]||0)),
-        0
-    );
-    const beerCurrentScore = results[beer] || 0;
-    results[beer] = beerCurrentScore + roundTotalScore;
-    return results;
-  }, {} as BeerScoreResults);
-};
+): BeerRanking[] => 
+  correctBeers.map( (correctBeer, index) => {
+      const points = contestantAnswers.reduce( 
+          (total, contestant) => total + ( 4 - (contestant.ratings[index] || 0) )
+      , 0);
+      return {name: correctBeer, points: points};
+  });
 
-export const rankedPointsSorting = (
-    contestantRoundResults: ContestantRoundResults=[]
+export const sortByRankedPointScores = (
+    contestantRoundResults: ResultSummary[]=[]
 ) =>
-  contestantRoundResults.slice().sort(
+  contestantRoundResults.sort(
       (r1: ResultSummary, r2: ResultSummary): number => {
         if (r2.totalPoints !== r1.totalPoints) {
           // Base on points if not tied.
@@ -320,38 +212,8 @@ export const rankedPointsSorting = (
         }
       });
 
-export const rankedTastScoreSorting = (
-    contestantRoundResults: ContestantRoundResults=[]
-): [string, number][] =>
-  contestantRoundResults.slice().sort(
-      (r1: ResultSummary, r2: ResultSummary) => {
-        return r1.totalTaste - r2.totalTaste;
-      }).map( (r) => [r.userUID, r.totalTaste]
-  );
+export const sortByRankedBeerTasteScores = (
+    beerScoreResults:BeerRanking[] = []
+): BeerRanking[] =>
+    beerScoreResults.sort( ({points:p1}, {points:p2}) => p1 - p2 );
 
-export const rankedBeerTasteSorting = (
-    beerScoreResults: BeerScoreResults={}
-): [string, number][] =>
-  Object.keys(beerScoreResults)
-      .sort( (k1, k2) => beerScoreResults[k1] - beerScoreResults[k2] )
-      .map( (k) => [k, beerScoreResults[k]] );
-
-
-export const createTastingResults = (
-    contestantRoundResults: ContestantRoundResults,
-    beerScoreResults: BeerScoreResults
-): TastingResults => {
-  const rankedPoints = rankedPointsSorting(contestantRoundResults);
-  const rankedTaste = rankedTastScoreSorting(contestantRoundResults);
-  const rankedBeerTaste = rankedBeerTasteSorting(beerScoreResults);
-  return {
-    winner: rankedPoints[0]?.userUID || "None",
-    second: rankedPoints[1]?.userUID || "None",
-    third: rankedPoints[3]?.userUID || null,
-    beerLovers: rankedTaste?.slice(0, 3),
-    beerHaters: rankedTaste?.reverse().slice(0, 3),
-    bestBeers: rankedBeerTaste.slice(0, 3),
-    worstBeers: rankedBeerTaste.reverse().slice(0, 3),
-    results: rankedPoints,
-  } as TastingResults;
-};

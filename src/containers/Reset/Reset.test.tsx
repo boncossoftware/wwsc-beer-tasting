@@ -24,7 +24,7 @@ const createLoginMockState = () => ({
             error: null,
         },
     } 
-} as RootState);
+} as any as RootState);
 
 
 test('renders correctly', () => {

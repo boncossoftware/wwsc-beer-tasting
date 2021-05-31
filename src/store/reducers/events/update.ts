@@ -16,12 +16,12 @@ export default function update(event: TastingEvent) {
     return async (dispatch: Dispatch<AnyAction>) => {
         dispatch({ type: ACTION_EVENTS_UPDATING, payload: true});
         try {
-            const {uid, email} = getCurrentUserInfo(); 
+            const {email} = getCurrentUserInfo(); 
             if (!event?.id) {
                 throw new StoreError('Event does not have an ID');
             }
             
-            const props = propsForEvent(uid, email, event); //Add the owner as related.
+            const props = propsForEvent(email, event); //Add the owner as related.
             const docRef = firebase.firestore().collection('events').doc(event.id);
             const resultsRef = firebase.firestore().collection('results').doc(event.id);
             await Promise.all([
