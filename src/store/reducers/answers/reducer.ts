@@ -12,9 +12,9 @@ import { StoreError } from "store/reducer";
 
 export type TastingAnswer = {
     id: string|undefined|null,
-    beers: string[]|undefined|null,
+    beers: (string|null)[]|undefined|null,
     asterisks: boolean[]|undefined|null,
-    ratings: number[]|undefined|null,
+    ratings: (number|null)[]|undefined|null,
     changes: number[]|undefined|null,
     rounds: number|undefined|null,
 }

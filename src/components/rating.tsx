@@ -1,11 +1,12 @@
-import { ChangeEvent, MouseEvent } from "react";
+import { ChangeEvent } from "react";
 import BaseRating from '@material-ui/lab/Rating';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 
 export type RatingProps = {
     id?: string,
-    rating: number, 
-    onChange?: (rating: number|null, event: ChangeEvent<{}>) => void,
+    rating: number|null, 
+    onChange?: (rating: number|null, event?: ChangeEvent<{}>) => void,
+    size: "small" | "medium" | "large" | undefined
 }
 
 const Rating = ({rating, onChange, ...p}: RatingProps) => {
