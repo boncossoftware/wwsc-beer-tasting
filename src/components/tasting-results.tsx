@@ -1,5 +1,5 @@
 import { List } from "@material-ui/core";
-import { Result } from "store/reducers/results/reducer";
+import { Result, ResultSummary } from "store/reducers/results/reducer";
 import { AchievementItem, LineItem, RankingResult, Subheader } from './tasting-results.styles';
 
 type TastingResultsProps = {
@@ -8,8 +8,12 @@ type TastingResultsProps = {
 
 const TastingResults = ({results}:TastingResultsProps) => {
     const available = Boolean(results?.lastUpdated);
-    const lover = results?.roundResults[0];
-    const hater = results?.roundResults?.reverse()[0];
+    let lover : ResultSummary | undefined;
+    let hater : ResultSummary | undefined;
+    results?.roundResults.forEach( r => {
+        lover = r.totalTaste < (lover?.totalTaste||Number.MAX_SAFE_INTEGER) ? r : lover;
+        hater = r.totalTaste > (hater?.totalTaste||-0) ? r : hater;
+    });
     const resultsCount = results?.roundResults?.length||0;
     if (available) {
         return <List disablePadding>

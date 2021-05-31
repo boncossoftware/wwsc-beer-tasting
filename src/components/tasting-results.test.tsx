@@ -71,9 +71,9 @@ test('renders contestant winner and losers correctly', () => {
         <TastingResults results={results} />
     );
     
-    const winner = screen.getByText(/Beer Lover/gi).nextSibling;
+    const winner = screen.getByText(/beer lover/gi).nextSibling;
     expect(winner?.textContent).toBe('winner@email.com');
 
-    const loser = screen.getByText(/Beer Lover/gi).nextSibling;
+    const loser = screen.getByText(/beer hater/gi).nextSibling;
     expect(loser?.textContent).toBe('loser@email.com');
 });
