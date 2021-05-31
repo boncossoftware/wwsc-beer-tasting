@@ -1,7 +1,16 @@
-import Rating from "./rating"
+
 import { MouseEventHandler } from "react";
-import { ListItem, ListItemText, ListSubheader, Typography } from "@material-ui/core";
-import { Asterisks, DisclosureIndicator } from './tasting-answer-item.styles';
+import { 
+    ListItem, 
+    ListItemText, 
+    ListSubheader, 
+    Typography 
+} from "@material-ui/core";
+import { 
+    Asterisks, 
+    DisclosureIndicator,
+    Rating
+} from './tasting-answer-item.styles';
 
 export type TastingAnswerItemProps = {
     roundIndex: number, 
@@ -20,9 +29,10 @@ const TastingAnswerItem = ({
     hasAsterisk, 
     showAsPoured, 
     canEdit=false, 
-    onClick
+    onClick,
+    ...p
 }: TastingAnswerItemProps) => {
-    return <>
+    return <div {...p}>
         <ListSubheader>
             {showAsPoured ? <> {roundIndex + 1}{roundIndex % 5 ? 'th' : 'st'} Poured </> : <> Round {roundIndex + 1} </>}
         </ListSubheader>
@@ -48,6 +58,6 @@ const TastingAnswerItem = ({
             />  
             { canEdit && <DisclosureIndicator />}
         </ListItem>
-    </>;
+    </div>;
 }
 export default TastingAnswerItem;

@@ -3,7 +3,7 @@ import CircularProgress from './full-page-circular-progress';
 
 test('renders correctly', () => {
     render(
-        <CircularProgress/>
+        <CircularProgress id="progress" />
     );
 
     const progress = document.getElementById('progress');

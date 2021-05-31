@@ -24,7 +24,7 @@ const createMockState = () => ({
         itemsLoading: {[TEST_ID]: false },
         itemsError: {[TEST_ID]: false }
     } 
-} as RootState);
+} as any as RootState);
 
 
 test('renders correctly', () => {

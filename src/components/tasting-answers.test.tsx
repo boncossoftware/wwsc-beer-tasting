@@ -28,6 +28,6 @@ test('renders correctly', async () => {
         expect(asterisk).toBeUndefined();
     }
     
-    const ratings = screen.getAllByText("★");
+    const ratings = document.getElementsByClassName("MuiRating-iconFilled");
     expect(ratings.length).toBe(mockAnswers.ratings![0]);
 });

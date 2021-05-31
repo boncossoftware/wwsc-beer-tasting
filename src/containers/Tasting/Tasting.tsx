@@ -80,42 +80,45 @@ const Tasting = ({baseURL}: TastingProps) => {
         dispatch( results.calculate(id) );
     }
 
-    if (answersLoading) {
-        return <CircularProgress />
-    }
-    return <>
-        {answersError && <ErrorMessage error={answersError} />}
-        {canEdit && 
-            <AllowEditField 
-                onChange={handleAllowEditing} 
-                value={editingAllowed} 
-            />
+    return <div id="tasting" >
+        {answersLoading ? 
+            <CircularProgress />
+            :
+            <>
+                {answersError && <ErrorMessage error={answersError} />}
+                {canEdit && 
+                    <AllowEditField 
+                        onChange={handleAllowEditing} 
+                        value={editingAllowed} 
+                    />
+                }
+                {userAnswers && 
+                    <TastingAnswers 
+                        answers={userAnswers} 
+                        showForBartender={isBartender} 
+                        editingAllowed={editingAllowed} 
+                        onClickItemAtIndex={ handleClickItemAtIndex }
+                    />
+                }
+                <Section title="Results">
+                    {(resultsLoading || resultsCalculating) ? 
+                        <ResultsCircularProgress />
+                        :
+                        <>
+                            {(resultsError || resultsCalculationError) && 
+                                <ErrorMessage error={resultsError || resultsCalculationError } />
+                            }
+                            <TastingResults results={tastingResults} />
+                            <CalculateResultsButton 
+                                onClick={handleCalculateResults}
+                            >
+                                {resultsAvailable ? 'Rec' : 'C'}alculate Results
+                            </CalculateResultsButton>
+                        </>
+                    }   
+                </Section>
+            </>
         }
-        {userAnswers && 
-            <TastingAnswers 
-                answers={userAnswers} 
-                showForBartender={isBartender} 
-                editingAllowed={editingAllowed} 
-                onClickItemAtIndex={ handleClickItemAtIndex }
-            />
-        }
-        <Section title="Results">
-            {(resultsLoading || resultsCalculating) ? 
-                <ResultsCircularProgress />
-                :
-                <>
-                    {(resultsError || resultsCalculationError) && 
-                        <ErrorMessage error={resultsError || resultsCalculationError } />
-                    }
-                    <TastingResults results={tastingResults} />
-                    <CalculateResultsButton 
-                        onClick={handleCalculateResults}
-                    >
-                        {resultsAvailable ? 'Rec' : 'C'}alculate Results
-                    </CalculateResultsButton>
-                </>
-            }   
-        </Section>
-    </>
+    </div>
 }
 export default Tasting;

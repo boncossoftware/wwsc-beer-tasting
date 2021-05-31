@@ -10,7 +10,7 @@ const TastingResults = ({results}:TastingResultsProps) => {
     const available = Boolean(results?.lastUpdated);
     let lover : ResultSummary | undefined;
     let hater : ResultSummary | undefined;
-    results?.roundResults.forEach( r => {
+    results?.roundResults?.forEach( r => {
         lover = r.totalTaste < (lover?.totalTaste||Number.MAX_SAFE_INTEGER) ? r : lover;
         hater = r.totalTaste > (hater?.totalTaste||-0) ? r : hater;
     });

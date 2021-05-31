@@ -21,7 +21,7 @@ test('renders correctly', async () => {
     const asterisk = screen.getByText("✱");
     expect(asterisk).toBeInTheDocument();
     
-    const ratings = screen.getAllByText("★");
+    const ratings = document.getElementsByClassName("MuiRating-iconFilled");
     expect(ratings.length).toBe(2);
 });
 
@@ -45,7 +45,7 @@ test('renders correctly as poured', async () => {
     const asterisk = screen.queryByText("✱");
     expect(asterisk).toBeNull();
     
-    const ratings = screen.queryAllByText("★");
+    const ratings = document.getElementsByClassName("MuiRating-iconFilled");
     expect(ratings.length).toBe(0);
 });
 

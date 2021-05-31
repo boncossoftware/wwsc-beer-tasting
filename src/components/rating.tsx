@@ -1,12 +1,16 @@
-import { MouseEvent } from "react";
+import { ChangeEvent, MouseEvent } from "react";
+import BaseRating from '@material-ui/lab/Rating';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 
 export type RatingProps = {
+    id?: string,
     rating: number, 
-    onChange?: (rating: number|null, event: MouseEvent) => void
+    onChange?: (rating: number|null, event: ChangeEvent<{}>) => void,
 }
 
-const Rating = ({rating, onChange}: RatingProps) => {
-    const handleRatingClick = (newRating: number) => (event: MouseEvent) => {
+const Rating = ({rating, onChange, ...p}: RatingProps) => {
+    
+    const handleRatingClick = (event: ChangeEvent<{}>, newRating: number|null) => {
         if (rating === newRating) {
             //Clear the rating.
             (onChange && onChange(null, event));
@@ -15,13 +19,21 @@ const Rating = ({rating, onChange}: RatingProps) => {
             (onChange && onChange(newRating, event));
         }
     }
+
     return (
-        <span>
-            <span onClick={handleRatingClick(1)}>{(rating < 1) ? '☆' : '★'}</span>
-            <span onClick={handleRatingClick(2)}>{(rating < 2) ? '☆' : '★'}</span>
-            <span onClick={handleRatingClick(3)}>{(rating < 3) ? '☆' : '★'}</span>
-            <span onClick={handleRatingClick(4)}>{(rating < 4) ? '☆' : '★'}</span>
-        </span>
+        <BaseRating
+            name="beer-rating"
+            value={rating}
+            precision={1}
+            max={4}
+            emptyIcon={
+                <StarBorderIcon fontSize="inherit" />
+            }
+            onChange={handleRatingClick}
+            size="medium"
+            readOnly={!Boolean(onChange)}
+            {...p}
+        />
     )
 }
 export default Rating;
