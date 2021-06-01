@@ -1,14 +1,15 @@
 import { 
+    Container as BaseContainer,
     Button,
     FormControl,
     FormControlLabel,
     styled,
     Switch,
 } from "@material-ui/core";
-import ErrorMessage from "components/error-message";
 import FullPageCircularProgress from "components/full-page-circular-progress";
 import SectionGrid from "components/section-grid";
 
+export const Container = BaseContainer;
 
 export const CircularProgress = FullPageCircularProgress;
 
@@ -45,17 +46,7 @@ export const AllowEditField = styled(({onChange, value, ...p})=>
     }
 }));
 
-export const Section = styled( ({...p}) =>
-    <SectionGrid {...p} />
-)( ({theme}) => ({
-    '& > .MuiTypography-root': {
-        paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(2),
-    },
-    '& > .MuiGrid-root': {
-        padding: theme.spacing(2)
-    }
-}));
+export const Section = SectionGrid;
 
 export const ResultsCircularProgress = styled( ({...p}) =>
     <FullPageCircularProgress {...p} />
@@ -71,3 +62,5 @@ export const CalculateResultsButton = styled( ({...p}) =>
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(10),
 }));
+
+

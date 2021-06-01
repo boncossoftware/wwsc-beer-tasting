@@ -6,14 +6,16 @@ type BeerListProps = {
     beers?: (string|null)[], 
     onClickBeer?: (beer: string|null, event?: MouseEvent<HTMLDivElement>) => void, 
     beerPreselectedIndex?: ((beer: string|null) => number), 
-    isBeerSelected?: ((beer: string|null) => boolean)
+    isBeerSelected?: ((beer: string|null) => boolean),
+    itemsSelectable?: boolean
 }
 
 const BeerList = ({
     beers=[], 
     onClickBeer, 
     beerPreselectedIndex, 
-    isBeerSelected
+    isBeerSelected,
+    itemsSelectable=true
 }: BeerListProps) => {
     
     const handleClickBeer = (beer: string|null, event?: MouseEvent<HTMLDivElement>) => {
@@ -31,6 +33,7 @@ const BeerList = ({
                     onClick={ event => handleClickBeer(beer, event)}
                     selected={selected}
                     preSelectedIndex={preSelectedIndex}
+                    selectable={itemsSelectable}
                 />
             );
         });

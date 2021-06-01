@@ -11,6 +11,7 @@ import TastingAnswers from "../../components/tasting-answers";
 import TastingResults from "../../components/tasting-results";
 import { answers, events, results } from "../../store";
 import { 
+    Container,
     AllowEditField, 
     CalculateResultsButton, 
     CircularProgress, 
@@ -80,7 +81,7 @@ const Tasting = ({baseURL}: TastingProps) => {
         dispatch( results.calculate(id) );
     }
 
-    return <div id="tasting" >
+    return <Container id="tasting" >
         {answersLoading ? 
             <CircularProgress />
             :
@@ -119,6 +120,6 @@ const Tasting = ({baseURL}: TastingProps) => {
                 </Section>
             </>
         }
-    </div>
+    </Container>
 }
 export default Tasting;
