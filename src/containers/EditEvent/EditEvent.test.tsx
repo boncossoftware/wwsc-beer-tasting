@@ -29,7 +29,7 @@ const createMockState = () => ({
         },
     }
 } as any as RootState);
-/*
+
 test('renders correctly', () => {
     render( <EditEvent />);
 
@@ -91,19 +91,19 @@ test('renders updating correctly', () => {
 
     const adding = screen.getByText(/updating.../ig);
     expect(adding).toBeInTheDocument();
-});*/
+});
 
 test('renders handle update', async () => {
     const mockState = createMockState();
-    let mockTastingEvent = mockState.events.items[0];
+    let mockTastingEvent = mockState.events.items![0];
     resetFirebaseMock({
-        getDocDataForID: (id) => {
+        getDocDataForID: (id: string) => {
             if (id === mockTastingEvent.id) {
                 return mockTastingEvent;
             }
             return undefined;
         },
-        updateDocDataForID: (id, data) => {
+        updateDocDataForID: (id: string, data: any) => {
             if (mockTastingEvent.id === id) {
                 mockTastingEvent = { ...mockTastingEvent, ...data };
             }

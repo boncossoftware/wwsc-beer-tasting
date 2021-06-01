@@ -1,0 +1,46 @@
+import { List } from "@material-ui/core";
+import { MouseEvent } from "react";
+import BeerListItem from './beer-list-item';
+
+type BeerListProps = {
+    beers?: (string|null)[], 
+    onClickBeer?: (beer: string|null, event?: MouseEvent<HTMLDivElement>) => void, 
+    beerPreselectedIndex?: ((beer: string|null) => number), 
+    isBeerSelected?: ((beer: string|null) => boolean)
+}
+
+const BeerList = ({
+    beers=[], 
+    onClickBeer, 
+    beerPreselectedIndex, 
+    isBeerSelected
+}: BeerListProps) => {
+    
+    const handleClickBeer = (beer: string|null, event?: MouseEvent<HTMLDivElement>) => {
+        onClickBeer && onClickBeer(beer, event);
+    };
+
+    const renderItems = () => {
+        return beers.map( (beer, index) => {
+            let preSelectedIndex = (beerPreselectedIndex && beerPreselectedIndex(beer));
+            const selected = (isBeerSelected && isBeerSelected(beer)) || false;
+            return (
+                <BeerListItem 
+                    key={index} 
+                    beer={beer} 
+                    onClick={ event => handleClickBeer(beer, event)}
+                    selected={selected}
+                    preSelectedIndex={preSelectedIndex}
+                />
+            );
+        });
+    }
+    
+    if (beers.length === 0) {
+        return <>No beers added</>
+    }
+    else {
+        return <List>{renderItems()}</List>;
+    }
+}   
+export default BeerList;

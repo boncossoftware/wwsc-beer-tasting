@@ -14,8 +14,8 @@ import {
 
 export type TastingAnswerItemProps = {
     roundIndex: number, 
-    selectedBeer: string, 
-    rating: number, 
+    selectedBeer: string|null, 
+    rating: number|null, 
     hasAsterisk: boolean, 
     showAsPoured: boolean, 
     canEdit?: boolean, 
