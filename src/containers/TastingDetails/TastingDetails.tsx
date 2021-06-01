@@ -8,17 +8,13 @@ import { useHistory, useParams } from "react-router";
 import { StoreError, UserInfo } from "store/reducer";
 import { TastingAnswer } from "store/reducers/answers/reducer";
 import { TastingEvent } from "store/reducers/events/reducer";
-import BeerList from "../../components/beer-list";
-import Rating from "../../components/rating";
 import { events, answers, RootState } from '../../store';
 import { 
     Container,
     CancelButton,
     CircularProgress,
-    Section,
     UpdateButton,
     InnerContainer,
-    BeerListCaption,
     RatingField,
     AsteriskedField,
     BeerSelectionField,
@@ -40,13 +36,14 @@ const TastingDetails = () => {
         s => s?.events?.items?.find(e => e.id === id)
     );
     const eventLoading = useSelector<RootState, boolean>(s => s?.events?.itemsLoading[id]);
+    const eventError = useSelector<RootState, StoreError>(s => s?.events?.itemsError[id]);  
     const answer = useSelector<RootState, TastingAnswer|undefined>(
         s => s?.answers?.items?.find(e => e.id === id)
     );
     const answerLoading = useSelector<RootState, boolean>(s => s?.answers?.itemsLoading[id]);
     const updating = useSelector<RootState, boolean>(s => s?.answers?.update.updating);
-    const updated = useSelector<RootState, boolean>(s => s?.answers?.update.updated);
-    const error = useSelector<RootState, StoreError|null>(s => s?.answers?.update.error);
+    const updated = useSelector<RootState, TastingAnswer[]|null>(s => s?.answers?.update.updated);
+    const answerError = useSelector<RootState, StoreError|null>(s => s?.answers?.update.error);
     
     const initialSelectedBeer = (answer?.beers||[])[roundIndex] || null;
     const initialSelectedRating = (answer?.ratings||[])[roundIndex] || null;
@@ -56,7 +53,7 @@ const TastingDetails = () => {
     const [selectedBeer, setSelectedBeer] = useState(initialSelectedBeer);
     const [selectedRating, setSelectedRating] = useState(initialSelectedRating);
     const [selectedAsterisked, setSelectedAsterisked] = useState(initialAsterisked);
-    const [open, setOpen] = useState(true);
+    const [open, setOpen] = useState<boolean>(true);
 
     const changes = (
         initialSelectedBeer !== selectedBeer
@@ -67,6 +64,7 @@ const TastingDetails = () => {
     );
 
     const loading = eventLoading || answerLoading;
+    const error = eventError || answerError;
     const isBartender = (event?.bartender && (event.bartender === user?.email));
 
     //Load the event (if needed)
@@ -172,7 +170,7 @@ const TastingDetails = () => {
                 onClose={handleCancel}
                 onExited={handleExit}
                 TransitionComponent={SlideUpTransition}
-            >
+            >  
                 <AppBar 
                     renderLeftComponent={ () => 
                         <CancelButton onClick={handleCancel} />

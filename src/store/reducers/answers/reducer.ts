@@ -26,7 +26,7 @@ export type AnswersState = {
     items: TastingAnswer[]|null,
     update: {
         updating: boolean,
-        updated: boolean,
+        updated: TastingAnswer[]|null,
         error: StoreError|null,
     },
 }
@@ -38,7 +38,7 @@ const initialState = {
     items: null,
     update: {
         updating: false,
-        updated: false,
+        updated: null,
         error: null,
     },
 }
@@ -79,7 +79,7 @@ export default function answersReducer(
         }
         case ACTION_EVENT_ANSWERS_UPDATE_RESET: {
             state.update.updating = false;
-            state.update.updated = false;
+            state.update.updated = null;
             state.update.error = null;
             return state;
         }
