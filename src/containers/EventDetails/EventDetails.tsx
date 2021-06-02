@@ -1,3 +1,4 @@
+import { Fade } from "@material-ui/core";
 import AppBar from "components/app-bar";
 import ErrorMessage from "components/error-message";
 import { useEffect } from "react";
@@ -74,29 +75,32 @@ const EventDetails = () => {
                     canEdit ? <EditButton onClick={handleEditEvent} /> : null
                 } 
             />
-            {loading ? 
-                <CircularProgress />
-                :
-                <>
-                    {error && <ErrorMessage error={error} /> }
-                    <Switch >
-                        <Route path={`${path}/tasting`}>
-                            <Tasting baseURL={`${baseURL}/tasting`}/>
-                        </Route>
-                        <Route path={`${path}/beers`}>
-                            <Beers />
-                        </Route>
-                        <Route path={`${path}/tasters`}>
-                            <Tasters />
-                        </Route>
-                        <Route path={`${path}/venue`}>
-                            <Venue />
-                        </Route>
-                        <Redirect to={`${baseURL}/tasting`} />
-                    </Switch>
-                </>
-            }
-            
+            <Fade in={!loading}>
+                <div>
+                {loading ? 
+                    <CircularProgress />
+                    :
+                    <>
+                        {error && <ErrorMessage error={error} /> }
+                        <Switch >
+                            <Route path={`${path}/tasting`}>
+                                <Tasting baseURL={`${baseURL}/tasting`}/>
+                            </Route>
+                            <Route path={`${path}/beers`}>
+                                <Beers />
+                            </Route>
+                            <Route path={`${path}/tasters`}>
+                                <Tasters />
+                            </Route>
+                            <Route path={`${path}/venue`}>
+                                <Venue />
+                            </Route>
+                            <Redirect to={`${baseURL}/tasting`} />
+                        </Switch>
+                    </>
+                }
+                </div>
+            </Fade>
             <BottomNavigationBar 
                 value={activeSection} 
                 onChange={handleChangeActiveSection}
