@@ -7,12 +7,25 @@ import {
     ListItemSecondaryAction,
     Typography,
     ListSubheader,
+    Container as BaseContainer
 } from "@material-ui/core";
 import { 
     AddCircleOutline,
     LocationCity
 } from "@material-ui/icons";
 import FullPageCircularProgress from "components/full-page-circular-progress";
+
+export const Container = styled(p=> 
+    <div {...p}/>
+)({
+
+});
+
+export const InnerContainer = styled(p=> 
+    <BaseContainer {...p}/>
+)({
+
+});
 
 export const AddButton = styled(p=> 
     <IconButton color="inherit" {...p}><AddCircleOutline/></IconButton>
@@ -29,7 +42,7 @@ export const EventList = styled(p=>
 });
 
 export const EventListSectionHeader = styled(p=>
-    <ListSubheader {...p} />
+    <ListSubheader {...p} disableGutters/>
 )({
 
 });
@@ -37,7 +50,7 @@ export const EventListSectionHeader = styled(p=>
 
 
 export const EventListItem = styled(p=>
-    <ListItem divider={true} button {...p} />
+    <ListItem divider={true} button disableGutters {...p} />
 )({
     width: '100%'
 });
