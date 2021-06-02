@@ -29,7 +29,7 @@ test('renders correctly', () => {
 
     render( <Venue />);
 
-    const container = document.getElementById('beers');
+    const container = document.getElementById('venue');
     expect(container).toBeInTheDocument();
 });
 
