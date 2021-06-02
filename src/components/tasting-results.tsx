@@ -16,7 +16,7 @@ const TastingResults = ({results}:TastingResultsProps) => {
     });
     const resultsCount = results?.roundResults?.length||0;
     return (
-        <List>
+        <List disablePadding>
             {available ? 
                 <>
                     <Subheader>Ranking</Subheader>

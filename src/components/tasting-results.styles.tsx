@@ -8,13 +8,13 @@ import {
 } from "@material-ui/core";
 
 export const Subheader = styled(({...p}) => 
-    <ListSubheader {...p}/>
+    <ListSubheader {...p} disableGutters/>
 )(({theme}) => ({
     
 }))
 
 export const RankingResult = styled(({rank, name, points, ...p}) => 
-    <ListItem {...p} divider>
+    <ListItem {...p} divider disableGutters>
         <ListItemIcon>{rank}</ListItemIcon>
         <ListItemText 
             primary={name}
@@ -26,7 +26,7 @@ export const RankingResult = styled(({rank, name, points, ...p}) =>
 }))
 
 export const LineItem = styled(({children, ...p}) => 
-    <ListItem {...p}>
+    <ListItem {...p} disableGutters>
         <ListItemText>
             {children}
         </ListItemText>
@@ -37,7 +37,7 @@ export const LineItem = styled(({children, ...p}) =>
 }))
 
 export const AchievementItem = styled(({achievement, receiver, ...p}) => 
-    <ListItem {...p} divider>
+    <ListItem {...p} divider disableGutters>
         <ListItemIcon>{achievement}</ListItemIcon>
         <ListItemText>
             {receiver}

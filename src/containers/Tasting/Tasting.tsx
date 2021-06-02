@@ -86,6 +86,7 @@ const Tasting = ({baseURL}: TastingProps) => {
             <CircularProgress />
             :
             <>
+                <Section>
                 {answersError && <ErrorMessage error={answersError} />}
                 {canEdit && 
                     <AllowEditField 
@@ -101,6 +102,7 @@ const Tasting = ({baseURL}: TastingProps) => {
                         onClickItemAtIndex={ handleClickItemAtIndex }
                     />
                 }
+                </Section>
                 <Section title="Results">
                     {(resultsLoading || resultsCalculating) ? 
                         <ResultsCircularProgress />

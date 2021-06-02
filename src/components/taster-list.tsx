@@ -43,7 +43,7 @@ const TasterList = ({
         return <Typography>No tasters added</Typography>
     }
     else {
-        return <List>{renderItems()}</List>
+        return <List disablePadding>{renderItems()}</List>
     }
 }   
 export default TasterList;

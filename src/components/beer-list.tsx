@@ -43,7 +43,7 @@ const BeerList = ({
         return <Typography>No beers added</Typography>
     }
     else {
-        return <List>{renderItems()}</List>;
+        return <List disablePadding>{renderItems()}</List>;
     }
 }   
 export default BeerList;
