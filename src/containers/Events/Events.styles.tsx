@@ -42,7 +42,7 @@ export const EventList = styled(p=>
 });
 
 export const EventListSectionHeader = styled(p=>
-    <ListSubheader {...p} />
+    <ListSubheader {...p} disableGutters/>
 )({
 
 });
