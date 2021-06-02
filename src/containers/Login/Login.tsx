@@ -6,6 +6,7 @@ import AuthenticationForm, {
     AuthenticationFormOnSubmitCallback
 } from '../../components/authentication-form';
 import {
+    FormInnerContainer,
     Title,
     Subtitle,
     MadeByBoncos
@@ -49,32 +50,29 @@ const Login = () => {
             </Subtitle>
             
             <FormContainer>
-                {loading ? 
-                    <CircularProgress />
-                    :
-                    <>
-                        { error && <ErrorMessage error={error} /> }
-                        <AuthenticationForm 
-                            id="login-form"
-                            submitButtonTitle="Login"
-                            onSubmit={handleLogin}
-                        />
-                        <OptionsContainer>
-                            <OptionLink 
-                                onClick={handleMoveToOtherPage} 
-                                to={`/forgot`}
-                            >
-                                Forgot Password?
-                            </OptionLink>
-                            <OptionLink 
-                                onClick={handleMoveToOtherPage} 
-                                to={`/create-account`}
-                            >
-                                Create Account
-                            </OptionLink>
-                        </OptionsContainer>
-                    </>
-                }
+                {loading && <CircularProgress />}
+                <FormInnerContainer hidden={loading} >
+                    { error && <ErrorMessage error={error} /> }
+                    <AuthenticationForm 
+                        id="login-form"
+                        submitButtonTitle="Login"
+                        onSubmit={handleLogin}
+                    />
+                    <OptionsContainer>
+                        <OptionLink 
+                            onClick={handleMoveToOtherPage} 
+                            to={`/forgot`}
+                        >
+                            Forgot Password?
+                        </OptionLink>
+                        <OptionLink 
+                            onClick={handleMoveToOtherPage} 
+                            to={`/create-account`}
+                        >
+                            Create Account
+                        </OptionLink>
+                    </OptionsContainer>
+                </FormInnerContainer>
             </FormContainer>
             <MadeByBoncos />
         </Container>
