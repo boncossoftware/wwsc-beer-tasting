@@ -3,10 +3,10 @@ import { MouseEventHandler } from "react";
 import { 
     ListItem, 
     ListItemText, 
-    ListSubheader, 
     Typography 
 } from "@material-ui/core";
 import { 
+    ListSubheader,
     Asterisks, 
     DisclosureIndicator,
     Rating
@@ -33,7 +33,7 @@ const TastingAnswerItem = ({
     ...p
 }: TastingAnswerItemProps) => {
     return <div {...p}>
-        <ListSubheader disableGutters>
+        <ListSubheader>
             {showAsPoured ? <> {roundIndex + 1}{roundIndex % 5 ? 'th' : 'st'} Poured </> : <> Round {roundIndex + 1} </>}
         </ListSubheader>
         <ListItem 
@@ -42,7 +42,7 @@ const TastingAnswerItem = ({
             button
             disabled={!canEdit}
             disableGutters
-        >
+        >   
             <ListItemText
                 primary={<>
                     {selectedBeer || 'Choose Beer'}

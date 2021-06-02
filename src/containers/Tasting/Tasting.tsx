@@ -86,22 +86,22 @@ const Tasting = ({baseURL}: TastingProps) => {
             <CircularProgress />
             :
             <>
-                <Section>
-                {answersError && <ErrorMessage error={answersError} />}
-                {canEdit && 
-                    <AllowEditField 
-                        onChange={handleAllowEditing} 
-                        value={editingAllowed} 
-                    />
-                }
-                {userAnswers && 
-                    <TastingAnswers 
-                        answers={userAnswers} 
-                        showForBartender={isBartender} 
-                        editingAllowed={editingAllowed} 
-                        onClickItemAtIndex={ handleClickItemAtIndex }
-                    />
-                }
+                <Section title="Answers">
+                    {answersError && <ErrorMessage error={answersError} />}
+                    {canEdit && 
+                        <AllowEditField 
+                            onChange={handleAllowEditing} 
+                            value={editingAllowed} 
+                        />
+                    }
+                    {userAnswers && 
+                        <TastingAnswers 
+                            answers={userAnswers} 
+                            showForBartender={isBartender} 
+                            editingAllowed={editingAllowed} 
+                            onClickItemAtIndex={ handleClickItemAtIndex }
+                        />
+                    }
                 </Section>
                 <Section title="Results">
                     {(resultsLoading || resultsCalculating) ? 
