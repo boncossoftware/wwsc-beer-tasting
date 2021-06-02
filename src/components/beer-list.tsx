@@ -1,4 +1,4 @@
-import { List } from "@material-ui/core";
+import { List, Typography } from "@material-ui/core";
 import { MouseEvent } from "react";
 import BeerListItem from './beer-list-item';
 
@@ -40,7 +40,7 @@ const BeerList = ({
     }
     
     if (beers.length === 0) {
-        return <>No beers added</>
+        return <Typography>No beers added</Typography>
     }
     else {
         return <List>{renderItems()}</List>;

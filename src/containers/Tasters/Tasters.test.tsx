@@ -1,5 +1,5 @@
 import { render, screen} from 'testing/test-utils';
-import Beers from './Beers';
+import Tasters from './Tasters';
 import { RootState } from 'store';
 import {resetFirebaseMock} from 'testing/mock-firebase';
 import { StoreError } from '../../store';
@@ -27,9 +27,9 @@ const createMockState = () => ({
 test('renders correctly', () => {
     resetFirebaseMock();
 
-    render( <Beers />);
+    render( <Tasters />);
 
-    const container = document.getElementById('beers');
+    const container = document.getElementById('tasters');
     expect(container).toBeInTheDocument();
 });
 
@@ -42,7 +42,7 @@ test('renders errors correctly', () => {
     mockState.events.itemsError[TEST_ID] = error;
     
     const mockDispatch = jest.fn();
-    render( <Beers />, {
+    render( <Tasters />, {
         initialState: mockState,
         wrapStore: (s:any) => ({
             ...s, 
@@ -63,7 +63,7 @@ test('renders loading correctly', () => {
     mockState.events.itemsLoading[TEST_ID] = true;
     
     const mockDispatch = jest.fn();
-    render( <Beers />, {
+    render( <Tasters />, {
         initialState: mockState,
         wrapStore: (s:any) => ({
             ...s, 
