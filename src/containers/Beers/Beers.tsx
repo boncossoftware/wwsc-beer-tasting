@@ -1,6 +1,7 @@
+import ErrorMessage from "components/error-message";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { RootState } from "store";
+import { RootState, StoreError } from "store";
 import { TastingEvent } from "store/reducers/events/reducer";
 import BeerList from "../../components/beer-list";
 import {
@@ -18,16 +19,24 @@ const Beers = () => {
     const event = useSelector<RootState, TastingEvent|undefined>( 
         s => s?.events?.items?.find( i => i.id === id ) 
     );
-    const loading = useSelector<RootState, boolean>( s => s?.events?.loading );
+    const error = useSelector<RootState, StoreError|undefined>( 
+        s => s?.events?.itemsError[id]
+    );
+    const loading = useSelector<RootState, boolean>( 
+        s => s?.events?.itemsLoading[id] 
+    );
     const beers = event?.beers || undefined;
     return (
         <Container id="beers">
             {loading ?
                     <CircularProgress />
                 :
-                <Section title="Beers">
-                    <BeerList beers={beers} itemsSelectable={false} />
-                </Section>
+                <>
+                    {error && <ErrorMessage error={error} />}
+                    <Section title="Beers">
+                        <BeerList beers={beers} itemsSelectable={false} />
+                    </Section>
+                </>
             }
         </Container>
     );
