@@ -71,5 +71,5 @@ export const VenueInfoItem = styled( ({title, value, ...p}) =>
         </Grid>
     </Grid>
 )(({theme}) => ({
-    marginLeft: theme.spacing(7)
+    
 }));
