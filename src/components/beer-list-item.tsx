@@ -6,35 +6,41 @@ export type BeerListItemProps = {
     beer: string | null,
     onClick?: MouseEventHandler<HTMLDivElement>,
     preSelectedIndex?: number,
-    selected?: boolean
+    selected?: boolean,
+    selectable?: boolean 
 }
 
 const BeerListItem = ({
     beer,
     onClick,
     preSelectedIndex = -1,
-    selected = false
+    selected = false,
+    selectable = true,
 }: BeerListItemProps) => {
+    const ItemComponent = (p: any) => (
+        selectable ? <ListItem {...p} button /> : <ListItem {...p} />
+    );
     return (
-        <ListItem
+        <ItemComponent
             onClick={onClick}
             divider
-            button
         >
-            <ListItemIcon>
-                <Checkbox
-                    edge="start"
-                    checked={selected}
-                    tabIndex={-1}
-                    disableRipple
-                />
-            </ListItemIcon>
+            {selectable && 
+                <ListItemIcon>
+                    <Checkbox
+                        edge="start"
+                        checked={selected}
+                        tabIndex={-1}
+                        disableRipple
+                    />
+                </ListItemIcon>
+            }
             <BeerName 
                 preSelectedIndex={preSelectedIndex}
             >
                 {beer}
             </BeerName>
-        </ListItem>
+        </ItemComponent>
     )
 };
 export default BeerListItem;

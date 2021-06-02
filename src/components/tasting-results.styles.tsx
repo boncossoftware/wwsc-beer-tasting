@@ -4,16 +4,17 @@ import {
     ListItemText,
     ListSubheader,
     styled,
+    Typography,
 } from "@material-ui/core";
 
 export const Subheader = styled(({...p}) => 
-    <ListSubheader {...p} disableGutters/>
+    <ListSubheader {...p}/>
 )(({theme}) => ({
     
 }))
 
 export const RankingResult = styled(({rank, name, points, ...p}) => 
-    <ListItem {...p} divider disableGutters>
+    <ListItem {...p} divider>
         <ListItemIcon>{rank}</ListItemIcon>
         <ListItemText 
             primary={name}
@@ -25,7 +26,7 @@ export const RankingResult = styled(({rank, name, points, ...p}) =>
 }))
 
 export const LineItem = styled(({children, ...p}) => 
-    <ListItem {...p} disableGutters>
+    <ListItem {...p}>
         <ListItemText>
             {children}
         </ListItemText>
@@ -36,7 +37,7 @@ export const LineItem = styled(({children, ...p}) =>
 }))
 
 export const AchievementItem = styled(({achievement, receiver, ...p}) => 
-    <ListItem {...p} divider disableGutters>
+    <ListItem {...p} divider>
         <ListItemIcon>{achievement}</ListItemIcon>
         <ListItemText>
             {receiver}
@@ -47,3 +48,12 @@ export const AchievementItem = styled(({achievement, receiver, ...p}) =>
         marginRight: theme.spacing(2),
     }
 }))
+
+export const NoResultsMessage = styled( ({...p}) =>
+    <Typography {...p}>
+        No results available.
+    </Typography>
+)(({theme}) => ({
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+}));

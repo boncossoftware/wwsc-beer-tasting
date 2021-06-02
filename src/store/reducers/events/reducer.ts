@@ -41,7 +41,7 @@ export type TastingEvent = {
     bartender: string|undefined|null;
     tasters: string[]|undefined|null;
     ownerAddedAsTaster: boolean|undefined|null;
-    beers: string[]|undefined|null;
+    beers: (string|null)[]|undefined|null;
     asterisksAllowed: number|undefined|null;
     editingAllowed: boolean|undefined|null;
     rounds: number|undefined|null;
