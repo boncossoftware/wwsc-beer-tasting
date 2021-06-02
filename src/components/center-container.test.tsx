@@ -1,16 +1,17 @@
-import { 
-    Container as BaseContainer, 
-    styled, 
-} from '@material-ui/core';
+import { screen } from '@testing-library/react';
+import { render } from 'testing/test-utils';
+import Container from './center-container';
 
-const CenterContainer = styled(p => 
-    <BaseContainer maxWidth='sm' {...p}/>
-)(
-    p => ({
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        paddingTop: p.theme.spacing(5),
-    })
-);
-export default CenterContainer;
+test('renders correctly', () => {
+    render(
+        <Container id="container">
+            Content
+        </Container>
+    );
+
+    const container = document.getElementById('container');
+    expect(container).toBeInTheDocument();  
+
+    const content = screen.getByText(/content/gi);
+    expect(content).toBeInTheDocument();  
+});
