@@ -1,22 +1,23 @@
 import { Checkbox, ListItem, ListItemIcon } from "@material-ui/core";
 import { MouseEventHandler } from "react";
-import { BeerName } from './beer-list-item.styles';
+import {TasterName} from './taster-list-item.styles';
 
-export type BeerListItemProps = {
-    beer: string | null,
+export type TasterListItemProps = {
+    taster: string | null,
     onClick?: MouseEventHandler<HTMLDivElement>,
-    preSelectedIndex?: number,
     selected?: boolean,
-    selectable?: boolean 
+    disabled?: boolean,
+    selectable?: boolean
 }
 
-const BeerListItem = ({
-    beer,
+
+const TasterListItem = ({
+    taster,
     onClick,
-    preSelectedIndex = -1,
+    disabled = false,
     selected = false,
-    selectable = true,
-}: BeerListItemProps) => {
+    selectable = false,
+}: TasterListItemProps) => {
     const ItemComponent = (p: any) => (
         selectable ? <ListItem {...p} button /> : <ListItem {...p} />
     );
@@ -24,9 +25,10 @@ const BeerListItem = ({
         <ItemComponent
             onClick={onClick}
             divider
+            disabled={disabled}
             disableGutters
         >
-            {selectable && 
+            {selectable &&
                 <ListItemIcon>
                     <Checkbox
                         edge="start"
@@ -36,12 +38,8 @@ const BeerListItem = ({
                     />
                 </ListItemIcon>
             }
-            <BeerName 
-                preSelectedIndex={preSelectedIndex}
-            >
-                {beer}
-            </BeerName>
+            <TasterName>{taster}</TasterName>
         </ItemComponent>
-    )
+    );
 };
-export default BeerListItem;
+export default TasterListItem;

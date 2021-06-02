@@ -3,6 +3,7 @@ import { AccountCircle as AccountIcon } from "@material-ui/icons";
 import { MouseEventHandler, useState } from "react";
 
 export type AccountButtonProps = {
+    id?: string,
     onClickLogout?: () => void
 }
 
@@ -19,8 +20,9 @@ const OptionsButton = ({onClickLogout, ...p}: AccountButtonProps) => {
 
     return (<>
         <IconButton 
-            color="inherit" {...p} 
+            color="inherit" 
             onClick={handleClickAccountIcon}
+            {...p} 
         >
             <AccountIcon/>
         </IconButton>

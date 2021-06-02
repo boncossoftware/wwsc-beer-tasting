@@ -37,9 +37,9 @@ export type TastingEvent = {
     venue: string|undefined|null;
     date: Date|undefined|null;
     price: string|undefined|null;
-    related: string[]|undefined|null;
+    related: (string|null)[]|undefined|null;
     bartender: string|undefined|null;
-    tasters: string[]|undefined|null;
+    tasters: (string|null)[]|undefined|null;
     ownerAddedAsTaster: boolean|undefined|null;
     beers: (string|null)[]|undefined|null;
     asterisksAllowed: number|undefined|null;
