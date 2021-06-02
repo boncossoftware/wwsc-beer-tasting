@@ -5,12 +5,14 @@ import { TastingEvent } from "store/reducers/events/reducer";
 import { events, RootState, StoreError } from '../../store';
 import AppBar from 'components/app-bar';
 import {
-        AddButton, 
-        CircularProgress,
-        EventList, 
-        EventListItem, 
-        EventListItemDetails,
-        EventListSectionHeader
+    Container,
+    InnerContainer,
+    AddButton, 
+    CircularProgress,
+    EventList, 
+    EventListItem, 
+    EventListItemDetails,
+    EventListSectionHeader
 } from './Events.styles';
 import ErrorMessage from "components/error-message";
 
@@ -34,40 +36,42 @@ const Events = () => {
         history.push(`/event/${item.id}/`);
     }
 
-    return <div id="events"> 
+    return <Container id="events"> 
         <AppBar 
             title="Events" 
             renderRightComponent={ () => <>
                 <AddButton onClick={handleAddEvent} disabled={loading}/>
             </>}
         />
-        <EventList>
-        {loading ? 
-            <CircularProgress />
-            :
-            <>
-                {error && <ErrorMessage error={error} />}
-                {items && items.map( (item, index) => {
-                    const newMonth = items[index-1]?.date?.getMonth() != item.date?.getMonth();
-                    return <div key={index}>
-                        {newMonth && 
-                            <EventListSectionHeader>
-                                {item.formattedMonth()}
-                            </EventListSectionHeader>
-                        }
-                        <EventListItem onClick={ handleClickEvent(item) }>
-                            <EventListItemDetails 
-                                name={item.name} 
-                                venue={item.venue} 
-                                date={item.formattedDate()}
-                            />
-                        </EventListItem>
-                    </div>
-                })} 
-                {items?.length === 0 && <>No events.<br/></>}
-            </>
-        }
-        </EventList>
-    </div>;
+        <InnerContainer>
+            <EventList>
+            {loading ? 
+                <CircularProgress />
+                :
+                <>
+                    {error && <ErrorMessage error={error} />}
+                    {items && items.map( (item, index) => {
+                        const newMonth = items[index-1]?.date?.getMonth() != item.date?.getMonth();
+                        return <div key={index}>
+                            {newMonth && 
+                                <EventListSectionHeader>
+                                    {item.formattedMonth()}
+                                </EventListSectionHeader>
+                            }
+                            <EventListItem onClick={ handleClickEvent(item) }>
+                                <EventListItemDetails 
+                                    name={item.name} 
+                                    venue={item.venue} 
+                                    date={item.formattedDate()}
+                                />
+                            </EventListItem>
+                        </div>
+                    })} 
+                    {items?.length === 0 && <>No events.<br/></>}
+                </>
+            }
+            </EventList>
+        </InnerContainer>
+    </Container>;
 }
 export default Events;
