@@ -1,7 +1,20 @@
+import { List } from "@material-ui/core";
+import { TastingAnswer } from "store/reducers/answers/reducer";
 import TastingAnswerItem from "./tasting-answer-item";
 
+export type TastingAnswersProps = {
+    answers: TastingAnswer, 
+    showForBartender?: boolean, 
+    editingAllowed?: boolean, 
+    onClickItemAtIndex?: (index: number) => void;
+}
 
-const TastingAnswers = ({answers, showForBartender, editingAllowed, onClickItemAtIndex}) => {
+const TastingAnswers = ({
+    answers, 
+    showForBartender=false, 
+    editingAllowed=false, 
+    onClickItemAtIndex
+}: TastingAnswersProps) => {
     const beersSelected = answers?.beers || [];
     const ratingsSelected = answers?.ratings || [];
     const asterisksSelected = answers?.asterisks || [];
@@ -31,8 +44,10 @@ const TastingAnswers = ({answers, showForBartender, editingAllowed, onClickItemA
         return items;
     }
 
-    return <>
-        {renderItems()}
-    </>
+    return (
+        <List disablePadding>
+            {renderItems()}
+        </List>
+    );
 }
 export default TastingAnswers;

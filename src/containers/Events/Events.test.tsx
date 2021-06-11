@@ -20,14 +20,14 @@ const createMockState = () => ({
         items: null,
         error: null,
     } 
-} as RootState);
+} as any as RootState);
 
 
 test('renders correctly', () => {
     render( <Events />);
 
-    const forgotContainer = document.getElementById('events');
-    expect(forgotContainer).toBeInTheDocument();
+    const container = document.getElementById('events');
+    expect(container).toBeInTheDocument();
 });
 
 

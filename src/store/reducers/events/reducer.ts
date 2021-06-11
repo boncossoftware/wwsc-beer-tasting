@@ -22,8 +22,8 @@ import {
 } from "./load";
 import { 
     ACTION_EVENTS_ITEM_LOADING, 
-    ACTION_EVENTS_LOAD_ITEM, 
-    ACTION_EVENTS_LOAD_ITEM_ERROR 
+    ACTION_EVENTS_ITEM_LOAD, 
+    ACTION_EVENTS_ITEM_LOAD_ERROR 
 } from "./load-item";
 import {StoreError} from '../../reducer';
 
@@ -37,11 +37,11 @@ export type TastingEvent = {
     venue: string|undefined|null;
     date: Date|undefined|null;
     price: string|undefined|null;
-    related: string[]|undefined|null;
+    related: (string|null)[]|undefined|null;
     bartender: string|undefined|null;
-    tasters: string[]|undefined|null;
+    tasters: (string|null)[]|undefined|null;
     ownerAddedAsTaster: boolean|undefined|null;
-    beers: string[]|undefined|null;
+    beers: (string|null)[]|undefined|null;
     asterisksAllowed: number|undefined|null;
     editingAllowed: boolean|undefined|null;
     rounds: number|undefined|null;
@@ -54,7 +54,7 @@ export type TastingEvent = {
 export type TastingEventsState = {
     loading: boolean;
     itemsLoading: {[key: string]: boolean};
-    itemsError: {[key: string]: Error};
+    itemsError: {[key: string]: StoreError};
     loaded: boolean;
     items: TastingEvent[]|null;
     error: StoreError|null;
@@ -69,7 +69,7 @@ export type TastingEventsState = {
         error: StoreError|null,
     },
     allowEditingAllowing: {[key: string]: boolean};
-    allowEditingError: {[key: string]: Error};
+    allowEditingError: {[key: string]: StoreError};
 }
 
 const initialState: TastingEventsState = {
@@ -93,6 +93,10 @@ const initialState: TastingEventsState = {
     allowEditingError: {}
 }
 
+const sortItems = (i1: TastingEvent, i2: TastingEvent): number => {
+    return (i2?.date?.getTime()||0) - (i1?.date?.getTime()||0);
+}
+
 export default function eventsReducer(
     state:TastingEventsState=initialState, 
     action: AnyAction
@@ -103,7 +107,7 @@ export default function eventsReducer(
             return state;
         }
         case ACTION_EVENTS_LOAD: {
-            state.items = action.payload; 
+            state.items = action.payload?.sort(sortItems); 
             return state;
         }
         case ACTION_EVENTS_LOAD_ERROR: {
@@ -116,12 +120,12 @@ export default function eventsReducer(
             state.itemsLoading[id] = loading;
             return state;
         }
-        case ACTION_EVENTS_LOAD_ITEM: {
+        case ACTION_EVENTS_ITEM_LOAD: {
             const item = action.payload;
-            state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
+            state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ].sort(sortItems);
             return state;
         }
-        case ACTION_EVENTS_LOAD_ITEM_ERROR: {
+        case ACTION_EVENTS_ITEM_LOAD_ERROR: {
             const {id, error} = action.payload;
             state.itemsError[id] = error;
             return state;
@@ -131,7 +135,9 @@ export default function eventsReducer(
             return state;
         }
         case ACTION_EVENTS_ADD: {
-            state.add.added = action.payload; 
+            const item = action.payload;
+            state.add.added = item; 
+            state.items = [ item, ...(state.items||[]) ].sort(sortItems);
             return state;
         }
         case ACTION_EVENTS_ADD_ERROR: {
@@ -149,7 +155,9 @@ export default function eventsReducer(
             return state;
         }
         case ACTION_EVENTS_UPDATE: {
-            state.update.updated = action.payload; 
+            const item = action.payload;
+            state.update.updated = item;
+            state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
             return state;
         }
         case ACTION_EVENTS_UPDATE_ERROR: {

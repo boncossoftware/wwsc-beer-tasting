@@ -1,7 +1,7 @@
 import { DocumentSnapshot, Timestamp } from 'store/firebase';
 import "firebase/firestore";
 import { TastingEvent } from "./reducer";
-import {formatRelative, format} from 'date-fns';
+import { format } from 'date-fns';
 
 export const eventFromDoc = (doc: DocumentSnapshot): TastingEvent => {
     return {
@@ -64,7 +64,7 @@ export const eventToDocData = (event: TastingEvent) => {
     }   
 }
 
-export const propsForEvent = (userUID: string, userEmail: string, event: TastingEvent): TastingEvent => {
+export const propsForEvent = (userEmail: string, event: TastingEvent): TastingEvent => {
     const tasters = Array.from( new Set([
         ...(event?.tasters || []),
     ].filter( t => t !== userEmail )));
@@ -81,7 +81,7 @@ export const propsForEvent = (userUID: string, userEmail: string, event: Tasting
         rounds: 10,
         asterisksAllowed: 2, //Default (can be overritten)
         ...event,
-        owner: userUID, //Set the user as the owner.
+        owner: userEmail, //Set the user as the owner.
         related,
         tasters,
     };
