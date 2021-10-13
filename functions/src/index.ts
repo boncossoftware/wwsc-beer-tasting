@@ -1,18 +1,18 @@
 import * as functions from "firebase-functions";
 import {
-    ContestantAnswers,
-    RoundResult,
-    ResultSummary,
-    BeerRanking,
-    TastingResults,
-    ServerError
-} from './model';
+  ContestantAnswers,
+  RoundResult,
+  ResultSummary,
+  BeerRanking,
+  TastingResults,
+  ServerError,
+} from "./model";
 import {
-    getCurrentTimestamp,
-    getTastingEvent,
-    getTastingEventAnswers,
-    setResults
-} from './data-service';
+  getCurrentTimestamp,
+  getTastingEvent,
+  getTastingEventAnswers,
+  setResults,
+} from "./data-service";
 
 const onCall = functions.https.onCall;
 
@@ -20,7 +20,7 @@ const onCall = functions.https.onCall;
  * ResultsError for an error object
  * with a error code.
  */
- export class ResultsError extends Error {
+export class ResultsError extends Error {
     code: number | undefined;
 
     /**
@@ -39,54 +39,62 @@ export const calculateResults = onCall(async (data, _) => {
   const id = data;
 
   try {
-    //Fetch event & answers
+    // Fetch event & answers
     functions.logger.debug(`fetching answers (${id})`);
     let [event, answers] = await Promise.all([
-        getTastingEvent(id),
-        getTastingEventAnswers(id)
+      getTastingEvent(id),
+      getTastingEventAnswers(id),
     ]);
     functions.logger.debug(`answers fetched (${id})`);
 
-    //Get the correct order of beers.
-    const barTenderAnswers = answers.find( a => a.id === event.bartender);
+    // Get the correct order of beers.
+    const barTenderAnswers = answers.find( (a) => a.id === event.bartender);
     validateBarTenderAnswers(barTenderAnswers);
 
     const correctBeers = barTenderAnswers?.beers;
     functions.logger.debug(`answers valid (${id})`);
 
-    //clear out the bartender's answers and owner answers if needed.
-    const exludeEmails = [event.bartender, (event.ownerAddedAsTaster && event.owner)];
-    answers = answers.filter( a => !exludeEmails.includes(a.id))
-    
+    // clear out the bartender's answers and owner answers if needed.
+    const exludeEmails = [
+      event.bartender,
+      (event.ownerAddedAsTaster && event.owner),
+    ];
+    answers = answers.filter( (a) => !exludeEmails.includes(a.id));
+
     // Create the tasting results
     const roundResults = createContestantRoundResults(correctBeers!, answers);
     sortByRankedPointScores(roundResults);
     const beerScoreResults = createBeerScoreResults(correctBeers!, answers);
     sortByRankedBeerTasteScores(beerScoreResults);
     const tastingResults = {
-        roundResults,
-        beerScoreResults,
-        lastUpdated: getCurrentTimestamp()
-    } as TastingResults
+      roundResults,
+      beerScoreResults,
+      lastUpdated: getCurrentTimestamp(),
+    } as TastingResults;
     functions.logger.debug(`results created (${id})`);
 
-    //Save the results.
+    // Save the results.
     setResults(id, tastingResults);
     functions.logger.debug(`results saved (${id})`);
 
-    //Reply with the results.
+    // Reply with the results.
     return tastingResults;
   } catch (error) {
     const message = (error as ResultsError).message;
     const code = (error as ResultsError).code;
-    functions.logger.error(`Error: ${message} (${code})\n ${error.stack}`);
-    
+    functions.logger.error(
+        `Error: ${message} (${code})\n`+
+        `${(error as any).stack}`
+    );
+
     return {error: {message, code}} as ServerError;
   }
 });
 
-export const validateBarTenderAnswers = (anwsers: ContestantAnswers | undefined) => {
-  if(anwsers?.beers === undefined){ 
+export const validateBarTenderAnswers = (
+    anwsers: ContestantAnswers | undefined
+) => {
+  if (anwsers?.beers === undefined) {
     throw new ResultsError("No answers found for bartender.", 1500);
   }
   functions.logger.debug(`bartender has answers (${anwsers.id})`);
@@ -100,7 +108,6 @@ export const validateBarTenderAnswers = (anwsers: ContestantAnswers | undefined)
   }
   functions.logger.debug(`bartender has all beers set (${anwsers.id})`);
 };
-
 
 
 export const createContestantRoundResults = (
@@ -172,12 +179,12 @@ export const createContestantRoundResults = (
 export const createBeerScoreResults = (
     correctBeers: string[],
     contestantAnswers: ContestantAnswers[]
-): BeerRanking[] => 
+): BeerRanking[] =>
   correctBeers.map( (correctBeer, index) => {
-      const points = contestantAnswers.reduce( 
-          (total, contestant) => total + ( 4 - (contestant.ratings[index] || 0) )
-      , 0);
-      return {name: correctBeer, points: points};
+    const points = contestantAnswers.reduce(
+        (total, contestant) => total + ( 4 - (contestant.ratings[index] || 0) )
+        , 0);
+    return {name: correctBeer, points: points};
   });
 
 export const sortByRankedPointScores = (
@@ -215,5 +222,5 @@ export const sortByRankedPointScores = (
 export const sortByRankedBeerTasteScores = (
     beerScoreResults:BeerRanking[] = []
 ): BeerRanking[] =>
-    beerScoreResults.sort( ({points:p1}, {points:p2}) => p1 - p2 );
+  beerScoreResults.sort( ({points: p1}, {points: p2}) => p1 - p2 );
 
