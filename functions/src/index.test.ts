@@ -1,42 +1,42 @@
 // Set the firebase env variables to silince warnings before loading it in.
 process.env.FIREBASE_CONFIG = "{}";
 process.env.GCLOUD_PROJECT = "";
-console.debug = jest.fn(); //Prevent loggin to console.
-console.error = jest.fn(); //Prevent loggin to console.
+console.debug = jest.fn(); // Prevent loggin to console.
+console.error = jest.fn(); // Prevent loggin to console.
 
 import {
-    ContestantAnswers, 
-    CONTESTANT_ANSWERS, 
-    CORRECT_BEERS, 
-    ServerError, 
-    TastingResults, 
-    WSC_VIRTUAL_BBT_ANSWERS, 
-    WSC_VIRTUAL_BBT_CORRECT_BEERS
+  ContestantAnswers,
+  CONTESTANT_ANSWERS,
+  CORRECT_BEERS,
+  ServerError,
+  TastingResults,
+  WSC_VIRTUAL_BBT_ANSWERS,
+  WSC_VIRTUAL_BBT_CORRECT_BEERS,
 } from "./model";
 
-const firebaseTest = require('firebase-functions-test')();
+const firebaseTest = require("firebase-functions-test")();
 
-//Mock the tasting event and answers fetched from firebase.
+// Mock the tasting event and answers fetched from firebase.
 const dataService = {
-    getTastingEvent: () => ({
-        bartender: 'bartender@email.com'
-    }),
-    getTastingEventAnswers: () => [
-        ...CONTESTANT_ANSWERS,
+  getTastingEvent: () => ({
+    bartender: "bartender@email.com",
+  }),
+  getTastingEventAnswers: () => [
+    ...CONTESTANT_ANSWERS,
         {
-            id: 'bartender@email.com',
-            beers: CORRECT_BEERS
-        } as ContestantAnswers
-    ],
-    getCurrentTimestamp: () => ({seconds: 0, nanoseconds: 0}),
-    setResults: () => null,
+          id: "bartender@email.com",
+          beers: CORRECT_BEERS,
+        } as ContestantAnswers,
+  ],
+  getCurrentTimestamp: () => ({seconds: 0, nanoseconds: 0}),
+  setResults: () => null,
 };
-jest.mock('./data-service', () => (dataService) );
+jest.mock("./data-service", () => (dataService) );
 
 test("calculateContestantRoundResults()", () => {
   const {
     createContestantRoundResults,
-  } = require('.');
+  } = require(".");
   const results = createContestantRoundResults(
       CORRECT_BEERS,
       CONTESTANT_ANSWERS
@@ -60,10 +60,10 @@ test("calculateContestantRoundResults()", () => {
 test("calculateBeerScoreResults()", () => {
   const {
     createBeerScoreResults,
-  } = require('.');
+  } = require(".");
   const results = createBeerScoreResults(
-    CORRECT_BEERS, 
-    CONTESTANT_ANSWERS
+      CORRECT_BEERS,
+      CONTESTANT_ANSWERS
   );
   expect(results[0].points).toBe(0);
   expect(results[1].points).toBe(1);
@@ -82,7 +82,7 @@ test("calculateContestantRoundResults() on BBT Vitrual event", () => {
   const {
     createContestantRoundResults,
     sortByRankedPointScores, // eslint-disable-line no-unused-vars,
-  } = require('.');
+  } = require(".");
   const results = createContestantRoundResults(
       WSC_VIRTUAL_BBT_CORRECT_BEERS,
       WSC_VIRTUAL_BBT_ANSWERS
@@ -103,30 +103,29 @@ test("calculateContestantRoundResults() on BBT Vitrual event", () => {
   expect(results[2].totalAsterisks).toBe(2);
   expect(results[2].totalAsterisksSecondHalf).toBe(0);
   expect(results[2].totalTaste).toBe(22);
-  
 });
 
 
 test("createTastingResults() on event", async () => {
-    const { calculateResults } = require('.');
-    const wrappedCalculateResults = firebaseTest.wrap(calculateResults);
-    const eventID = '1';
-    const results: TastingResults = await wrappedCalculateResults(eventID);
-    
-    expect(results.roundResults[0].userEmail).toBe(CONTESTANT_ANSWERS[0].id);
-    expect(results.roundResults[1].userEmail).toBe(CONTESTANT_ANSWERS[1].id);
+  const {calculateResults} = require(".");
+  const wrappedCalculateResults = firebaseTest.wrap(calculateResults);
+  const eventID = "1";
+  const results: TastingResults = await wrappedCalculateResults(eventID);
 
-    expect(results.beerScoreResults[0].name).toBe(CORRECT_BEERS[0]);
-    expect(results.beerScoreResults[1].name).toBe(CORRECT_BEERS[1]);
+  expect(results.roundResults[0].userEmail).toBe(CONTESTANT_ANSWERS[0].id);
+  expect(results.roundResults[1].userEmail).toBe(CONTESTANT_ANSWERS[1].id);
+
+  expect(results.beerScoreResults[0].name).toBe(CORRECT_BEERS[0]);
+  expect(results.beerScoreResults[1].name).toBe(CORRECT_BEERS[1]);
 });
 
 test("createTastingResults() on event with no bartender", async () => {
-    dataService.getTastingEventAnswers = () => CONTESTANT_ANSWERS;
-    const { calculateResults } = require('.');
-    const wrappedCalculateResults = firebaseTest.wrap(calculateResults);
-    const eventID = '1';
-    const results = await wrappedCalculateResults(eventID) as ServerError;
-    
-    expect(results.error).toBeTruthy();
-    expect(results.error.code).toBe(1500);
+  dataService.getTastingEventAnswers = () => CONTESTANT_ANSWERS;
+  const {calculateResults} = require(".");
+  const wrappedCalculateResults = firebaseTest.wrap(calculateResults);
+  const eventID = "1";
+  const results = await wrappedCalculateResults(eventID) as ServerError;
+
+  expect(results.error).toBeTruthy();
+  expect(results.error.code).toBe(1500);
 });

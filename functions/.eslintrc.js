@@ -26,6 +26,7 @@ module.exports = {
     "jest",
   ],
   rules: {
-    quotes: ["error", "double"],
+    "quotes": ["error", "double"],
+    "no-unused-vars": "off",
   },
 };
