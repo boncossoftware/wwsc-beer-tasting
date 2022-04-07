@@ -110,7 +110,7 @@ const TastingDetails = () => {
     }
 
     const handleExit = () => {
-        history.push(`/event/${id}/tasting`);
+        history.push(`/event/${id}/tasting`, { scrollToRound: round });
     }
 
     const handleSave = () => {

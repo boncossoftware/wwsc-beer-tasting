@@ -1,8 +1,8 @@
 
 import ErrorMessage from "components/error-message";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useParams } from "react-router";
+import { useHistory, useLocation, useParams } from "react-router";
 import { RootState, StoreError, UserInfo } from "store/reducer";
 import { TastingAnswer } from "store/reducers/answers/reducer";
 import { TastingEvent } from "store/reducers/events/reducer";
@@ -23,9 +23,16 @@ export type TastingProps = {
     baseURL : string
 }
 
+type TastingParams = {id?: string,};
+type TastingState = {scrollToRound?: string,};
+
 const Tasting = ({baseURL}: TastingProps) => {    
     const history = useHistory();
-    const {id} = useParams<{id: string}>();
+    const {id=''} = useParams<TastingParams>();
+    const location = useLocation();
+    const {scrollToRound} = (location.state ?? {}) as TastingState;
+
+    const [scrolledToRound, setScrolledToRound] = useState<Boolean>(false);
 
     const dispatch = useDispatch();
     const user = useSelector<RootState, UserInfo|null>( s => s?.auth?.user);
@@ -62,6 +69,15 @@ const Tasting = ({baseURL}: TastingProps) => {
         dispatch( results.loadItem(id) );
     }, [dispatch, id] );
 
+    useEffect( () => {
+        if (answersLoading) return; //Still loading.
+        if (scrollToRound === undefined) return; //Nothing to scroll to.
+        if (scrolledToRound === true) return; //Already scrolled.
+        document.getElementById(`tasting-answer-item-${scrollToRound}`)?.scrollIntoView();
+        setScrolledToRound(true);
+        //After load scroll to a round (once) if needed.
+    }, [answersLoading]);
+
     const handleAllowEditing = () => {
         const message = editingAllowed ? 
             'Are you sure you want to stop editing answers?'
@@ -79,6 +95,11 @@ const Tasting = ({baseURL}: TastingProps) => {
 
     const handleCalculateResults = () => {
         dispatch( results.calculate(id) );
+    }
+
+    if (scrollToRound && !scrolledToRound) {
+        document.getElementById(`tasting-answer-item-${scrollToRound}`)?.scrollIntoView({block: "center", behavior: "smooth"});
+        setScrolledToRound(true);
     }
 
     return <Container id="tasting" >

@@ -32,11 +32,10 @@ const TastingAnswerItem = ({
     onClick,
     ...p
 }: TastingAnswerItemProps) => {
-    return <div {...p}>
-        <ListSubheader>
-            {showAsPoured ? <> {roundIndex + 1}{roundIndex % 5 ? 'th' : 'st'} Poured </> : <> Round {roundIndex + 1} </>}
-        </ListSubheader>
+    const round = showAsPoured ? <> {roundIndex + 1}{roundIndex % 5 ? 'th' : 'st'} Poured </> : <> Round {roundIndex + 1} </>;
+    return <div {...p} id={`tasting-answer-item-${roundIndex + 1}`}>
         <ListItem 
+            dense
             onClick={ (canEdit ? onClick : undefined) } 
             divider
             button
@@ -45,6 +44,7 @@ const TastingAnswerItem = ({
         >   
             <ListItemText
                 primary={<>
+                    <b>{round}</b>
                     {selectedBeer || 'Choose Beer'}
                     { (!showAsPoured && hasAsterisk) && 
                         <Asterisks />
