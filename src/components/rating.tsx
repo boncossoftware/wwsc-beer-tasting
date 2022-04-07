@@ -6,7 +6,7 @@ export type RatingProps = {
     id?: string,
     rating: number|null, 
     onChange?: (rating: number|null, event?: ChangeEvent<{}>) => void,
-    size: "small" | "medium" | "large" | undefined
+    size?: "small" | "medium" | "large" | undefined
 }
 
 const Rating = ({rating, onChange, ...p}: RatingProps) => {
