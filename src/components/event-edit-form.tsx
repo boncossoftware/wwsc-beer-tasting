@@ -118,7 +118,7 @@ const EventEditForm = ({event=DEFAULT_EVENT, onChange}: EventEditFormProps) => {
                 )}
             </EditTastersList>
             <AddTasterButton onClick={handleAddTaster} />
-            <AddMeAsTasterField onChange={handleChange} />
+            <AddMeAsTasterField onChange={handleChange} checked={event.ownerAddedAsTaster}/>
         </Section>
 
         <Section title="Beers">
