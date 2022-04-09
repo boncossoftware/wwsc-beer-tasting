@@ -98,7 +98,7 @@ const Tasting = ({baseURL}: TastingProps) => {
     }
 
     if (scrollToRound && !scrolledToRound) {
-        document.getElementById(`tasting-answer-item-${scrollToRound}`)?.scrollIntoView({block: "center", behavior: "smooth"});
+        document.getElementById(`tasting-answer-item-${scrollToRound}`)?.scrollIntoView({block: "center"});
         setScrolledToRound(true);
     }
 
