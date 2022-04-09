@@ -133,11 +133,11 @@ const Tasting = ({baseURL}: TastingProps) => {
                                 <ErrorMessage error={resultsError || resultsCalculationError } />
                             }
                             <TastingResults results={tastingResults} />
-                            <CalculateResultsButton 
+                            {canEdit && <CalculateResultsButton 
                                 onClick={handleCalculateResults}
                             >
                                 {resultsAvailable ? 'Rec' : 'C'}alculate Results
-                            </CalculateResultsButton>
+                            </CalculateResultsButton>}
                         </>
                     }   
                 </Section>
