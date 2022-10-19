@@ -10,6 +10,7 @@ export type RatingProps = {
 }
 
 const Rating = ({rating, onChange, ...p}: RatingProps) => {
+    const {size="medium", ...otherProps} = p;
     
     const handleRatingClick = (event: ChangeEvent<{}>, newRating: number|null) => {
         if (rating === newRating) {
@@ -22,19 +23,17 @@ const Rating = ({rating, onChange, ...p}: RatingProps) => {
     }
 
     return (
-        <BaseRating
-            name="beer-rating"
-            value={rating}
-            precision={1}
-            max={4}
-            emptyIcon={
-                <StarBorderIcon fontSize="inherit" />
-            }
-            onChange={handleRatingClick}
-            size="medium"
-            readOnly={!Boolean(onChange)}
-            {...p}
-        />
-    )
+      <BaseRating
+        name="beer-rating"
+        value={rating}
+        precision={1}
+        max={4}
+        emptyIcon={<StarBorderIcon fontSize="inherit" />}
+        onChange={handleRatingClick}
+        size={size}
+        readOnly={!Boolean(onChange)}
+        {...otherProps}
+      />
+    );
 }
 export default Rating;
