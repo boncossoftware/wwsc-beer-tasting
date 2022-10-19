@@ -57,6 +57,7 @@ const Rating = ({ rating, onChange, type = "display"}: RatingProps) => {
       >
         {Object.keys(ratingOptions).map((value) => (
           <FormControlLabel
+            key={value}
             value={value}
             control={<Radio />}
             label={`${value}. ${ratingOptions[value].label}`}
