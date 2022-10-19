@@ -11,7 +11,7 @@ export const ACTION_EVENT_ANSWERS_LOAD_ITEM_ERROR = 'event_answers/load_item_err
 const emptyList = (i=0) => { 
     let list = Array(i);
     for(i; i > 0; i--)
-        list[i] = null;
+        list[i-1] = null;
     return list;
 };
 
