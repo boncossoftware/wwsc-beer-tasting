@@ -19,6 +19,9 @@ export default function loadItem(id: string) {
         catch (error) {
             dispatch({ type: ACTION_EVENTS_ITEM_LOAD_ERROR, payload: {id, error }});
         }
-        dispatch({ type: ACTION_EVENTS_ITEM_LOADING, payload: {id, loading: false }});
+        dispatch({
+            type: ACTION_EVENTS_ITEM_LOADING,
+            payload: { id, loading: false },
+        });
     }
 }

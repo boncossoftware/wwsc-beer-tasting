@@ -63,7 +63,7 @@ const TastingDetails = () => {
         initialAsterisked !== selectedAsterisked
     );
 
-    const loading = eventLoading || answerLoading;
+    const loading = (eventLoading && !event) || (answerLoading && !answer);
     const error = eventError || answerError;
     const isBartender = (event?.bartender && (event.bartender === user?.email));
 
@@ -161,55 +161,54 @@ const TastingDetails = () => {
     }
 
     return (
-        <Container 
-            id="tasting-details"
+      <Container id="tasting-details">
+        <Dialog
+          fullScreen
+          open={open}
+          onClose={handleCancel}
+          onExited={handleExit}
+          TransitionComponent={SlideUpTransition}
+          scroll="paper"
         >
-            <Dialog
-                fullScreen
-                open={open}
-                onClose={handleCancel}
-                onExited={handleExit}
-                TransitionComponent={SlideUpTransition}
-            >  
-                <AppBar 
-                    renderLeftComponent={ () => 
-                        <CancelButton onClick={handleCancel} />
-                    } 
-                    title={`Round ${round}`}
-                    renderRightComponent={ () =>
-                        <UpdateButton isSaving={updating} onClick={handleSave} />
-                    } 
+          <AppBar
+            renderLeftComponent={() => <CancelButton onClick={handleCancel} />}
+            title={`Round ${round}`}
+            renderRightComponent={() => (
+              <UpdateButton isSaving={updating} onClick={handleSave} />
+            )}
+          />
+          <InnerContainer>
+            {loading ? (
+              <CircularProgress />
+            ) : (
+              <>
+                {error && <ErrorMessage error={error} />}
+                <BeerSelectionField
+                  beers={event?.beers as any[]}
+                  beerPreselectedIndex={beerPreselectedIndex}
+                  isBeerSelected={isBeerSelected}
+                  onClickBeer={handleClickBeer}
                 />
-                <InnerContainer>
-                {loading ?
-                    <CircularProgress />
-                    :
-                    <>
-                        {error && <ErrorMessage error={error} /> }
-                        <BeerSelectionField
-                            beers={event?.beers as any[]}
-                            beerPreselectedIndex={beerPreselectedIndex}
-                            isBeerSelected={isBeerSelected}
-                            onClickBeer={handleClickBeer}
-                        />
-                        {!isBartender && <>
-                            <RatingField 
-                                rating={selectedRating} 
-                                onChange={handleRatingChange} 
-                            />
-                            <AsteriskedField 
-                                selected={selectedAsterisked}
-                                onChange={handleAsteriskedChange}
-                                disabled={!selectedAsterisked && asterisksLeft() <= 0}
-                                asterisksLeft={asterisksLeft()}
-                            />
-                            <ChangesMadeField changesMade={changesMade} />
-                        </>}
-                    </>
-                }
-                </InnerContainer>
-            </Dialog>
-        </Container>
+                {!isBartender && (
+                  <>
+                    <RatingField
+                      rating={selectedRating}
+                      onChange={handleRatingChange}
+                    />
+                    <AsteriskedField
+                      selected={selectedAsterisked}
+                      onChange={handleAsteriskedChange}
+                      disabled={!selectedAsterisked && asterisksLeft() <= 0}
+                      asterisksLeft={asterisksLeft()}
+                    />
+                    <ChangesMadeField changesMade={changesMade} />
+                  </>
+                )}
+              </>
+            )}
+          </InnerContainer>
+        </Dialog>
+      </Container>
     );
 }
 export default TastingDetails

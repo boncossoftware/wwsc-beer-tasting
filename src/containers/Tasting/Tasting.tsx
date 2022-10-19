@@ -81,47 +81,51 @@ const Tasting = ({baseURL}: TastingProps) => {
         dispatch( results.calculate(id) );
     }
 
-    return <Container id="tasting" >
-        {answersLoading ? 
-            <CircularProgress />
-            :
-            <>
-                <Section title="Answers">
-                    {answersError && <ErrorMessage error={answersError} />}
-                    {canEdit && 
-                        <AllowEditField 
-                            onChange={handleAllowEditing} 
-                            value={editingAllowed} 
-                        />
-                    }
-                    {userAnswers && 
-                        <TastingAnswers 
-                            answers={userAnswers} 
-                            showForBartender={isBartender} 
-                            editingAllowed={editingAllowed} 
-                            onClickItemAtIndex={ handleClickItemAtIndex }
-                        />
-                    }
-                </Section>
-                <Section title="Results">
-                    {(resultsLoading || resultsCalculating) ? 
-                        <ResultsCircularProgress />
-                        :
-                        <>
-                            {(resultsError || resultsCalculationError) && 
-                                <ErrorMessage error={resultsError || resultsCalculationError } />
-                            }
-                            <TastingResults results={tastingResults} />
-                            <CalculateResultsButton 
-                                onClick={handleCalculateResults}
-                            >
-                                {resultsAvailable ? 'Rec' : 'C'}alculate Results
-                            </CalculateResultsButton>
-                        </>
-                    }   
-                </Section>
-            </>
-        }
-    </Container>
+    const displayAnswersLoading = answersLoading && !userAnswers;
+
+    return (
+      <Container id="tasting">
+        {displayAnswersLoading ? (
+          <CircularProgress />
+        ) : (
+          <>
+            <Section title="Answers">
+              {answersError && <ErrorMessage error={answersError} />}
+              {canEdit && (
+                <AllowEditField
+                  onChange={handleAllowEditing}
+                  value={editingAllowed}
+                />
+              )}
+              {userAnswers && (
+                <TastingAnswers
+                  answers={userAnswers}
+                  showForBartender={isBartender}
+                  editingAllowed={editingAllowed}
+                  onClickItemAtIndex={handleClickItemAtIndex}
+                />
+              )}
+            </Section>
+            <Section title="Results">
+              {resultsLoading || resultsCalculating ? (
+                <ResultsCircularProgress />
+              ) : (
+                <>
+                  {(resultsError || resultsCalculationError) && (
+                    <ErrorMessage
+                      error={resultsError || resultsCalculationError}
+                    />
+                  )}
+                  <TastingResults results={tastingResults} />
+                  <CalculateResultsButton onClick={handleCalculateResults}>
+                    {resultsAvailable ? "Rec" : "C"}alculate Results
+                  </CalculateResultsButton>
+                </>
+              )}
+            </Section>
+          </>
+        )}
+      </Container>
+    );
 }
 export default Tasting;

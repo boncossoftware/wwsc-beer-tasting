@@ -62,55 +62,55 @@ const EventDetails = () => {
         history.push(`${baseURL}/${section}`);
         
     }
+
+    const displayLoading = loading && !item;
     return (
-        <Container 
-            id="event-details"
-        > 
-            <AppBar 
-                renderLeftComponent={ () => 
-                    <BackButton onClick={handleBackToEvents} />
-                } 
-                title={item?.name || 'Event'}
-                renderRightComponent={ () =>
-                    canEdit ? <EditButton onClick={handleEditEvent} /> : null
-                } 
-            />
-            <Fade in={!loading}>
-                <div>
-                {loading ? 
-                    <CircularProgress />
-                    :
-                    <>
-                        {error && <ErrorMessage error={error} /> }
-                        <Switch >
-                            <Route path={`${path}/tasting`}>
-                                <Tasting baseURL={`${baseURL}/tasting`}/>
-                            </Route>
-                            <Route path={`${path}/beers`}>
-                                <Beers />
-                            </Route>
-                            <Route path={`${path}/tasters`}>
-                                <Tasters />
-                            </Route>
-                            <Route path={`${path}/venue`}>
-                                <Venue />
-                            </Route>
-                            <Redirect to={`${baseURL}/tasting`} />
-                        </Switch>
-                    </>
-                }
-                </div>
-            </Fade>
-            <BottomNavigationBar 
-                value={activeSection} 
-                onChange={handleChangeActiveSection}
-            >
-                <TastingBarItem value={'tasting'} />
-                <BeersBarItem value={'beers'} />
-                <TastersBarItem value={'tasters'} />
-                <VenueBarItem value={'venue'} />
-            </BottomNavigationBar>
-        </Container>
-    )
+      <Container id="event-details">
+        <AppBar
+          renderLeftComponent={() => (
+            <BackButton onClick={handleBackToEvents} />
+          )}
+          title={item?.name || "Event"}
+          renderRightComponent={() =>
+            canEdit ? <EditButton onClick={handleEditEvent} /> : null
+          }
+        />
+        <Fade in={!displayLoading}>
+          <div>
+            {displayLoading ? (
+              <CircularProgress />
+            ) : (
+              <>
+                {error && <ErrorMessage error={error} />}
+                <Switch>
+                  <Route path={`${path}/tasting`}>
+                    <Tasting baseURL={`${baseURL}/tasting`} />
+                  </Route>
+                  <Route path={`${path}/beers`}>
+                    <Beers />
+                  </Route>
+                  <Route path={`${path}/tasters`}>
+                    <Tasters />
+                  </Route>
+                  <Route path={`${path}/venue`}>
+                    <Venue />
+                  </Route>
+                  <Redirect to={`${baseURL}/tasting`} />
+                </Switch>
+              </>
+            )}
+          </div>
+        </Fade>
+        <BottomNavigationBar
+          value={activeSection}
+          onChange={handleChangeActiveSection}
+        >
+          <TastingBarItem value={"tasting"} />
+          <BeersBarItem value={"beers"} />
+          <TastersBarItem value={"tasters"} />
+          <VenueBarItem value={"venue"} />
+        </BottomNavigationBar>
+      </Container>
+    );
 }
 export default EventDetails;
