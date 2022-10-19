@@ -52,7 +52,7 @@ const TastingAnswerItem = ({
                 </>}
                 secondary={ !showAsPoured && <>
                         <Typography variant='caption'> 
-                            Rating <Rating rating={rating} /> 
+                            Rating: <Rating rating={rating} /> 
                         </Typography> 
                     </>
                 } 

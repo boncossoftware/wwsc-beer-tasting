@@ -51,7 +51,7 @@ const Events = () => {
                 <>
                     {error && <ErrorMessage error={error} />}
                     {items && items.map( (item, index) => {
-                        const newMonth = items[index-1]?.date?.getMonth() != item.date?.getMonth();
+                        const newMonth = items[index-1]?.date?.getMonth() !== item.date?.getMonth();
                         return <div key={index}>
                             {newMonth && 
                                 <EventListSectionHeader>

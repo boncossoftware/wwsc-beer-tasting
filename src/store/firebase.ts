@@ -19,14 +19,14 @@ if (!TEST_ENV && (firebase.apps.length === 0)) {
         appId: process.env.REACT_APP_FIREBASE_APP_ID
     });
     
-    const db = firebase.firestore();
-    const fns = firebase.functions();
-    const ath = firebase.auth();
-    if (window.location.hostname === "localhost") {
-        db.useEmulator("localhost", 8080);
-        fns.useEmulator("localhost", 5001);
-        ath.useEmulator("http://localhost:9099");
-    }
+    // const db = firebase.firestore();
+    // const fns = firebase.functions();
+    // const ath = firebase.auth();
+    // if (window.location.hostname === "localhost") {
+    //     db.useEmulator("localhost", 8080);
+    //     fns.useEmulator("localhost", 5001);
+    //     ath.useEmulator("http://localhost:9099");
+    // }
 }
 
 export function getCurrentUserInfo(): {uid: string, email: string} {

@@ -101,94 +101,95 @@ export default function eventsReducer(
     state:TastingEventsState=initialState, 
     action: AnyAction
 ): TastingEventsState {
+    let newState = {...state};
     switch(action.type) {
         case ACTION_EVENTS_LOADING: {
-            state.loading = action.payload; 
-            return state;
+            newState.loading = action.payload; 
+            return newState;
         }
         case ACTION_EVENTS_LOAD: {
-            state.items = action.payload?.sort(sortItems); 
-            return state;
+            newState.items = action.payload?.sort(sortItems); 
+            return newState;
         }
         case ACTION_EVENTS_LOAD_ERROR: {
-            state.items = null;
-            state.error = action.payload;
-            return state;
+            newState.items = null;
+            newState.error = action.payload;
+            return newState;
         }
         case ACTION_EVENTS_ITEM_LOADING: {
             const {id, loading} = action.payload;
-            state.itemsLoading[id] = loading;
-            return state;
+            newState.itemsLoading[id] = loading;
+            return newState;
         }
         case ACTION_EVENTS_ITEM_LOAD: {
             const item = action.payload;
-            state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ].sort(sortItems);
-            return state;
+            newState.items = [ ...( newState.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ].sort(sortItems);
+            return newState;
         }
         case ACTION_EVENTS_ITEM_LOAD_ERROR: {
             const {id, error} = action.payload;
-            state.itemsError[id] = error;
-            return state;
+            newState.itemsError[id] = error;
+            return newState;
         }
         case ACTION_EVENTS_ADDING: {
-            state.add.adding = action.payload; 
-            return state;
+            newState.add.adding = action.payload; 
+            return newState;
         }
         case ACTION_EVENTS_ADD: {
             const item = action.payload;
-            state.add.added = item; 
-            state.items = [ item, ...(state.items||[]) ].sort(sortItems);
-            return state;
+            newState.add.added = item; 
+            newState.items = [ item, ...(newState.items||[]) ].sort(sortItems);
+            return newState;
         }
         case ACTION_EVENTS_ADD_ERROR: {
-            state.add.error = action.payload; 
-            return state;
+            newState.add.error = action.payload; 
+            return newState;
         }
         case ACTION_EVENTS_ADD_RESET: {
-            state.add.adding = false;
-            state.add.added = null;
-            state.add.error = null;
-            return state;
+            newState.add.adding = false;
+            newState.add.added = null;
+            newState.add.error = null;
+            return newState;
         }
         case ACTION_EVENTS_UPDATING: {
-            state.update.updating = action.payload; 
-            return state;
+            newState.update.updating = action.payload; 
+            return newState;
         }
         case ACTION_EVENTS_UPDATE: {
             const item = action.payload;
-            state.update.updated = item;
-            state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
-            return state;
+            newState.update.updated = item;
+            newState.items = [ ...( newState.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
+            return newState;
         }
         case ACTION_EVENTS_UPDATE_ERROR: {
-            state.update.error = action.payload; 
-            return state;
+            newState.update.error = action.payload; 
+            return newState;
         }
         case ACTION_EVENTS_UPDATE_RESET: {
-            state.update.updating = false;
-            state.update.updated = null;
-            state.update.error = null;
-            return state;
+            newState.update.updating = false;
+            newState.update.updated = null;
+            newState.update.error = null;
+            return newState;
         }
         case ACTION_EVENTS_ALLOW_EDIT_ALLOWING: {
             const {id, allowing} = action.payload;
-            state.allowEditingAllowing[id] = allowing;
-            return state;
+            newState.allowEditingAllowing[id] = allowing;
+            return newState;
         }
         case ACTION_EVENTS_ALLOW_EDIT: {
             const {id, allowed} = action.payload;
-            state.items = [ ...(state.items?.map( i => (i.id !== id) ? i : {...i,  editingAllowed: allowed}) || []) ];
-            return state;
+            newState.items = [ ...(newState.items?.map( i => (i.id !== id) ? i : {...i,  editingAllowed: allowed}) || []) ];
+            return newState;
         }
         case ACTION_EVENTS_ALLOW_EDIT_ERROR: {
             const {id, error} = action.payload;
-            state.allowEditingError[id] = error; 
-            return state;
+            newState.allowEditingError[id] = error; 
+            return newState;
         }
         case ACTION_EVENTS_LISTEN_CHANGE: {
             const event = action.payload;
-            state.items = [ ...(state.items?.map( i => (i.id !== event.id) ? i : event) || []) ];
-            return state;
+            newState.items = [ ...(newState.items?.map( i => (i.id !== event.id) ? i : event) || []) ];
+            return newState;
         }
         default: {
             return state;

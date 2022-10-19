@@ -30,5 +30,4 @@ export const Rating = styled(({...p}) =>
     <BaseRating {...p} />
 )({
     paddingTop: 1,
-    fontSize: 'inherit',
 });

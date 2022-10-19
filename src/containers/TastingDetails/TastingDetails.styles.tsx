@@ -104,31 +104,17 @@ export const BeerSelectionField = styled(({
 }));
 
 
-export const RatingField = styled(({
-    selectedRating,
-    onChange,
-    ...p
-}) =>
-    <FormControl
-        margin="normal"
-        fullWidth
-        {...p}
-    >
-        <FormLabel>
-            Rating
-        </FormLabel>
-        <Rating
-            rating={selectedRating}
-            onChange={onChange}
-            size="large"
-        />
-    </FormControl>
-)(({ theme }) => ({
-    marginTop: theme.spacing(4),
-    '& .MuiRating-root': {
-        marginTop: theme.spacing(1),
-        width: 'fit-content',
-    }
+export const RatingField = styled(({ rating, onChange, ...p }) => (
+  <FormControl margin="normal" fullWidth {...p}>
+    <FormLabel>Rating</FormLabel>
+    <Rating rating={rating} onChange={onChange} type="edit" />
+  </FormControl>
+))(({ theme }) => ({
+  marginTop: theme.spacing(4),
+  "& .MuiRating-root": {
+    marginTop: theme.spacing(1),
+    width: "fit-content",
+  },
 }));
 
 export const AsteriskedField = styled(({

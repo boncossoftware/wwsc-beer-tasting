@@ -36,7 +36,7 @@ export const eventFromDoc = (doc: DocumentSnapshot): TastingEvent => {
               "MMMM" +
                 (this.date.getFullYear() === new Date().getFullYear()
                   ? ""
-                  : ", YYYY")
+                  : ", yyyy")
             )
           : "-";
       }
@@ -92,7 +92,7 @@ export const propsForEvent = (
   return {
     editingAllowed,
     rounds,
-    asterisksAllowed, //Default (can be overritten)
+    asterisksAllowed, 
     ...otherFields,
     owner: userEmail, //Set the user as the owner.
     related,

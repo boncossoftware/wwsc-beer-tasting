@@ -47,41 +47,42 @@ export default function answersReducer(
     state:AnswersState = initialState, 
     action: AnyAction
 ): AnswersState {
+    let newState = {...state};
     switch(action.type) {
         case ACTION_EVENT_ANSWERS_ITEM_LOADING: {
             const {id, loading} = action.payload;
-            state.itemsLoading[id] = loading;
-            return state;
+            newState.itemsLoading[id] = loading;
+            return newState;
         }
         case ACTION_EVENT_ANSWERS_LOAD_ITEM: {
             const item = action.payload;
-            state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
-            return state;
+            newState.items = [ ...( newState.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
+            return newState;
         }
         case ACTION_EVENT_ANSWERS_LOAD_ITEM_ERROR: {
             const {id, error} = action.payload;
-            state.itemsError[id] = error;
-            return state;
+            newState.itemsError[id] = error;
+            return newState;
         }
         case ACTION_EVENT_ANSWERS_UPDATING: {
-            state.update.updating = action.payload; 
-            return state;
+            newState.update.updating = action.payload; 
+            return newState;
         }
         case ACTION_EVENT_ANSWERS_UPDATED: {
             const item = action.payload;
-            state.update.updated = item; 
-            state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
-            return state;
+            newState.update.updated = item; 
+            newState.items = [ ...( newState.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
+            return newState;
         }
         case ACTION_EVENT_ANSWERS_UPDATE_ERROR: {
-            state.update.error = action.payload;
-            return state;
+            newState.update.error = action.payload;
+            return newState;
         }
         case ACTION_EVENT_ANSWERS_UPDATE_RESET: {
-            state.update.updating = false;
-            state.update.updated = null;
-            state.update.error = null;
-            return state;
+            newState.update.updating = false;
+            newState.update.updated = null;
+            newState.update.error = null;
+            return newState;
         }
         default: {
             return state;
