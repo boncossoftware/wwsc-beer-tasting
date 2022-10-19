@@ -29,6 +29,7 @@ import {StoreError} from '../../reducer';
 
 import { ACTION_EVENTS_LISTEN_CHANGE } from './listen-change'; //Also listens for event changes
 import { AnyAction } from "redux";
+import { addOrUpdateItem } from "../results/utils";
 
 export type TastingEvent = {
     id: string;
@@ -123,7 +124,9 @@ export default function eventsReducer(
         }
         case ACTION_EVENTS_ITEM_LOAD: {
             const item = action.payload;
-            newState.items = [ ...( newState.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ].sort(sortItems);
+            newState.items = (
+              addOrUpdateItem(item, state.items) as TastingEvent[]
+            ).sort(sortItems);
             return newState;
         }
         case ACTION_EVENTS_ITEM_LOAD_ERROR: {
@@ -158,7 +161,9 @@ export default function eventsReducer(
         case ACTION_EVENTS_UPDATE: {
             const item = action.payload;
             newState.update.updated = item;
-            newState.items = [ ...( newState.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
+            newState.items = (
+              addOrUpdateItem(item, state.items) as TastingEvent[]
+            ).sort(sortItems);
             return newState;
         }
         case ACTION_EVENTS_UPDATE_ERROR: {
@@ -187,8 +192,10 @@ export default function eventsReducer(
             return newState;
         }
         case ACTION_EVENTS_LISTEN_CHANGE: {
-            const event = action.payload;
-            newState.items = [ ...(newState.items?.map( i => (i.id !== event.id) ? i : event) || []) ];
+            const item = action.payload;
+            newState.items = (
+              addOrUpdateItem(item, state.items) as TastingEvent[]
+            ).sort(sortItems);
             return newState;
         }
         default: {

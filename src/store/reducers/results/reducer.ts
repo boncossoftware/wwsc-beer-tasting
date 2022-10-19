@@ -4,6 +4,7 @@ import { ACTION_EVENT_RESULTS_CALCULATED, ACTION_EVENT_RESULTS_CALCULATE_ERROR, 
 import { ACTION_EVENT_RESULTS_LOAD_ITEM_ERROR } from "./load-item";
 import { ACTION_EVENT_RESULTS_LOAD_ITEM } from "./load-item";
 import { ACTION_EVENT_RESULTS_ITEM_LOADING } from "./load-item";
+import { addOrUpdateItem } from "./utils";
 
 export interface RoundResult {
     index: number,
@@ -70,7 +71,7 @@ export default function resultsReducer(
         }
         case ACTION_EVENT_RESULTS_LOAD_ITEM: {
             const item = action.payload;
-            newState.items = [ ...( newState.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
+            newState.items = addOrUpdateItem(item, state.items) as Result[];
             return newState;
         }
         case ACTION_EVENT_RESULTS_LOAD_ITEM_ERROR: {
@@ -85,7 +86,7 @@ export default function resultsReducer(
         }
         case ACTION_EVENT_RESULTS_CALCULATED: {
             const item = action.payload;
-            newState.items = [ ...( newState.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
+            newState.items = addOrUpdateItem(item, state.items) as Result[];
             return newState;
         }
         case ACTION_EVENT_RESULTS_CALCULATE_ERROR: {
