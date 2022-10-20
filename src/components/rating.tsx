@@ -1,40 +1,82 @@
 import { ChangeEvent } from "react";
-import BaseRating from '@material-ui/lab/Rating';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
+import { Chip, FormControlLabel, makeStyles, Radio, RadioGroup, Typography } from "@material-ui/core";
 
 export type RatingProps = {
-    id?: string,
-    rating: number|null, 
-    onChange?: (rating: number|null, event?: ChangeEvent<{}>) => void,
-    size: "small" | "medium" | "large" | undefined
-}
+  id?: string;
+  rating: number | null;
+  onChange?: (rating: number | null, event?: ChangeEvent<{}>) => void;
+  type: "edit" | "display" | undefined;
+};
 
-const Rating = ({rating, onChange, ...p}: RatingProps) => {
-    
-    const handleRatingClick = (event: ChangeEvent<{}>, newRating: number|null) => {
-        if (rating === newRating) {
-            //Clear the rating.
-            (onChange && onChange(null, event));
-        }
-        else {
-            (onChange && onChange(newRating, event));
-        }
+const useStyles = makeStyles({
+  rating: {
+    fontSize: "0.70rem",
+  },
+});
+
+
+const ratingOptions: {
+  [index: string]: { label: string };
+} = {
+  '1': {
+    label: "HMMMMM",
+  },
+  '2': {
+    label: "HMMm",
+  },
+  '3': {
+    label: "Ehhh",
+  },
+  '4': {
+    label: "BLEHHH",
+  },
+};
+
+const Rating = ({ rating, onChange, type = "display"}: RatingProps) => {
+  const classes = useStyles();
+
+  const handleRatingClick = (
+    event: ChangeEvent<{}>,
+    newRating: string | null
+  ) => {
+    if (rating === newRating) {
+      //Clear the rating.
+      onChange && onChange(null, event);
+    } else {
+      onChange && onChange(parseInt(newRating ?? '0'), event);
     }
-
+  };
+  
+  if (type === 'edit') {
     return (
-        <BaseRating
-            name="beer-rating"
-            value={rating}
-            precision={1}
-            max={4}
-            emptyIcon={
-                <StarBorderIcon fontSize="inherit" />
-            }
-            onChange={handleRatingClick}
-            size="medium"
-            readOnly={!Boolean(onChange)}
-            {...p}
-        />
-    )
-}
+      <RadioGroup
+        aria-label="rating"
+        name="rating1"
+        value={rating?.toString()}
+        onChange={handleRatingClick}
+      >
+        {Object.keys(ratingOptions).map((value) => (
+          <FormControlLabel
+            key={value}
+            value={value}
+            control={<Radio />}
+            label={`${value}. ${ratingOptions[value].label}`}
+          />
+        ))}
+      </RadioGroup>
+    );
+  } else {
+    if (rating != null) {
+      return (
+        <Typography
+          component="span"
+          color="inherit"
+          classes={{ root: classes.rating }}
+        >{`${ratingOptions[rating].label} (${rating})`}</Typography>
+      );
+    } else {
+      return <span>-</span>;
+    }
+  }
+};
 export default Rating;

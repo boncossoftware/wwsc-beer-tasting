@@ -30,7 +30,7 @@ service cloud.firestore {
             //Each user can only edit their own answers.
             allow list: if ownerOfEventWithID(eventId);
             allow get: if request.auth.token.email == answerId;
-            allow create,update: if (request.auth.token.email == answerId);
+            allow create,update: if (request.auth.token.email == answerId  || ownerOfEventWithID(eventId));
             allow delete: if ownerOfEventWithID(eventId);
         }
 

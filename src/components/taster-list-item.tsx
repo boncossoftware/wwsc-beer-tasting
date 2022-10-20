@@ -26,7 +26,6 @@ const TasterListItem = ({
             onClick={onClick}
             divider
             disabled={disabled}
-            disableGutters
         >
             {selectable &&
                 <ListItemIcon>

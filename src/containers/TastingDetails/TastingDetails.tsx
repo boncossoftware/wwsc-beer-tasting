@@ -37,10 +37,12 @@ const TastingDetails = () => {
     );
     const eventLoading = useSelector<RootState, boolean>(s => s?.events?.itemsLoading[id]);
     const eventError = useSelector<RootState, StoreError>(s => s?.events?.itemsError[id]);  
-    const answer = useSelector<RootState, TastingAnswer|undefined>(
-        s => s?.answers?.items?.find(e => e.id === id)
+    const answer = useSelector<RootState, TastingAnswer | undefined>((s) =>
+      s?.answers?.items?.find((e) => e.id === user?.email)
     );
-    const answerLoading = useSelector<RootState, boolean>(s => s?.answers?.itemsLoading[id]);
+    const answerLoading = useSelector<RootState, boolean>(
+      (s) => s?.answers?.itemsLoading[user?.email ?? '']
+    );
     const updating = useSelector<RootState, boolean>(s => s?.answers?.update.updating);
     const updated = useSelector<RootState, TastingAnswer[]|null>(s => s?.answers?.update.updated);
     const answerError = useSelector<RootState, StoreError|null>(s => s?.answers?.update.error);
@@ -63,7 +65,7 @@ const TastingDetails = () => {
         initialAsterisked !== selectedAsterisked
     );
 
-    const loading = eventLoading || answerLoading;
+    const loading = (eventLoading && !event) || (answerLoading && !answer);
     const error = eventError || answerError;
     const isBartender = (event?.bartender && (event.bartender === user?.email));
 
@@ -161,55 +163,54 @@ const TastingDetails = () => {
     }
 
     return (
-        <Container 
-            id="tasting-details"
+      <Container id="tasting-details">
+        <Dialog
+          fullScreen
+          open={open}
+          onClose={handleCancel}
+          onExited={handleExit}
+          TransitionComponent={SlideUpTransition}
+          scroll="paper"
         >
-            <Dialog
-                fullScreen
-                open={open}
-                onClose={handleCancel}
-                onExited={handleExit}
-                TransitionComponent={SlideUpTransition}
-            >  
-                <AppBar 
-                    renderLeftComponent={ () => 
-                        <CancelButton onClick={handleCancel} />
-                    } 
-                    title={`Round ${round}`}
-                    renderRightComponent={ () =>
-                        <UpdateButton isSaving={updating} onClick={handleSave} />
-                    } 
+          <AppBar
+            renderLeftComponent={() => <CancelButton onClick={handleCancel} />}
+            title={`Round ${round}`}
+            renderRightComponent={() => (
+              <UpdateButton isSaving={updating} onClick={handleSave} />
+            )}
+          />
+          <InnerContainer>
+            {loading ? (
+              <CircularProgress />
+            ) : (
+              <>
+                {error && <ErrorMessage error={error} />}
+                <BeerSelectionField
+                  beers={event?.beers as any[]}
+                  beerPreselectedIndex={beerPreselectedIndex}
+                  isBeerSelected={isBeerSelected}
+                  onClickBeer={handleClickBeer}
                 />
-                <InnerContainer>
-                {loading ?
-                    <CircularProgress />
-                    :
-                    <>
-                        {error && <ErrorMessage error={error} /> }
-                        <BeerSelectionField
-                            beers={event?.beers as any[]}
-                            beerPreselectedIndex={beerPreselectedIndex}
-                            isBeerSelected={isBeerSelected}
-                            onClickBeer={handleClickBeer}
-                        />
-                        {!isBartender && <>
-                            <RatingField 
-                                rating={selectedRating} 
-                                onChange={handleRatingChange} 
-                            />
-                            <AsteriskedField 
-                                selected={selectedAsterisked}
-                                onChange={handleAsteriskedChange}
-                                disabled={!selectedAsterisked && asterisksLeft() <= 0}
-                                asterisksLeft={asterisksLeft()}
-                            />
-                            <ChangesMadeField changesMade={changesMade} />
-                        </>}
-                    </>
-                }
-                </InnerContainer>
-            </Dialog>
-        </Container>
+                {!isBartender && (
+                  <>
+                    <RatingField
+                      rating={selectedRating}
+                      onChange={handleRatingChange}
+                    />
+                    <AsteriskedField
+                      selected={selectedAsterisked}
+                      onChange={handleAsteriskedChange}
+                      disabled={!selectedAsterisked && asterisksLeft() <= 0}
+                      asterisksLeft={asterisksLeft()}
+                    />
+                    <ChangesMadeField changesMade={changesMade} />
+                  </>
+                )}
+              </>
+            )}
+          </InnerContainer>
+        </Dialog>
+      </Container>
     );
 }
 export default TastingDetails

@@ -27,13 +27,13 @@ const Tasters = () => {
     );
     const tasters = event?.tasters || undefined;
     return (
-        <Container id="tasters">
+        <Container id="tasters" disableGutters>
             {loading ? 
                 <CircularProgress />
                 :
                 <>
                     {error && <ErrorMessage error={error} />}
-                    <Section title="Tasters">
+                    <Section>
                         <TasterList tasters={tasters} />
                     </Section>
                 </>

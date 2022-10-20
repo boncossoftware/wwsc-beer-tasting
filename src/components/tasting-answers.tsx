@@ -19,7 +19,7 @@ const TastingAnswers = ({
     const ratingsSelected = answers?.ratings || [];
     const asterisksSelected = answers?.asterisks || [];
     const showAsPoured = showForBartender || false;
-    const rounds = answers?.rounds || 10;
+    const rounds = answers?.rounds || 0;
 
     const renderItems = () => {
         let index, items=[];
@@ -45,7 +45,7 @@ const TastingAnswers = ({
     }
 
     return (
-        <List disablePadding>
+        <List>
             {renderItems()}
         </List>
     );

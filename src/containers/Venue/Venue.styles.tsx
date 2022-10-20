@@ -6,7 +6,7 @@ import {
     Typography
 } from '@material-ui/core';
 import { 
-    LocationCity as VenueIcon, 
+    PlaceOutlined as VenueIcon, 
 } from "@material-ui/icons";
 import FullPageCircularProgress from "components/full-page-circular-progress";
 import BaseSection from 'components/section-grid';
@@ -39,7 +39,7 @@ export const VenueInfoHeader = styled( ({venue, ...p}) =>
         </Grid>
     </Grid>
 )(({theme}) => ({
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
 
     '& .MuiAvatar-root': {

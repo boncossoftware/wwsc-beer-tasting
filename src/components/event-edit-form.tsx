@@ -1,12 +1,9 @@
-import { AddButton } from "containers/Events/Events.styles";
-import { format } from "date-fns";
 import { ChangeEvent, useState } from "react";
 import { TastingEvent } from "store/reducers/events/reducer";
 import { 
     BartenderEmailField, 
     Container, 
     DateField, 
-    InputChangeEventHandler, 
     NameField, 
     Section, 
     EditTastersList, 
@@ -37,21 +34,22 @@ export const DEFAULT_EVENT = {
     date: null,
     tasters: [''],
     beers: [''],
+    rounds: 0,
     asterisksAllowed: 2
 } as TastingEvent;
 
 const EventEditForm = ({event=DEFAULT_EVENT, onChange}: EventEditFormProps) => {
     const [autoFocus, setAutoFocus] = useState(false);
 
-    const handleChange: InputChangeEventHandler = (field, value) => {
-        const changed = Object.assign({}, {...event, [field]: value});
+    const handleChange = (change: {[field: string]: any}) => {
+        const changed = Object.assign({}, {...event, ...change});
         (onChange && onChange(changed));
     }
 
     const handleAddTaster = () => {
         setAutoFocus(true);
         const tasters = [...(event?.tasters || []), ''];
-        handleChange('tasters', tasters);
+        handleChange({'tasters': tasters});
     }
 
     const handleChangeTaster = (
@@ -60,19 +58,19 @@ const EventEditForm = ({event=DEFAULT_EVENT, onChange}: EventEditFormProps) => {
     ) => {
         const tasters = event?.tasters || [];
         tasters[index] = clickEvent?.target?.value || '';
-        handleChange('tasters', tasters);
+        handleChange({tasters});
     }
 
     const handleRemoveTaster = (index: number) => {
         const tasters = (event?.tasters || [])
         tasters.splice(index, 1);
-        handleChange('tasters', tasters);
+        handleChange({tasters});
     }
 
     const handleAddBeer = () => {
         setAutoFocus(true);
         const beers = [...(event?.beers || []), ''];
-        handleChange('beers', beers);
+        handleChange({beers, rounds: beers.length});
     }
 
     const handleChangeBeer = (
@@ -81,69 +79,86 @@ const EventEditForm = ({event=DEFAULT_EVENT, onChange}: EventEditFormProps) => {
     ) => {
         const beers = event?.beers || [];
         beers[index] = clickEvent?.target?.value || '';
-        handleChange('beers', beers);
+        handleChange({beers});
     }
 
     const handleRemoveBeer = (index: number) => {
         const beers = (event?.beers || [])
         beers.splice(index, 1);
-        handleChange('beers', beers);
+        handleChange({beers, rounds: beers.length});
     }
     
-    return <Container id={'event-edit-form'}>
+    return (
+      <Container id={"event-edit-form"}>
         <Section title="Event">
-            <NameField value={event?.name || DEFAULT_EVENT.name} onChange={handleChange} />
-            <VenueField value={event?.venue || DEFAULT_EVENT.venue} onChange={handleChange} />
-            <DateField value={event?.date} onChange={handleChange} />
-            <PriceField value={event?.price || DEFAULT_EVENT.price} onChange={handleChange} />
+          <NameField
+            value={event?.name || DEFAULT_EVENT.name}
+            onChange={handleChange}
+          />
+          <VenueField
+            value={event?.venue || DEFAULT_EVENT.venue}
+            onChange={handleChange}
+          />
+          <DateField value={event?.date} onChange={handleChange} />
+          <PriceField
+            value={event?.price || DEFAULT_EVENT.price}
+            onChange={handleChange}
+          />
         </Section>
-        
+
         <Section title="Bartender">
-            <BartenderEmailField value={event?.bartender || DEFAULT_EVENT.bartender} onChange={handleChange} />
+          <BartenderEmailField
+            value={event?.bartender}
+            onChange={handleChange}
+          />
         </Section>
 
         <Section title="Tasters">
-            <EditTastersList>
-                {(event?.tasters||[]).map( (email, index) => 
-                    <EditTasterItem
-                        key={index}
-                        id={`taster-${index}`}
-                        email={email} 
-                        onChange={ (e: ChangeEvent<HTMLInputElement>) => 
-                            handleChangeTaster(index, e) 
-                        }
-                        onRemove={ () => handleRemoveTaster(index) }
-                        autoFocus={autoFocus}
-                    />
-                )}
-            </EditTastersList>
-            <AddTasterButton onClick={handleAddTaster} />
-            <AddMeAsTasterField onChange={handleChange} />
+          <EditTastersList>
+            {(event?.tasters || []).map((email, index) => (
+              <EditTasterItem
+                key={index}
+                id={`taster-${index}`}
+                email={email}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  handleChangeTaster(index, e)
+                }
+                onRemove={() => handleRemoveTaster(index)}
+                autoFocus={autoFocus}
+              />
+            ))}
+          </EditTastersList>
+          <AddTasterButton onClick={handleAddTaster} />
+          <AddMeAsTasterField
+            checked={event?.ownerAddedAsTaster}
+            onChange={handleChange}
+          />
         </Section>
 
         <Section title="Beers">
-            <EditBeerList>
-            {(event?.beers||[]).map( (name, index) => 
-                <EditBeerItem
-                    key={index}
-                    name={name}
-                    id={`beer-${index}`}
-                    onChange={ (e: ChangeEvent<HTMLInputElement>) => 
-                        handleChangeBeer(index, e) 
-                    }
-                    onRemove={ () => handleRemoveBeer(index) }
-                    autoFocus={autoFocus}
-                />
-            )}
-            </EditBeerList>
-            <AddBeerButton onClick={handleAddBeer} />
+          <EditBeerList>
+            {(event?.beers || []).map((name, index) => (
+              <EditBeerItem
+                key={index}
+                name={name}
+                id={`beer-${index}`}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  handleChangeBeer(index, e)
+                }
+                onRemove={() => handleRemoveBeer(index)}
+                autoFocus={autoFocus}
+              />
+            ))}
+          </EditBeerList>
+          <AddBeerButton onClick={handleAddBeer} />
         </Section>
         <Section title="Options">
-            <AsterisksAllowedField 
-                value={event?.asterisksAllowed || DEFAULT_EVENT.asterisksAllowed} 
-                onChange={handleChange}
-            />
+          <AsterisksAllowedField
+            value={event?.asterisksAllowed ?? ""}
+            onChange={handleChange}
+          />
         </Section>
-    </Container>
+      </Container>
+    );
 }
 export default EventEditForm;
