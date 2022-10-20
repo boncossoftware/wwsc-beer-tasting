@@ -6,7 +6,7 @@ import { ArrowForwardIos } from "@material-ui/icons";
 import BaseRating from "./rating"
 
 export const ListSubheader = styled(({...p}) => 
-    <BaseListSubheader disableGutters disableSticky {...p} />
+    <BaseListSubheader disableSticky {...p} />
 )(({theme}) => ({
     color: theme.palette.primary.main,
     backgroundColor: theme.palette.background.default,

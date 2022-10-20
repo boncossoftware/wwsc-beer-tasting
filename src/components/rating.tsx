@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import { Chip, FormControlLabel, makeStyles, Radio, RadioGroup } from "@material-ui/core";
+import { Chip, FormControlLabel, makeStyles, Radio, RadioGroup, Typography } from "@material-ui/core";
 
 export type RatingProps = {
   id?: string;
@@ -9,8 +9,8 @@ export type RatingProps = {
 };
 
 const useStyles = makeStyles({
-  chipLabel: {
-   fontSize: '0.70rem'
+  rating: {
+    fontSize: "0.70rem",
   },
 });
 
@@ -68,15 +68,14 @@ const Rating = ({ rating, onChange, type = "display"}: RatingProps) => {
   } else {
     if (rating != null) {
       return (
-        <Chip
-          label={`${rating}. ${ratingOptions[rating].label}`}
-          size="small"
-          variant="outlined"
-          classes={{ label: classes.chipLabel }}
-        />
+        <Typography
+          component="span"
+          color="inherit"
+          classes={{ root: classes.rating }}
+        >{`${ratingOptions[rating].label} (${rating})`}</Typography>
       );
     } else {
-      return <span>no rating selected</span>;
+      return <span>-</span>;
     }
   }
 };

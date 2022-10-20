@@ -7,7 +7,6 @@ import { TastingEvent } from "./reducer";
 import { Dispatch, AnyAction } from "redux";
 import { RootState, StoreError } from "store/reducer";
 import { getCurrentUserInfo } from "store/firebase";
-import { answers } from "store";
 import { newAnswersData } from "../answers/utils";
 
 export const ACTION_EVENTS_UPDATING = "events/updating";

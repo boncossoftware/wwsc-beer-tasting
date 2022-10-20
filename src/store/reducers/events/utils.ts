@@ -23,7 +23,7 @@ export const eventFromDoc = (doc: DocumentSnapshot): TastingEvent => {
     formattedDate: function () {
       if (!(this as any)._formattedDate) {
         (this as any)._formattedDate = this.date
-          ? format(this.date, "ccc d, h:mm aaaa")
+          ? format(this.date, "ccc dd, hh:mm aaaa")
           : "-";
       }
       return (this as any)._formattedDate;

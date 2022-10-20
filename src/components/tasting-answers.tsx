@@ -45,7 +45,7 @@ const TastingAnswers = ({
     }
 
     return (
-        <List disablePadding>
+        <List>
             {renderItems()}
         </List>
     );

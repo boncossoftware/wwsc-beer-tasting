@@ -27,13 +27,13 @@ const Beers = () => {
     );
     const beers = event?.beers || undefined;
     return (
-        <Container id="beers">
+        <Container id="beers" disableGutters>
             {loading ?
                     <CircularProgress />
                 :
                 <>
                     {error && <ErrorMessage error={error} />}
-                    <Section title="Beers">
+                    <Section>
                         <BeerList beers={beers} itemsSelectable={false} />
                     </Section>
                 </>

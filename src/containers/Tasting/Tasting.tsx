@@ -92,12 +92,12 @@ const Tasting = ({ baseURL }: TastingProps) => {
   const displayAnswersLoading = answersLoading && !userAnswers;
 
   return (
-    <Container id="tasting">
+    <Container id="tasting" disableGutters>
       {displayAnswersLoading ? (
         <CircularProgress />
       ) : (
         <>
-          <Section title="Answers">
+          <Section>
             {answersError && <ErrorMessage error={answersError} />}
             {canEdit && (
               <AllowEditField
@@ -118,7 +118,7 @@ const Tasting = ({ baseURL }: TastingProps) => {
             {resultsLoading || resultsCalculating ? (
               <ResultsCircularProgress />
             ) : (
-              <>
+              <Container>
                 {(resultsError || resultsCalculationError) && (
                   <ErrorMessage
                     error={resultsError || resultsCalculationError}
@@ -128,7 +128,7 @@ const Tasting = ({ baseURL }: TastingProps) => {
                 <CalculateResultsButton onClick={handleCalculateResults}>
                   {resultsAvailable ? "Rec" : "C"}alculate Results
                 </CalculateResultsButton>
-              </>
+              </Container>
             )}
           </Section>
         </>
