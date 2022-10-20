@@ -46,7 +46,6 @@ export const AppBarTitle = styled(({ children, ...p }) => {
   textOverflow: "ellipsis",
   maxLines: 1,
   padding: theme.spacing(1),
-  marginBottom: 3,
   lineHeight: "1.05rem",
 }));
 
