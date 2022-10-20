@@ -75,7 +75,6 @@ export const propsForEvent = (
     new Set(
       [
         ...(event?.bartender ? [event?.bartender] : []),
-        ...(event?.related || []),
         ...(event?.tasters || []),
       ].filter((r) => r !== userEmail)
     )

@@ -1,12 +1,9 @@
-import { AddButton } from "containers/Events/Events.styles";
-import { format } from "date-fns";
 import { ChangeEvent, useState } from "react";
 import { TastingEvent } from "store/reducers/events/reducer";
 import { 
     BartenderEmailField, 
     Container, 
     DateField, 
-    InputChangeEventHandler, 
     NameField, 
     Section, 
     EditTastersList, 
@@ -43,15 +40,15 @@ export const DEFAULT_EVENT = {
 const EventEditForm = ({event=DEFAULT_EVENT, onChange}: EventEditFormProps) => {
     const [autoFocus, setAutoFocus] = useState(false);
 
-    const handleChange: InputChangeEventHandler = (field, value) => {
-        const changed = Object.assign({}, {...event, [field]: value});
+    const handleChange = (change: {[field: string]: any}) => {
+        const changed = Object.assign({}, {...event, ...change});
         (onChange && onChange(changed));
     }
 
     const handleAddTaster = () => {
         setAutoFocus(true);
         const tasters = [...(event?.tasters || []), ''];
-        handleChange('tasters', tasters);
+        handleChange({'tasters': tasters});
     }
 
     const handleChangeTaster = (
@@ -60,19 +57,19 @@ const EventEditForm = ({event=DEFAULT_EVENT, onChange}: EventEditFormProps) => {
     ) => {
         const tasters = event?.tasters || [];
         tasters[index] = clickEvent?.target?.value || '';
-        handleChange('tasters', tasters);
+        handleChange({tasters});
     }
 
     const handleRemoveTaster = (index: number) => {
         const tasters = (event?.tasters || [])
         tasters.splice(index, 1);
-        handleChange('tasters', tasters);
+        handleChange({tasters});
     }
 
     const handleAddBeer = () => {
         setAutoFocus(true);
         const beers = [...(event?.beers || []), ''];
-        handleChange('beers', beers);
+        handleChange({beers, rounds: beers.length});
     }
 
     const handleChangeBeer = (
@@ -81,13 +78,13 @@ const EventEditForm = ({event=DEFAULT_EVENT, onChange}: EventEditFormProps) => {
     ) => {
         const beers = event?.beers || [];
         beers[index] = clickEvent?.target?.value || '';
-        handleChange('beers', beers);
+        handleChange({beers});
     }
 
     const handleRemoveBeer = (index: number) => {
         const beers = (event?.beers || [])
         beers.splice(index, 1);
-        handleChange('beers', beers);
+        handleChange({beers, rounds: beers.length});
     }
     
     return <Container id={'event-edit-form'}>

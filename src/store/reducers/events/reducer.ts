@@ -27,7 +27,7 @@ import {
 } from "./load-item";
 import {StoreError} from '../../reducer';
 
-import { ACTION_EVENTS_LISTEN_CHANGE } from './listen-change'; //Also listens for event changes
+import { ACTION_EVENTS_LISTEN_CHANGE, ACTION_EVENTS_LISTEN_REMOVE } from './listen-change'; //Also listens for event changes
 import { AnyAction } from "redux";
 import { addOrUpdateItem } from "../results/utils";
 
@@ -196,6 +196,13 @@ export default function eventsReducer(
             newState.items = (
               addOrUpdateItem(item, state.items) as TastingEvent[]
             ).sort(sortItems);
+            return newState;
+        }
+        case ACTION_EVENTS_LISTEN_REMOVE: {
+            const itemId = action.payload;
+            newState.items = newState.items?.filter(
+                item => item.id !== itemId
+            ) || [];
             return newState;
         }
         default: {

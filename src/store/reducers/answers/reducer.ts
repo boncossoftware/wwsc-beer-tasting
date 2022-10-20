@@ -10,6 +10,7 @@ import { ACTION_EVENT_ANSWERS_UPDATE_RESET } from "./reset-update";
 import { AnyAction } from "redux";
 import { StoreError } from "store/reducer";
 import { addOrUpdateItem } from "../results/utils";
+import { ACTION_ANSWERS_LISTEN_CHANGE } from "./listen-change";
 
 export type TastingAnswer = {
   id: string;
@@ -84,6 +85,11 @@ export default function answersReducer(
       newState.update.updated = null;
       newState.update.error = null;
       return newState;
+    }
+    case ACTION_ANSWERS_LISTEN_CHANGE: {
+        const item = action.payload;
+        newState.items = addOrUpdateItem(item, state.items) as TastingAnswer[];
+        return newState;
     }
     default: {
       return state;

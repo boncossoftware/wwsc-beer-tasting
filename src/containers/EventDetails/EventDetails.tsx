@@ -63,6 +63,12 @@ const EventDetails = () => {
         
     }
 
+    useEffect(() => {
+      if (item === undefined) {
+        history.push("/");
+      }
+    }, [item, history]);
+
     const displayLoading = loading && !item;
     return (
       <Container id="event-details">

@@ -7,6 +7,7 @@ export {default as update} from './update';
 export {default as resetUpdate} from './reset-update';
 export {default as allowEdit} from './allow-edit';
 export {
-    EVENT_MODIFIED_EVENT as EVENT_MODIFIED_EVENT, 
-    default as listenChange
+    EVENT_MODIFIED_EVENT, 
+    listenChange,
+    listenRemove
 } from './listen-change';

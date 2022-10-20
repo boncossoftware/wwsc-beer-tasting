@@ -37,10 +37,12 @@ const TastingDetails = () => {
     );
     const eventLoading = useSelector<RootState, boolean>(s => s?.events?.itemsLoading[id]);
     const eventError = useSelector<RootState, StoreError>(s => s?.events?.itemsError[id]);  
-    const answer = useSelector<RootState, TastingAnswer|undefined>(
-        s => s?.answers?.items?.find(e => e.id === id)
+    const answer = useSelector<RootState, TastingAnswer | undefined>((s) =>
+      s?.answers?.items?.find((e) => e.id === user?.email)
     );
-    const answerLoading = useSelector<RootState, boolean>(s => s?.answers?.itemsLoading[id]);
+    const answerLoading = useSelector<RootState, boolean>(
+      (s) => s?.answers?.itemsLoading[user?.email ?? '']
+    );
     const updating = useSelector<RootState, boolean>(s => s?.answers?.update.updating);
     const updated = useSelector<RootState, TastingAnswer[]|null>(s => s?.answers?.update.updated);
     const answerError = useSelector<RootState, StoreError|null>(s => s?.answers?.update.error);
