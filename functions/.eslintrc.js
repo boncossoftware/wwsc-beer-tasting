@@ -1,5 +1,5 @@
 module.exports = {
-  root: true,
+  roots: ['./functions'],
   env: {
     es6: true,
     node: true,

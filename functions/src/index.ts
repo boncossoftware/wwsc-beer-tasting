@@ -172,6 +172,7 @@ export const createBeerScoreResults = (
       (total, contestant) => total + (contestant.ratings[index] || 4),
       0
     );
+
     return { name: correctBeer, points: points };
   });
 
