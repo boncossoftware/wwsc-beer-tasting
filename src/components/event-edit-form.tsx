@@ -34,6 +34,7 @@ export const DEFAULT_EVENT = {
     date: null,
     tasters: [''],
     beers: [''],
+    rounds: 0,
     asterisksAllowed: 2
 } as TastingEvent;
 
@@ -87,60 +88,77 @@ const EventEditForm = ({event=DEFAULT_EVENT, onChange}: EventEditFormProps) => {
         handleChange({beers, rounds: beers.length});
     }
     
-    return <Container id={'event-edit-form'}>
+    return (
+      <Container id={"event-edit-form"}>
         <Section title="Event">
-            <NameField value={event?.name || DEFAULT_EVENT.name} onChange={handleChange} />
-            <VenueField value={event?.venue || DEFAULT_EVENT.venue} onChange={handleChange} />
-            <DateField value={event?.date} onChange={handleChange} />
-            <PriceField value={event?.price || DEFAULT_EVENT.price} onChange={handleChange} />
+          <NameField
+            value={event?.name || DEFAULT_EVENT.name}
+            onChange={handleChange}
+          />
+          <VenueField
+            value={event?.venue || DEFAULT_EVENT.venue}
+            onChange={handleChange}
+          />
+          <DateField value={event?.date} onChange={handleChange} />
+          <PriceField
+            value={event?.price || DEFAULT_EVENT.price}
+            onChange={handleChange}
+          />
         </Section>
-        
+
         <Section title="Bartender">
-            <BartenderEmailField value={event?.bartender || DEFAULT_EVENT.bartender} onChange={handleChange} />
+          <BartenderEmailField
+            value={event?.bartender}
+            onChange={handleChange}
+          />
         </Section>
 
         <Section title="Tasters">
-            <EditTastersList>
-                {(event?.tasters||[]).map( (email, index) => 
-                    <EditTasterItem
-                        key={index}
-                        id={`taster-${index}`}
-                        email={email} 
-                        onChange={ (e: ChangeEvent<HTMLInputElement>) => 
-                            handleChangeTaster(index, e) 
-                        }
-                        onRemove={ () => handleRemoveTaster(index) }
-                        autoFocus={autoFocus}
-                    />
-                )}
-            </EditTastersList>
-            <AddTasterButton onClick={handleAddTaster} />
-            <AddMeAsTasterField onChange={handleChange} />
+          <EditTastersList>
+            {(event?.tasters || []).map((email, index) => (
+              <EditTasterItem
+                key={index}
+                id={`taster-${index}`}
+                email={email}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  handleChangeTaster(index, e)
+                }
+                onRemove={() => handleRemoveTaster(index)}
+                autoFocus={autoFocus}
+              />
+            ))}
+          </EditTastersList>
+          <AddTasterButton onClick={handleAddTaster} />
+          <AddMeAsTasterField
+            checked={event?.ownerAddedAsTaster}
+            onChange={handleChange}
+          />
         </Section>
 
         <Section title="Beers">
-            <EditBeerList>
-            {(event?.beers||[]).map( (name, index) => 
-                <EditBeerItem
-                    key={index}
-                    name={name}
-                    id={`beer-${index}`}
-                    onChange={ (e: ChangeEvent<HTMLInputElement>) => 
-                        handleChangeBeer(index, e) 
-                    }
-                    onRemove={ () => handleRemoveBeer(index) }
-                    autoFocus={autoFocus}
-                />
-            )}
-            </EditBeerList>
-            <AddBeerButton onClick={handleAddBeer} />
+          <EditBeerList>
+            {(event?.beers || []).map((name, index) => (
+              <EditBeerItem
+                key={index}
+                name={name}
+                id={`beer-${index}`}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  handleChangeBeer(index, e)
+                }
+                onRemove={() => handleRemoveBeer(index)}
+                autoFocus={autoFocus}
+              />
+            ))}
+          </EditBeerList>
+          <AddBeerButton onClick={handleAddBeer} />
         </Section>
         <Section title="Options">
-            <AsterisksAllowedField 
-                value={event?.asterisksAllowed || DEFAULT_EVENT.asterisksAllowed} 
-                onChange={handleChange}
-            />
+          <AsterisksAllowedField
+            value={event?.asterisksAllowed ?? ""}
+            onChange={handleChange}
+          />
         </Section>
-    </Container>
+      </Container>
+    );
 }
 export default EventEditForm;

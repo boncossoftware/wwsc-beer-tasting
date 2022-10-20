@@ -27,7 +27,7 @@ const wrapOnChange = (p: any, parseValue?:((v:any) => any)) => {
         //Fake an onChange as a change event.
         { 
             onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-                p.onChange(event?.target?.id, pV(event?.target?.value))
+                p.onChange({[event?.target?.id]: pV(event?.target?.value)})
             }
         }    
         :
@@ -104,7 +104,7 @@ export const DateField = styled(p=>
                 {...p} 
                 {...(p.onChange ? 
                     //Fake an onChange as a change event.
-                    { onChange: (date) => p.onChange("date", date) }    
+                    { onChange: (date) => p.onChange({"date": date}) }    
                     :
                     {}
                 )}
@@ -199,34 +199,31 @@ export const AddTasterButton = styled(p=>
     <Button variant="outlined" {...p} color="primary">Add Taster</Button>
 )({});
 
-export const AddMeAsTasterField = styled(({onChange, checked, ...p})=>
-    <FormControl
-        margin="normal"
-    >
-        <FormControlLabel
-            control={
-                <Checkbox 
-                    checked={checked} 
-                    inputProps={{
-                        id: "ownerAddedAsTaster"
-                    }}
-                    {...(onChange ? 
-                        //Fake an onChange as a change event.
-                        { 
-                            onChange: e => {
-                                onChange("ownerAddedAsTaster", e?.target?.checked) 
-                            }
-                        }    
-                        :
-                        {}
-                    )}
-                    name="ownerAddedAsTaster"
-                    {...p}
-                />}
-            label="Include me as taster"
+export const AddMeAsTasterField = styled(({ onChange, checked, value, ...p }) => (
+  <FormControl margin="normal">
+    <FormControlLabel
+      control={
+        <Checkbox
+          checked={checked}
+          inputProps={{
+            id: "ownerAddedAsTaster",
+          }}
+          {...(onChange
+            ? //Fake an onChange as a change event.
+              {
+                onChange: (e) => {
+                  onChange({ ownerAddedAsTaster: e?.target?.checked });
+                },
+              }
+            : {})}
+          name="ownerAddedAsTaster"
+          {...p}
         />
-    </FormControl>
-)({});
+      }
+      label="Include me as taster"
+    />
+  </FormControl>
+))({});
 
 export const EditBeerList = styled(p=>
     <List {...p} />
@@ -262,19 +259,26 @@ export const AddBeerButton = styled(p=>
     <Button variant="outlined" {...p} color="primary">Add Beer</Button>
 )({});
 
-export const AsterisksAllowedField = styled(p=> 
-    <Grid item>
-        <TextField 
-            variant="outlined"
-            margin="normal"
-            fullWidth
-            id="asterisksAllowed"
-            label="Asterisks' Allowed"
-            name="asterisksAllowed"
-            placeholder="2"
-            {...p}
-            {...wrapOnChange(p, parseInt)}
-        />
-    </Grid>
-)({});
+const parseToInt = (defaultValue: any) => (value: any) => {
+  const parsed = parseInt(value);
+  if (isNaN(parsed)) {
+    return defaultValue;
+  }
+  return parsed;
+};
+export const AsterisksAllowedField = styled((p) => (
+  <Grid item>
+    <TextField
+      variant="outlined"
+      margin="normal"
+      fullWidth
+      id="asterisksAllowed"
+      label="Asterisks' Allowed"
+      name="asterisksAllowed"
+      placeholder="2"
+      {...p}
+      {...wrapOnChange(p, parseToInt(0))}
+    />
+  </Grid>
+))({});
 

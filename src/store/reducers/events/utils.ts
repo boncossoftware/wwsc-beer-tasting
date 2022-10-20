@@ -83,7 +83,7 @@ export const propsForEvent = (
 
   const {
     editingAllowed = false, //Default (can be overritten)
-    rounds = 10,
+    rounds = 0,
     asterisksAllowed = 2, //Default (can be overritten)
     ...otherFields
   } = event;
