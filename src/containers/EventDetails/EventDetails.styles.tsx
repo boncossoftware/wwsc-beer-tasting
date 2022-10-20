@@ -11,7 +11,7 @@ import {
     EmojiEvents as TastingIcon, 
     LocalDrink as BeerIcon,
     People as TastersIcon,
-    LocationCity as VenueIcon,
+    PlaceOutlined as VenueIcon,
 } from "@material-ui/icons";
 import FullPageCircularProgress from "components/full-page-circular-progress";
 

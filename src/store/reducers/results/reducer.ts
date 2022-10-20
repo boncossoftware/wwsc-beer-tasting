@@ -4,6 +4,7 @@ import { ACTION_EVENT_RESULTS_CALCULATED, ACTION_EVENT_RESULTS_CALCULATE_ERROR, 
 import { ACTION_EVENT_RESULTS_LOAD_ITEM_ERROR } from "./load-item";
 import { ACTION_EVENT_RESULTS_LOAD_ITEM } from "./load-item";
 import { ACTION_EVENT_RESULTS_ITEM_LOADING } from "./load-item";
+import { addOrUpdateItem } from "./utils";
 
 export interface RoundResult {
     index: number,
@@ -61,36 +62,37 @@ export default function resultsReducer(
     state:ResultsState=initialState, 
     action: AnyAction
 ): ResultsState {
+    let newState = { ...state };
     switch(action.type) {
         case ACTION_EVENT_RESULTS_ITEM_LOADING: {
             const {id, loading} = action.payload;
-            state.itemsLoading[id] = loading as boolean;
-            return state;
+            newState.itemsLoading[id] = loading as boolean;
+            return newState;
         }
         case ACTION_EVENT_RESULTS_LOAD_ITEM: {
             const item = action.payload;
-            state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
-            return state;
+            newState.items = addOrUpdateItem(item, state.items) as Result[];
+            return newState;
         }
         case ACTION_EVENT_RESULTS_LOAD_ITEM_ERROR: {
             const {id, error} = action.payload;
-            state.itemsError[id] = error;
-            return state;
+            newState.itemsError[id] = error;
+            return newState;
         }
         case ACTION_EVENT_RESULTS_CALCULATING: {
             const {id, calculating} = action.payload;
-            state.itemsCalculating[id] = calculating;
-            return state;
+            newState.itemsCalculating[id] = calculating;
+            return newState;
         }
         case ACTION_EVENT_RESULTS_CALCULATED: {
             const item = action.payload;
-            state.items = [ ...( state.items?.map( i => (i.id !== item.id) ? i : item ) || [item] ) ];
-            return state;
+            newState.items = addOrUpdateItem(item, state.items) as Result[];
+            return newState;
         }
         case ACTION_EVENT_RESULTS_CALCULATE_ERROR: {
             const {id, error} = action.payload;
-            state.itemsCalculationError[id] = error;
-            return state;
+            newState.itemsCalculationError[id] = error;
+            return newState;
         }
         default: {
             return state;

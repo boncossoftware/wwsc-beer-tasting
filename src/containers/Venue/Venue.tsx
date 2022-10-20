@@ -42,7 +42,7 @@ const Venue = () => {
                 :
                 <>
                     {error && <ErrorMessage error={error}/>}
-                    <Section title="Venue">
+                    <Section>
                         <VenueInfoHeader venue={venue} />
                         <VenueInfoItem title="Time" value={formattedTime}/>
                         <VenueInfoItem title="Date" value={formattedDate}/>

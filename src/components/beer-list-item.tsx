@@ -24,7 +24,6 @@ const BeerListItem = ({
         <ItemComponent
             onClick={onClick}
             divider
-            disableGutters
         >
             {selectable && 
                 <ListItemIcon>

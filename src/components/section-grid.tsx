@@ -22,6 +22,7 @@ const SectionGrid = styled(({children, title, ...p}) =>
 
     '& h5': {
         //Fix the line dissapearing when not alligned properly.
+        marginLeft: theme.spacing(2),
         marginBottom: theme.spacing(1)
     },
 

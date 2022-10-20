@@ -2,15 +2,16 @@
 import { MouseEventHandler } from "react";
 import { 
     ListItem, 
+    ListItemIcon, 
     ListItemText, 
     Typography 
 } from "@material-ui/core";
 import { 
-    ListSubheader,
     Asterisks, 
     DisclosureIndicator,
     Rating
 } from './tasting-answer-item.styles';
+import { styled } from "@material-ui/styles";
 
 export type TastingAnswerItemProps = {
     roundIndex: number, 
@@ -22,7 +23,7 @@ export type TastingAnswerItemProps = {
     onClick?: MouseEventHandler
 }
 
-const TastingAnswerItem = ({
+const BaseTastingAnswerItem = ({
     roundIndex, 
     selectedBeer, 
     rating, 
@@ -32,33 +33,58 @@ const TastingAnswerItem = ({
     onClick,
     ...p
 }: TastingAnswerItemProps) => {
-    return <div {...p}>
-        <ListSubheader>
-            {showAsPoured ? <> {roundIndex + 1}{roundIndex % 5 ? 'th' : 'st'} Poured </> : <> Round {roundIndex + 1} </>}
-        </ListSubheader>
-        <ListItem 
-            onClick={ (canEdit ? onClick : undefined) } 
-            divider
-            button
-            disabled={!canEdit}
-            disableGutters
-        >   
-            <ListItemText
-                primary={<>
-                    {selectedBeer || 'Choose Beer'}
-                    { (!showAsPoured && hasAsterisk) && 
-                        <Asterisks />
-                    }
-                </>}
-                secondary={ !showAsPoured && <>
-                        <Typography variant='caption'> 
-                            Rating <Rating rating={rating} /> 
-                        </Typography> 
-                    </>
-                } 
-            />  
-            { canEdit && <DisclosureIndicator />}
+    return (
+      <div {...p}>
+        <ListItem
+          onClick={canEdit ? onClick : undefined}
+          divider
+          button
+          disabled={!canEdit}
+        >
+          <ListItemIcon className="round">
+            <Typography
+              variant="h6"
+              className={roundIndex < 9 ? "left-padding" : ""}
+              color={selectedBeer && rating ? "secondary" : "textPrimary"}
+            >
+              {roundIndex + 1}
+            </Typography>
+          </ListItemIcon>
+          <ListItemText
+            primary={
+              <>
+                {selectedBeer || "Choose Beer"}
+                {!showAsPoured && hasAsterisk && <Asterisks />}
+              </>
+            }
+            secondary={
+              !showAsPoured && (
+                <>
+                  <Typography
+                    variant="caption"
+                    color={rating ? "primary" : "textSecondary"}
+                  >
+                    Rating: <Rating rating={rating} />
+                  </Typography>
+                </>
+              )
+            }
+          />
+          {canEdit && <DisclosureIndicator />}
         </ListItem>
-    </div>;
+      </div>
+    );
 }
+const TastingAnswerItem = styled(BaseTastingAnswerItem)(({ theme }) => ({
+  "& .round": {
+    minWidth: 35,
+    "& .left-padding": {
+      marginLeft: 10,
+    },
+    "& .MuiTypography-h6": {
+        fontSize: "1.2rem"
+    }
+  },
+}));
+
 export default TastingAnswerItem;
