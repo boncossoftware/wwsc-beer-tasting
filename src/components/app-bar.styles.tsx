@@ -10,10 +10,13 @@ export const AppBar = styled(p=>
     top: 0
 });
 
-export const AppBarTitle = styled(p=>
-    <Typography variant="h6" {...p} />
-)({
+export const AppBarTitle = styled((p) => <Typography variant="h6" {...p} />)(
+  ({ theme }) => ({
+    marginLeft: theme.spacing(2),
     flexGrow: 1,
-    fontWeight: 'bold'
-});
+    fontWeight: "bold",
+    textOverflow: "ellipsis",
+    maxLines: 1
+  })
+);
 
