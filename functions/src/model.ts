@@ -1,65 +1,65 @@
 export type TastingEvent = {
-    id: string;
-    owner: string|undefined|null;
-    name: string|undefined|null;
-    related: string[]|undefined|null;
-    bartender: string|undefined|null;
-    tasters: string[]|undefined|null;
-    ownerAddedAsTaster: boolean|undefined|null;
-    beers: string[]|undefined|null;
-    asterisksAllowed: number|undefined|null;
-    editingAllowed: boolean|undefined|null;
-    rounds: number|undefined|null;
-}
+  id: string;
+  owner: string | undefined | null;
+  name: string | undefined | null;
+  related: string[] | undefined | null;
+  bartender: string | undefined | null;
+  tasters: string[] | undefined | null;
+  ownerAddedAsTaster: boolean | undefined | null;
+  beers: string[] | undefined | null;
+  asterisksAllowed: number | undefined | null;
+  editingAllowed: boolean | undefined | null;
+  rounds: number | undefined | null;
+};
 export interface BarTenderAnswers {
-    id: string,
-    beers: string[]
+  id: string;
+  beers: string[];
 }
 
 export interface ContestantAnswers extends BarTenderAnswers {
-    asterisks: (boolean|null)[],
-    ratings: (number|null)[],
-    changes: (number|null)[],
+  asterisks: (boolean | null)[];
+  ratings: (number | null)[];
+  changes: (number | null)[];
 }
 
 export interface RoundResult {
-    index: number,
-    selectedBeer: string,
-    correctBeer: string,
-    correct: boolean,
-    tasteScore: number,
-    asterisked: boolean,
-    points: number,
-    changesMade: number,
+  index: number;
+  selectedBeer: string;
+  correctBeer: string;
+  correct: boolean;
+  tasteScore: number;
+  asterisked: boolean;
+  points: number;
+  changesMade: number;
 }
 
 export interface ResultSummary {
-    userEmail: string,
-    totalPoints: number,
-    totalTaste: number,
-    totalAsterisks: number,
-    totalAsterisksSecondHalf: number,
-    totalChanges: number,
-    roundResults: RoundResult[],
-    beerScores: {[id:string]: number};
+  userEmail: string;
+  totalPoints: number;
+  totalTaste: number;
+  totalAsterisks: number;
+  totalAsterisksSecondHalf: number;
+  totalChanges: number;
+  roundResults: RoundResult[];
+  beerScores: { [id: string]: number };
 }
 
 export interface BeerRanking {
-    name: string,
-    points: number
+  name: string;
+  points: number;
 }
 
 export interface TastingResults {
-    roundResults: ResultSummary[],
-    beerScoreResults: BeerRanking[],
-    lastUpdated: {seconds: number, nanoseconds: number}
+  roundResults: ResultSummary[];
+  beerScoreResults: BeerRanking[];
+  lastUpdated: { seconds: number; nanoseconds: number };
 }
 
 export interface ServerError {
-    error: {
-        message: string,
-        code: number
-    }
+  error: {
+    message: string;
+    code: number;
+  };
 }
 
 export const CORRECT_BEERS = [
@@ -81,7 +81,7 @@ export const CONTESTANT_ANSWERS: ContestantAnswers[] = [
     beers: CORRECT_BEERS, // All correct beeers.
     // All correct asterisks.
     asterisks: [true, true, null, null, null, null, null, null, null, null],
-    ratings: [4, 4, 4, 4, 4, 3, 2, 1, 0, 0],
+    ratings: [1, 1, 1, 1, 1, 2, 3, 4, 4, 4],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // All low change counts.
   },
   {
@@ -89,12 +89,10 @@ export const CONTESTANT_ANSWERS: ContestantAnswers[] = [
     beers: CORRECT_BEERS.slice().reverse(), // All wrong beers.
     // All incorrect asterisks (in second half).
     asterisks: [null, null, null, null, null, null, null, null, true, true],
-    ratings: [4, 3, 2, 1, 0, 0, 0, 0, 0, 0],
+    ratings: [1, 2, 3, 4, 4, 4, 4, 4, 4, 4],
     changes: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5], // All high change counts.
   },
 ];
-
-const toRatings = (arr: number[]) => arr.map( (v) => Math.max(0, 4 - v));
 
 export const WSC_VIRTUAL_BBT_CORRECT_BEERS = [
   "Augustiner Helles Lager",
@@ -125,7 +123,7 @@ export const WSC_VIRTUAL_BBT_ANSWERS = [
       "Becks Pils",
     ],
     asterisks: [null, null, true, null, null, null, null, null, null, null],
-    ratings: toRatings([1, 4, 2, 4, 2, 3, 4, 3, 2, 1]),
+    ratings: [1, 4, 2, 4, 2, 3, 4, 3, 2, 1],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // falset available, asume 1.
   },
   {
@@ -143,7 +141,7 @@ export const WSC_VIRTUAL_BBT_ANSWERS = [
       "Rothaus Tanne Zapfle",
     ],
     asterisks: [null, null, null, null, null, null, null, null, true, null],
-    ratings: toRatings([1, 3, 1, 2, 2, 4, 3, 2, 2, 2]),
+    ratings: [1, 3, 1, 2, 2, 4, 3, 2, 2, 2],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // falset available, asume 1.
   },
   {
@@ -161,7 +159,7 @@ export const WSC_VIRTUAL_BBT_ANSWERS = [
       "Paulaner Muenchner Helles Lager",
     ],
     asterisks: [null, null, null, null, null, null, null, null, null, null],
-    ratings: toRatings([4, 4, 3, 3, 3, 3, 3, 3, 3, 3]),
+    ratings: [4, 4, 3, 3, 3, 3, 3, 3, 3, 3],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // falset available, asume 1.
   },
   {
@@ -179,7 +177,7 @@ export const WSC_VIRTUAL_BBT_ANSWERS = [
       "Augustiner Helles Lager",
     ],
     asterisks: [false, null, true, null, null, null, null, null, null, null],
-    ratings: toRatings([1, 2, 1, 2, 3, 4, 2, 3, 1, 2]),
+    ratings: [1, 2, 1, 2, 3, 4, 2, 3, 1, 2],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // falset available, asume 1.
   },
   {
@@ -197,9 +195,18 @@ export const WSC_VIRTUAL_BBT_ANSWERS = [
       "Paulaner Muenchner Helles Lager",
     ],
     asterisks: [
-      false, false, false, true, false, false, false, true, false, false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
     ],
-    ratings: toRatings([2, 2, 2, 2, 3, 3, 3, 2, 1, 2]),
+    ratings: [2, 2, 2, 2, 3, 3, 3, 2, 1, 2],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // falset available, asume 1.
   },
   {
@@ -217,9 +224,18 @@ export const WSC_VIRTUAL_BBT_ANSWERS = [
       "Rothaus Tanne Zapfle",
     ],
     asterisks: [
-      false, false, true, false, false, false, false, false, true, false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
     ],
-    ratings: toRatings([1, 3, 1, 3, 3, 4, 3, 3, 1, 3]),
+    ratings: [1, 3, 1, 3, 3, 4, 3, 3, 1, 3],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // falset available, asume 1.
   },
   {
@@ -237,9 +253,18 @@ export const WSC_VIRTUAL_BBT_ANSWERS = [
       "Rothaus Tanne Zapfle",
     ],
     asterisks: [
-      false, false, false, true, false, false, false, true, false, false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
     ],
-    ratings: toRatings([1, 3, 1, 2, 2, 4, 3, 3, 1, 3]),
+    ratings: [1, 3, 1, 2, 2, 4, 3, 3, 1, 3],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // falset available, asume 1.
   },
   {
@@ -257,9 +282,18 @@ export const WSC_VIRTUAL_BBT_ANSWERS = [
       "Bitburger Pilsener",
     ],
     asterisks: [
-      false, false, true, false, false, false, false, false, false, false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
     ],
-    ratings: toRatings([2, 1, 1, 1, 4, 4, 4, 4, 3, 4]),
+    ratings: [2, 1, 1, 1, 4, 4, 4, 4, 3, 4],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // falset available, asume 1.
   },
   {
@@ -277,9 +311,18 @@ export const WSC_VIRTUAL_BBT_ANSWERS = [
       "Bitburger Pilsener",
     ],
     asterisks: [
-      false, false, false, false, false, false, false, true, false, true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
     ],
-    ratings: toRatings([3, 2, 2, 3, 4, 4, 4, 1, 1, 2]),
+    ratings: [3, 2, 2, 3, 4, 4, 4, 1, 1, 2],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // falset available, asume 1.
   },
   {
@@ -297,9 +340,18 @@ export const WSC_VIRTUAL_BBT_ANSWERS = [
       "Bitburger Pilsener",
     ],
     asterisks: [
-      false, false, false, true, true, false, false, false, false, false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
     ],
-    ratings: toRatings([2, 2, 1, 2, 2, 2, 3, 2, 1, 1]),
+    ratings: [2, 2, 1, 2, 2, 2, 3, 2, 1, 1],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // falset available, asume 1.
   },
   {
@@ -317,9 +369,18 @@ export const WSC_VIRTUAL_BBT_ANSWERS = [
       "Augustiner Helles Lager",
     ],
     asterisks: [
-      false, false, false, false, true, false, false, false, true, false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
     ],
-    ratings: toRatings([2, 4, 3, 3, 3, 2, 3, 2, 1, 2]),
+    ratings: [2, 4, 3, 3, 3, 2, 3, 2, 1, 2],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // falset available, asume 1.
   },
   {
@@ -337,9 +398,18 @@ export const WSC_VIRTUAL_BBT_ANSWERS = [
       "Rothaus Tanne Zapfle",
     ],
     asterisks: [
-      true, true, false, false, false, false, false, false, false, false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
     ],
-    ratings: toRatings([1, 2, 2, 2, 3, 3, 2, 3, 2, 2]),
+    ratings: [1, 2, 2, 2, 3, 3, 2, 3, 2, 2],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // falset available, asume 1.
   },
   {
@@ -357,9 +427,18 @@ export const WSC_VIRTUAL_BBT_ANSWERS = [
       "Erdinger Weissbier hell",
     ],
     asterisks: [
-      false, false, false, true, false, false, false, true, false, false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
     ],
-    ratings: toRatings([1, 3, 1, 1, 2, 4, 3, 2, 2, 4]),
+    ratings: [1, 3, 1, 1, 2, 4, 3, 2, 2, 4],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // falset available, asume 1.
   },
   {
@@ -377,9 +456,18 @@ export const WSC_VIRTUAL_BBT_ANSWERS = [
       "Paulaner Muenchner Helles Lager",
     ],
     asterisks: [
-      true, true, false, false, false, false, false, false, false, false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
     ],
-    ratings: toRatings([1, 2, 1, 2, 3, 4, 4, 4, 4, 3]),
+    ratings: [1, 2, 1, 2, 3, 4, 4, 4, 4, 3],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], // falset available, asume 1.
   },
 ];
