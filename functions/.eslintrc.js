@@ -1,8 +1,8 @@
 module.exports = {
   root: true,
   env: {
-    "es6": true,
-    "node": true,
+    es6: true,
+    node: true,
     "jest/globals": true,
   },
   extends: [
@@ -19,14 +19,13 @@ module.exports = {
   },
   ignorePatterns: [
     "/lib/**/*", // Ignore built files.
+    "*.test.*", // Ignore test files.
   ],
-  plugins: [
-    "@typescript-eslint",
-    "import",
-    "jest",
-  ],
+  plugins: ["@typescript-eslint", "import", "jest"],
   rules: {
-    "quotes": ["error", "double"],
+    quotes: ["error", "double"],
     "no-unused-vars": "off",
+    indent: ["error", 2],
+    "quote-props": "off",
   },
 };
