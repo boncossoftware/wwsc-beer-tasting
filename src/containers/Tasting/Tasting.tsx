@@ -16,6 +16,7 @@ import {
   CircularProgress,
   ResultsCircularProgress,
   Section,
+  ResultsContainer,
 } from "./Tasting.styles";
 
 export type TastingProps = {
@@ -118,17 +119,19 @@ const Tasting = ({ baseURL }: TastingProps) => {
             {resultsLoading || resultsCalculating ? (
               <ResultsCircularProgress />
             ) : (
-              <Container>
+              <ResultsContainer>
                 {(resultsError || resultsCalculationError) && (
                   <ErrorMessage
                     error={resultsError || resultsCalculationError}
                   />
                 )}
                 <TastingResults results={tastingResults} />
-                <CalculateResultsButton onClick={handleCalculateResults}>
-                  {resultsAvailable ? "Rec" : "C"}alculate Results
-                </CalculateResultsButton>
-              </Container>
+                {canEdit && (
+                  <CalculateResultsButton onClick={handleCalculateResults}>
+                    {resultsAvailable ? "Rec" : "C"}alculate Results
+                  </CalculateResultsButton>
+                )}
+              </ResultsContainer>
             )}
           </Section>
         </>

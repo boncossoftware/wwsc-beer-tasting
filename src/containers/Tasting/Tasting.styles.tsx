@@ -12,6 +12,10 @@ import SectionGrid from "components/section-grid";
 
 export const Container = BaseContainer;
 
+export const ResultsContainer = styled(BaseContainer)(({ theme }) => ({
+  marginBottom: theme.spacing(10),
+}));
+
 export const CircularProgress = FullPageCircularProgress;
 
 export const AllowEditField = styled(({ onChange, value, ...p }) => (
@@ -62,7 +66,6 @@ export const CalculateResultsButton = styled( ({...p}) =>
     <Button variant="outlined" color="primary" fullWidth {...p}/>
 )(({theme}) => ({
     marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(10),
 }));
 
 
