@@ -10,24 +10,7 @@ export const AppBar = styled(p=>
     top: 0
 });
 
-function getTextWidth(text: string, font ?: string | undefined) {
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d");
-
-  if (context) {
-    context.font = font || getComputedStyle(document.body).font;
-    return context.measureText(text).width;
-  }
-  else {
-    return 0;
-  }
-}
-
 export const AppBarTitle = styled(({ children, ...p }) => {
-  if (typeof children === "string" || children instanceof String) {
-    const width = getTextWidth(children as string);
-    console.log(width);
-  }
   return <Typography variant="h6" {...p} children={children} />;
 })(({ theme }) => ({
   [theme.breakpoints.down("sm")]: {
