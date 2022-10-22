@@ -3,19 +3,6 @@ process.env.FIREBASE_CONFIG = "{}";
 process.env.GCLOUD_PROJECT = "";
 console.debug = jest.fn(); // Prevent loggin to console.
 console.error = jest.fn(); // Prevent loggin to console.
-
-import {
-  ContestantAnswers,
-  CONTESTANT_ANSWERS,
-  CORRECT_BEERS,
-  ServerError,
-  TastingResults,
-  WSC_VIRTUAL_BBT_ANSWERS,
-  WSC_VIRTUAL_BBT_CORRECT_BEERS,
-} from "./model";
-
-const firebaseTest = require("firebase-functions-test")();
-
 // Mock the tasting event and answers fetched from firebase.
 const dataService = {
   getTastingEvent: () => ({
@@ -33,6 +20,21 @@ const dataService = {
 };
 jest.mock("./data-service", () => dataService);
 
+import { sortByRankedPointScores, TIE_BREAKER_REASON_LESS_ASTERISKS, TIE_BREAKER_REASON_MORE_CORRECT_SECOND_HALF } from ".";
+import {
+  ContestantAnswers,
+  CONTESTANT_ANSWERS,
+  CONTESTANT_ANSWERS_TIE_BREAKER_ASTERISK,
+  CONTESTANT_ANSWERS_TIE_BREAKER_SECOND_HALF,
+  CORRECT_BEERS,
+  ServerError,
+  TastingResults,
+  WSC_VIRTUAL_BBT_ANSWERS,
+  WSC_VIRTUAL_BBT_CORRECT_BEERS,
+} from "./model";
+
+const firebaseTest = require("firebase-functions-test")();
+
 test("calculateContestantRoundResults()", () => {
   const { createContestantRoundResults } = require(".");
   const results = createContestantRoundResults(
@@ -48,11 +50,11 @@ test("calculateContestantRoundResults()", () => {
   // All low scores converted to warawara-scores (4 - score).
   expect(results[1].totalTaste).toBe(34);
 
-  expect(results[0].totalAsterisks).toBe(2);
-  expect(results[0].totalAsterisksSecondHalf).toBe(0);
-
-  expect(results[1].totalAsterisks).toBe(2);
-  expect(results[1].totalAsterisksSecondHalf).toBe(2);
+  expect(results[0].totalCorrectAsterisks).toBe(2);
+  expect(results[0].totalCorrectSecondHalf).toBe(5);
+  
+  expect(results[1].totalCorrectAsterisks).toBe(0);
+  expect(results[1].totalCorrectSecondHalf).toBe(0);
 });
 
 test("calculateBeerScoreResults()", () => {
@@ -82,18 +84,18 @@ test("BBT Vitrual event - calculateContestantRoundResults()", () => {
   sortByRankedPointScores(results);
 
   expect(results[0].totalPoints).toBe(10);
-  expect(results[0].totalAsterisks).toBe(1);
-  expect(results[0].totalAsterisksSecondHalf).toBe(0);
+  expect(results[0].totalCorrectAsterisks).toBe(1);
+  expect(results[0].totalCorrectSecondHalf).toBe(5);
   expect(results[0].totalTaste).toBe(28);
 
   expect(results[1].totalPoints).toBe(8);
-  expect(results[1].totalAsterisks).toBe(2);
-  expect(results[1].totalAsterisksSecondHalf).toBe(0);
+  expect(results[1].totalCorrectAsterisks).toBe(2);
+  expect(results[1].totalCorrectSecondHalf).toBe(3);
   expect(results[1].totalTaste).toBe(18);
 
   expect(results[2].totalPoints).toBe(8);
-  expect(results[2].totalAsterisks).toBe(2);
-  expect(results[2].totalAsterisksSecondHalf).toBe(0);
+  expect(results[2].totalCorrectAsterisks).toBe(2);
+  expect(results[2].totalCorrectSecondHalf).toBe(2);
   expect(results[2].totalTaste).toBe(22);
 });
 
@@ -102,7 +104,6 @@ test("event - createTastingResults()", async () => {
   const wrappedCalculateResults = firebaseTest.wrap(calculateResults);
   const eventID = "1";
   const results: TastingResults = await wrappedCalculateResults(eventID);
-
   expect(results.roundResults[0].userEmail).toBe(CONTESTANT_ANSWERS[0].id);
   expect(results.roundResults[1].userEmail).toBe(CONTESTANT_ANSWERS[1].id);
 
@@ -119,4 +120,38 @@ test("event with no bartender - createTastingResults()", async () => {
 
   expect(results.error).toBeTruthy();
   expect(results.error.code).toBe(1500);
+});
+
+test("In a tie the participant with least asterisks should win.", async () => {
+  const { createContestantRoundResults } = require(".");
+  const results = createContestantRoundResults(
+    CORRECT_BEERS,
+    CONTESTANT_ANSWERS_TIE_BREAKER_ASTERISK
+  );
+  const sortedResults = sortByRankedPointScores(results);
+
+  expect(sortedResults[0].userEmail).toBe("contestant_1@email.com");//Winner
+  expect(sortedResults[0].isTied).toBe(true);
+  expect(sortedResults[1].isTied).toBe(true);
+  expect(sortedResults[0].tieBreakerReason).toBe(
+    TIE_BREAKER_REASON_LESS_ASTERISKS
+  );
+  expect(sortedResults[1].tieBreakerReason).toBe(null);
+});
+
+test("In a tie the participant with same asterisks then most correct beers in second half should win.", async () => {
+  const { createContestantRoundResults } = require(".");
+  const results = createContestantRoundResults(
+    CORRECT_BEERS,
+    CONTESTANT_ANSWERS_TIE_BREAKER_SECOND_HALF
+  );
+  const sortedResults = sortByRankedPointScores(results);
+
+  expect(sortedResults[0].userEmail).toBe("contestant_1@email.com"); //Winner
+  expect(sortedResults[0].isTied).toBe(true);
+  expect(sortedResults[1].isTied).toBe(true);
+  expect(sortedResults[0].tieBreakerReason).toBe(
+    TIE_BREAKER_REASON_MORE_CORRECT_SECOND_HALF
+  );
+  expect(sortedResults[1].tieBreakerReason).toBe(null);
 });

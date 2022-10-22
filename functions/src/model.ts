@@ -37,11 +37,13 @@ export interface ResultSummary {
   userEmail: string;
   totalPoints: number;
   totalTaste: number;
-  totalAsterisks: number;
-  totalAsterisksSecondHalf: number;
+  totalCorrectAsterisks: number;
+  totalCorrectSecondHalf: number;
   totalChanges: number;
   roundResults: RoundResult[];
   beerScores: { [id: string]: number };
+  isTied: boolean;
+  tieBreakerReason: string | null;
 }
 
 export interface BeerRanking {
@@ -91,6 +93,52 @@ export const CONTESTANT_ANSWERS: ContestantAnswers[] = [
     asterisks: [null, null, null, null, null, null, null, null, true, true],
     ratings: [1, 2, 3, 4, 4, 4, 4, 4, 4, 4],
     changes: [5, 5, 5, 5, 5, 5, 5, 5, 5, 5], // All high change counts.
+  },
+];
+
+export const CONTESTANT_ANSWERS_TIE_BREAKER_ASTERISK: ContestantAnswers[] = [
+  {
+    id: "contestant_1@email.com",
+    beers: CORRECT_BEERS,
+    asterisks: [null, null, null, null, null, null,
+      null, null, null, null], // Has less asterisks.
+    ratings: [1, 1, 1, 1, 1, 2, 3, 4, 4, 4],
+    changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  },
+  {
+    id: "contestant_2@email.com",
+    beers: [
+      ...CORRECT_BEERS.slice(0, 8),
+      ...CORRECT_BEERS.slice(0, 2), // These are incorrect
+    ],
+    // All incorrect asterisks (in second half).
+    asterisks: [true, true, null, null, null,
+      null, null, null, null, null],
+    ratings: [1, 2, 3, 4, 4, 4, 4, 4, 4, 4],
+    changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  },
+];
+
+export const CONTESTANT_ANSWERS_TIE_BREAKER_SECOND_HALF: ContestantAnswers[] = [
+  {
+    id: "contestant_1@email.com",
+    beers: [
+      ...CORRECT_BEERS.slice(8, 10), // These are incorrect on
+      ...CORRECT_BEERS.slice(2, 10),
+    ],
+    asterisks: [null, null, null, null, null, null, null, null, null, null],
+    ratings: [1, 1, 1, 1, 1, 2, 3, 4, 4, 4],
+    changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  },
+  {
+    id: "contestant_2@email.com",
+    beers: [
+      ...CORRECT_BEERS.slice(0, 8),
+      ...CORRECT_BEERS.slice(0, 2), // These are incorrect on
+    ],
+    asterisks: [null, null, null, null, null, null, null, null, null, null],
+    ratings: [1, 2, 3, 4, 4, 4, 4, 4, 4, 4],
+    changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   },
 ];
 
