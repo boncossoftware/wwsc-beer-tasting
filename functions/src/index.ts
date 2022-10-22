@@ -16,6 +16,11 @@ import {
 
 const onCall = functions.https.onCall;
 
+export const TIE_BREAKER_REASON_LESS_ASTERISKS = "Less asterisks used overal";
+export const TIE_BREAKER_REASON_MORE_CORRECT_SECOND_HALF =
+  "More correct beers in second half";
+export const DRINK_OFF = "DRINK OFF!";
+
 /**
  * ResultsError for an error object
  * with a error code.
@@ -86,7 +91,7 @@ export const calculateResults = onCall(async (data, _) => {
       `Error: ${message} (${code})\n` + `${(error as any).stack}`
     );
 
-    return { error: { message, code } } as ServerError;
+    return {error: {message, code}} as ServerError;
   }
 });
 
@@ -117,31 +122,35 @@ export const createContestantRoundResults = (
     const summary: ResultSummary = {
       totalPoints: 0,
       totalTaste: 0,
-      totalAsterisks: 0,
-      totalAsterisksSecondHalf: 0,
+      totalCorrectAsterisks: 0,
+      totalCorrectSecondHalf: 0,
       totalChanges: 0,
       roundResults: [],
       userEmail: contestantAnswers.id,
       beerScores: {},
+      isTied: false,
+      tieBreakerReason: null,
     };
 
     summary.roundResults = contestantAnswers?.beers.map(
       (roundAnswer, roundIndex) => {
         const correctBeer = correctBeers[roundIndex];
-        const asterisked = contestantAnswers?.asterisks[roundIndex] || false;
+        const asterisked = (contestantAnswers?.asterisks[roundIndex] ||
+          false) as boolean;
         const tasteScore = contestantAnswers?.ratings[roundIndex] || 4;
-        const changes = contestantAnswers?.changes[roundIndex];
+        const changes = contestantAnswers?.changes[roundIndex] as number;
         const correct = (roundAnswer === correctBeer) as boolean;
         const points =
           (correct ? 1 : 0) +
           (correct && asterisked ? 1 : 0) +
           (!correct && asterisked ? -1 : 0);
 
+        // (Usually round 6 or higher)
         const isSecondHalf = roundIndex >= rounds / 2;
         summary.totalPoints += points;
         summary.totalTaste += tasteScore;
-        summary.totalAsterisks += asterisked ? 1 : 0;
-        summary.totalAsterisksSecondHalf += asterisked && isSecondHalf ? 1 : 0;
+        summary.totalCorrectAsterisks += correct && asterisked ? 1 : 0;
+        summary.totalCorrectSecondHalf += correct && isSecondHalf ? 1 : 0;
         summary.totalChanges += changes || 0;
         summary.beerScores[correctBeer] =
           (summary.beerScores[correctBeer] || 0) + tasteScore;
@@ -172,36 +181,52 @@ export const createBeerScoreResults = (
       (total, contestant) => total + (contestant.ratings[index] || 4),
       0
     );
-    return { name: correctBeer, points: points };
+    return {name: correctBeer, points: points};
   });
 
 export const sortByRankedPointScores = (
   contestantRoundResults: ResultSummary[] = []
 ) =>
+  /* NOTE FOR SORTING:
+   * If the result is negative, r1 is sorted
+   * before r2.
+   * If the result is positive, r2 is sorted
+   * before r1.
+   * If the result is 0, no changes are done
+   * with the sort order of the two values.
+   */
   contestantRoundResults.sort(
     (r1: ResultSummary, r2: ResultSummary): number => {
       if (r2.totalPoints !== r1.totalPoints) {
-        // Base on points if not tied.
+        // Base on points if not tied. Based
+        // on scoring rules 1 and 2 (see
+        // createContestantRoundResults)
         return r2.totalPoints - r1.totalPoints;
       } else {
-        // If points are tied than base on total asterisks (less wins)
-        if (r2.totalAsterisks !== r1.totalAsterisks) {
-          return r1.totalAsterisksSecondHalf - r2.totalAsterisksSecondHalf;
+        r1.isTied = true;
+        r2.isTied = true;
+        // If points are tied than base on total
+        // asterisks (less wins). Based tie breaker rule 1.
+        if (r2.totalCorrectAsterisks !== r1.totalCorrectAsterisks) {
+          const result = r1.totalCorrectAsterisks - r2.totalCorrectAsterisks;
+          (result > 0 ? r2 : r1).tieBreakerReason =
+            TIE_BREAKER_REASON_LESS_ASTERISKS;
+          return result;
         } else {
           // If points and total asterisks are tied than base
-          // on total asterisks second half (less wins).
-          if (r2.totalAsterisksSecondHalf !== r1.totalAsterisksSecondHalf) {
-            return r1.totalAsterisksSecondHalf - r2.totalAsterisksSecondHalf;
+          // on total correct beers in second half (more wins).
+          // Based tie breaker rule 2.
+          if (r2.totalCorrectSecondHalf !== r1.totalCorrectSecondHalf) {
+            const result =
+              r2.totalCorrectSecondHalf - r1.totalCorrectSecondHalf;
+            (result > 0 ? r2 : r1).tieBreakerReason =
+              TIE_BREAKER_REASON_MORE_CORRECT_SECOND_HALF;
+            return result;
           } else {
-            // If points and total asterisks (second half) are tied than
-            // base on total changes (less wins).
-            if (r2.totalChanges !== r1.totalChanges) {
-              return r1.totalChanges - r2.totalChanges;
-            } else {
-              // If all else fails thant base on total warawara taste
-              // score (less wins).
-              return r1.totalTaste - r2.totalTaste;
-            }
+            r1.tieBreakerReason = DRINK_OFF;
+            r2.tieBreakerReason = DRINK_OFF;
+            // Drink off.
+            return 0;
           }
         }
       }
@@ -211,4 +236,4 @@ export const sortByRankedPointScores = (
 export const sortByRankedBeerTasteScores = (
   beerScoreResults: BeerRanking[] = []
 ): BeerRanking[] =>
-  beerScoreResults.sort(({ points: p1 }, { points: p2 }) => p1 - p2);
+  beerScoreResults.sort(({points: p1}, {points: p2}) => p1 - p2);
