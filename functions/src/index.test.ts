@@ -82,7 +82,6 @@ test("BBT Vitrual event - calculateContestantRoundResults()", () => {
     WSC_VIRTUAL_BBT_ANSWERS
   );
   sortByRankedPointScores(results);
-  console.log(results);
 
   expect(results[0].totalPoints).toBe(10);
   expect(results[0].totalCorrectAsterisks).toBe(1);
