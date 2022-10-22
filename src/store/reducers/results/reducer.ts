@@ -18,14 +18,16 @@ export interface RoundResult {
 }
 
 export interface ResultSummary {
-    userEmail: string,
-    totalPoints: number,
-    totalTaste: number,
-    totalAsterisks: number,
-    totalAsterisksSecondHalf: number,
-    totalChanges: number,
-    roundResults: RoundResult[],
-    beerScores: {[id:string]: number};
+  userEmail: string;
+  totalPoints: number;
+  totalTaste: number;
+  totalCorrectAsterisks: number;
+  totalCorrectSecondHalf: number;
+  totalChanges: number;
+  roundResults: RoundResult[];
+  beerScores: { [id: string]: number };
+  isTied: boolean;
+  tieBreakerReason: string | null;
 }
 
 export interface BeerRanking {
