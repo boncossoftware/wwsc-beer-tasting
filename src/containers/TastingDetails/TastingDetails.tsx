@@ -168,7 +168,7 @@ const TastingDetails = () => {
           fullScreen
           open={open}
           onClose={handleCancel}
-          onExited={handleExit}
+          TransitionProps={{ onExited: handleExit }}
           TransitionComponent={SlideUpTransition}
           scroll="paper"
         >

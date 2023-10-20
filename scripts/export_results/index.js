@@ -1,7 +1,8 @@
 import * as admin from "firebase-admin/app";
-import serviceAccount from "../../.keys/service-account.json";
 import { getFirestore } from "firebase-admin/firestore";
 import fs from "fs";
+
+const serviceAccount = JSON.parse(fs.readFileSync("../../.keys/service-account.json"));
 
 admin.initializeApp({
   credential: admin.cert(serviceAccount),
@@ -12,7 +13,7 @@ const run = async () => {
   const db = getFirestore();
   const results = await db
     .collection("results")
-    .doc("VwQViuKA470m8b06E442")
+    .doc("NQjTpWLJjDd7hA5xyRov")
     .get();
 
   const rounds = [...Array(10).keys()];

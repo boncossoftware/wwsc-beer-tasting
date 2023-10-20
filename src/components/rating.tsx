@@ -32,7 +32,7 @@ const ratingOptions: {
   },
 };
 
-const Rating = ({ rating, onChange, type = "display"}: RatingProps) => {
+const Rating = ({ id, rating, onChange, type = "display"}: RatingProps) => {
   const classes = useStyles();
 
   const handleRatingClick = (
@@ -50,6 +50,7 @@ const Rating = ({ rating, onChange, type = "display"}: RatingProps) => {
   if (type === 'edit') {
     return (
       <RadioGroup
+        id={id}
         aria-label="rating"
         name="rating1"
         value={rating?.toString()}
@@ -61,6 +62,7 @@ const Rating = ({ rating, onChange, type = "display"}: RatingProps) => {
             value={value}
             control={<Radio />}
             label={`${value}. ${ratingOptions[value].label}`}
+            id={`beer-rating-${value}`}
           />
         ))}
       </RadioGroup>
@@ -69,6 +71,7 @@ const Rating = ({ rating, onChange, type = "display"}: RatingProps) => {
     if (rating != null) {
       return (
         <Typography
+          id={id}
           component="span"
           color="inherit"
           classes={{ root: classes.rating }}
