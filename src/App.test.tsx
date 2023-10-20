@@ -3,6 +3,6 @@ import App from './App';
 
 test('renders learn react link', () => {
     render(<App />);
-    const initialLoadingElement = screen.getByText('loading...');
-    expect(initialLoadingElement).toBeInTheDocument();
+    const progress = screen.getByRole('progressbar', {hidden: true}); //hidden true because of fade in.
+    expect(progress).toBeInTheDocument();
 });

@@ -101,13 +101,14 @@ test('renders handle load', async () => {
     const docCall = mockFirebase.firestore().doc.mock.calls; 
 
     //Once the the load.
-    expect(collectionCall.length).toBe(1); 
+    expect(collectionCall.length).toBe(2); //One for the collection and one for subscribe.
     expect(collectionCall[0][0]).toBe('events');
+    expect(collectionCall[1][0]).toBe('events');
 
     expect(docCall.length).toBe(1); 
     expect(docCall[0][0]).toBe(TEST_ID);
 
-    const loadItemAction = dispatch.mock.calls[0][0];
+    const loadItemAction = dispatch!.mock.calls[0][0];
     const reductions = await getActionRedutions(loadItemAction, mockState);
     expect(reductions[0]).toStrictEqual({
         type: ACTION_EVENTS_ITEM_LOADING, 

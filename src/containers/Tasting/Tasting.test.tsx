@@ -8,10 +8,6 @@ import {
     ACTION_EVENT_ANSWERS_ITEM_LOADING, 
     ACTION_EVENT_ANSWERS_LOAD_ITEM 
 } from 'store/reducers/answers/load-item';
-import { 
-    ACTION_EVENT_RESULTS_ITEM_LOADING, 
-    ACTION_EVENT_RESULTS_LOAD_ITEM 
-} from 'store/reducers/results/load-item';
 
 const TEST_ID = 'test-id';
 
@@ -70,52 +66,6 @@ test('renders answers errors correctly', () => {
 });
 
 
-test('renders results errors correctly', () => {
-    resetFirebaseMock();
-
-    const mockState = createMockState();
-    const error = new StoreError('error', 1);
-    mockState.results.itemsError[TEST_ID] = error;
-    
-    const mockDispatch = jest.fn();
-    render( <Tasting baseURL="/" />, {
-        initialState: mockState,
-        wrapStore: (s:any) => ({
-            ...s, 
-            dispatch: mockDispatch
-        })
-    });
-
-    const errorElement = screen.getByText(
-        `${error.message}(${error.code})`
-    );
-    expect(errorElement).toBeInTheDocument();
-});
-
-
-test('renders results calulation errors correctly', () => {
-    resetFirebaseMock();
-
-    const mockState = createMockState();
-    const error = new StoreError('error', 1);
-    mockState.results.itemsCalculationError[TEST_ID] = error;
-    
-    const mockDispatch = jest.fn();
-    render( <Tasting baseURL="/" />, {
-        initialState: mockState,
-        wrapStore: (s:any) => ({
-            ...s, 
-            dispatch: mockDispatch
-        })
-    });
-
-    const errorElement = screen.getByText(
-        `${error.message}(${error.code})`
-    );
-    expect(errorElement).toBeInTheDocument();
-});
-
-
 test('renders answers loading correctly', () => {
     resetFirebaseMock();
 
@@ -134,47 +84,6 @@ test('renders answers loading correctly', () => {
     const progress = screen.getByRole('progressbar');
     expect(progress).toBeInTheDocument();
 });
-
-
-test('renders results loading correctly', () => {
-    resetFirebaseMock();
-
-    const mockState = createMockState();
-    mockState.results.itemsLoading[TEST_ID] = true;
-    
-    const mockDispatch = jest.fn();
-    render( <Tasting baseURL="/" />, {
-        initialState: mockState,
-        wrapStore: (s:any) => ({
-            ...s, 
-            dispatch: mockDispatch
-        })
-    });
-
-    const progress = screen.getByRole('progressbar');
-    expect(progress).toBeInTheDocument();
-});
-
-
-test('renders results calculating correctly', () => {
-    resetFirebaseMock();
-
-    const mockState = createMockState();
-    mockState.results.itemsCalculating[TEST_ID] = true;
-    
-    const mockDispatch = jest.fn();
-    render( <Tasting baseURL="/" />, {
-        initialState: mockState,
-        wrapStore: (s:any) => ({
-            ...s, 
-            dispatch: mockDispatch
-        })
-    });
-
-    const progress = screen.getByRole('progressbar');
-    expect(progress).toBeInTheDocument();
-});
-
 
 test('renders handle load', async () => {
     resetFirebaseMock();
@@ -197,41 +106,26 @@ test('renders handle load', async () => {
     const docCall = mockFirebase.firestore().doc.mock.calls; 
     
     //Once the the load.
-    expect(collectionCall.length).toBe(3); 
+    expect(collectionCall.length).toBe(4); 
     expect(collectionCall[0][0]).toBe('events');
     expect(collectionCall[1][0]).toBe('answers');
-    expect(collectionCall[2][0]).toBe('results');
     
-    expect(docCall.length).toBe(3); 
+    expect(docCall.length).toBe(4); 
     expect(docCall[0][0]).toBe(TEST_ID);
     expect(docCall[1][0]).toBe(mockState.auth.user?.email);
-    expect(docCall[2][0]).toBe(TEST_ID);
 
     const answersLoadItemAction = dispatch!.mock.calls[0][0];
     let reductions = await getActionRedutions(answersLoadItemAction, mockState);
     expect(reductions[0]).toStrictEqual({
         type: ACTION_EVENT_ANSWERS_ITEM_LOADING, 
-        payload: {id: TEST_ID, loading: true}
+        payload: {id: mockState.auth.user?.email, loading: true}
     });
     expect(reductions[1].type).toEqual(ACTION_EVENT_ANSWERS_LOAD_ITEM);
     expect(reductions[1].payload).toBeTruthy();
-    expect(reductions[1].payload.id).toEqual(TEST_ID);
+    expect(reductions[1].payload.id).toEqual(mockState.auth.user?.email);
     expect(reductions[2]).toStrictEqual({
         type: ACTION_EVENT_ANSWERS_ITEM_LOADING, 
-        payload: {id: TEST_ID, loading: false}
+        payload: {id: mockState.auth.user?.email, loading: false}
     });
-    
-    const resultsLoadItemAction = dispatch!.mock.calls[1][0];
-    reductions = await getActionRedutions(resultsLoadItemAction, mockState);
-    expect(reductions[0]).toStrictEqual({
-        type: ACTION_EVENT_RESULTS_ITEM_LOADING, 
-        payload: {id: TEST_ID, loading: true}
-    });
-    expect(reductions[1].type).toEqual(ACTION_EVENT_RESULTS_LOAD_ITEM);
-    expect(reductions[1].payload).toBeTruthy();
-    expect(reductions[1].payload.id).toEqual(TEST_ID);
-    expect(reductions[2]).toStrictEqual({
-        type: ACTION_EVENT_RESULTS_ITEM_LOADING, 
-        payload: {id: TEST_ID, loading: false}
-    });
+
 });

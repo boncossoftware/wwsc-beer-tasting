@@ -12,7 +12,7 @@ test('renders correctly', async () => {
         /> 
     );
 
-    const round1 = screen.getByText(/round 1/gi);
+    const round1 = screen.getByText(/1/gi);
     expect(round1).toBeInTheDocument();
 
     const beer = screen.getByText(/test/gi);
@@ -21,8 +21,8 @@ test('renders correctly', async () => {
     const asterisk = screen.getByText("✱");
     expect(asterisk).toBeInTheDocument();
     
-    const ratings = document.getElementsByClassName("MuiRating-iconFilled");
-    expect(ratings.length).toBe(2);
+    const rating = screen.queryByText("HMMm (2)");
+    expect(rating).toBeInTheDocument();
 });
 
 test('renders correctly as poured', async () => {
@@ -36,7 +36,7 @@ test('renders correctly as poured', async () => {
         /> 
     );
 
-    const round1 = screen.getByText(/1st poured/gi);
+    const round1 = screen.getByText(/1/gi);
     expect(round1).toBeInTheDocument();
 
     const beer = screen.getByText(/test/gi);
@@ -45,8 +45,8 @@ test('renders correctly as poured', async () => {
     const asterisk = screen.queryByText("✱");
     expect(asterisk).toBeNull();
     
-    const ratings = document.getElementsByClassName("MuiRating-iconFilled");
-    expect(ratings.length).toBe(0);
+    const rating = screen.queryByText("HMMm (2)");
+    expect(rating).toBeNull();
 });
 
 

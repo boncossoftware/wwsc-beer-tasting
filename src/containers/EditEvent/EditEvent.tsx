@@ -85,7 +85,7 @@ const EditEvent = () => {
         fullScreen
         open={open}
         onClose={handleCancel}
-        onExited={handleExit}
+        TransitionProps={{ onExited: handleExit }}
         TransitionComponent={SlideUpTransition}
       >
         <AppBar

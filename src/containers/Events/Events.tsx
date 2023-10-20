@@ -36,7 +36,7 @@ const Events = () => {
         history.push(`/event/${item.id}/`);
     }
 
-    const displayLoading = (loading && !events);
+    const displayLoading = (loading && !items);
 
     return (
       <Container id="events">
