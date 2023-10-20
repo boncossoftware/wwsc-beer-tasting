@@ -4,7 +4,7 @@ import Rating from './rating';
 
 test('renders correctly', () => {
     render(
-        <Rating id="rating" rating={4} />
+        <Rating id="rating" type="display" rating={4} />
     );
 
     const progress = document.getElementById('rating');
@@ -14,7 +14,7 @@ test('renders correctly', () => {
 test('handles changes correctly', async () => {
     const onChange = jest.fn();
     render(
-        <Rating rating={0} onChange={onChange} />
+        <Rating rating={0} type='edit' onChange={onChange} />
     );
 
     const maxBeerRating = document.getElementById('beer-rating-4');

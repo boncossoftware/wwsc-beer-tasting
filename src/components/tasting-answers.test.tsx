@@ -14,7 +14,7 @@ export const mockAnswers: TastingAnswer = {
 test('renders correctly', async () => {
     render( <TastingAnswers answers={mockAnswers} /> );
 
-    const round1 = screen.getByText(/round 1/gi);
+    const round1 = screen.getByText(/1/gi);
     expect(round1).toBeInTheDocument();
 
     const beer = screen.getByText(/test/gi);
@@ -28,6 +28,6 @@ test('renders correctly', async () => {
         expect(asterisk).toBeUndefined();
     }
     
-    const ratings = document.getElementsByClassName("MuiRating-iconFilled");
-    expect(ratings.length).toBe(mockAnswers.ratings![0]);
+    const rating = screen.getByText('HMMm (2)');
+    expect(rating).toBeInTheDocument();
 });

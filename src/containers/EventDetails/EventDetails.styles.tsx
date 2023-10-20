@@ -9,6 +9,7 @@ import {
 import { 
     ArrowBackIos as BackIcon, 
     EmojiEvents as TastingIcon, 
+    FormatListNumbered as ResultsIcon,
     LocalDrink as BeerIcon,
     People as TastersIcon,
     PlaceOutlined as VenueIcon,
@@ -67,6 +68,18 @@ export const TastingBarItem = styled(({...p}) =>
         label="Tasting" 
         icon={
             <TastingIcon />
+        } 
+        {...p} 
+    />
+)({
+
+});
+
+export const ResultsBarItem = styled(({...p}) =>
+    <BottomNavigationAction 
+        label="Results" 
+        icon={
+            <ResultsIcon />
         } 
         {...p} 
     />

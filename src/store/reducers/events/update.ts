@@ -35,13 +35,13 @@ export default function update(event: TastingEvent) {
         //Reset all answers.
         answersRef
           .get()
-          .then((snaps: QuerySnapshot) =>
-            Promise.all(
+          .then((snaps: QuerySnapshot) => {
+            return Promise.all(
               snaps?.docs?.map((snap) =>
                 snap?.ref.set(newAnswersData(event.rounds ?? 0))
-              )
+              ) ?? []
             )
-          ),
+          }),
         //Delete all results.
         resultsRef.delete(),
       ]);
@@ -49,7 +49,6 @@ export default function update(event: TastingEvent) {
       const doc = await docRef.get();
       event = eventFromDoc(doc);
       dispatch({ type: ACTION_EVENTS_UPDATE, payload: event });
-      //dispatch( answers.loadItem('1'));
     } catch (error) {
       console.log(error);
       dispatch({ type: ACTION_EVENTS_UPDATE_ERROR, payload: error });

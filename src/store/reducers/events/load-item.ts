@@ -4,7 +4,7 @@ import "firebase/firestore";
 import { eventFromDoc } from "./utils";
 import { AnyAction, Dispatch } from "redux";
 import { subscribe } from "./listen-change";
-import { RootState, StoreError } from "store";
+import { RootState, StoreError } from "store/reducer";
 
 export const ACTION_EVENTS_ITEM_LOADING = "events/load_item_loading";
 export const ACTION_EVENTS_ITEM_LOAD = "events/load_item";

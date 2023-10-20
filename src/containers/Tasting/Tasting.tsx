@@ -5,18 +5,13 @@ import { useHistory, useParams } from "react-router";
 import { RootState, StoreError, UserInfo } from "store/reducer";
 import { TastingAnswer } from "store/reducers/answers/reducer";
 import { TastingEvent } from "store/reducers/events/reducer";
-import { Result } from "store/reducers/results/reducer";
 import TastingAnswers from "../../components/tasting-answers";
-import TastingResults from "../../components/tasting-results";
 import { answers, events, results } from "../../store";
 import {
   Container,
   AllowEditField,
-  CalculateResultsButton,
   CircularProgress,
-  ResultsCircularProgress,
   Section,
-  ResultsContainer,
 } from "./Tasting.styles";
 
 export type TastingProps = {
@@ -40,23 +35,6 @@ const Tasting = ({ baseURL }: TastingProps) => {
     s?.answers?.items?.find((i) => i.id === user?.email)
   );
 
-  const resultsLoading = useSelector<RootState, boolean>(
-    (s) => s?.results?.itemsLoading[id]
-  );
-  const resultsError = useSelector<RootState, StoreError | undefined>(
-    (s) => s?.results?.itemsError[id]
-  );
-  const tastingResults = useSelector<RootState, Result | undefined>((s) =>
-    s?.results?.items?.find((i) => i.id === id)
-  );
-  const resultsCalculating = useSelector<RootState, boolean>(
-    (s) => s?.results?.itemsCalculating[id]
-  );
-  const resultsCalculationError = useSelector<
-    RootState,
-    StoreError | undefined
-  >((s) => s?.results?.itemsCalculationError[id]);
-
   const tastingEvent = useSelector<RootState, TastingEvent>(
     (s) => s?.events?.items?.find((i) => i.id === id) || ({} as TastingEvent)
   );
@@ -66,11 +44,9 @@ const Tasting = ({ baseURL }: TastingProps) => {
   const editingAllowed = Boolean(tastingEvent.editingAllowed);
   const isBartender = bartender === user?.email;
   const canEdit = owner === user?.email;
-  const resultsAvailable = Boolean(tastingResults?.lastUpdated);
 
   useEffect(() => {
     dispatch(answers.loadItem(id));
-    dispatch(results.loadItem(id));
   }, [dispatch, id]);
 
   const handleAllowEditing = () => {
@@ -86,10 +62,6 @@ const Tasting = ({ baseURL }: TastingProps) => {
     index !== undefined && history.push(`${baseURL}/round/${index + 1}`);
   };
 
-  const handleCalculateResults = () => {
-    dispatch(results.calculate(id));
-  };
-
   const displayAnswersLoading = answersLoading && !userAnswers;
 
   return (
@@ -97,44 +69,23 @@ const Tasting = ({ baseURL }: TastingProps) => {
       {displayAnswersLoading ? (
         <CircularProgress />
       ) : (
-        <>
-          <Section>
-            {answersError && <ErrorMessage error={answersError} />}
-            {canEdit && (
-              <AllowEditField
-                onChange={handleAllowEditing}
-                value={editingAllowed}
-              />
-            )}
-            {userAnswers && (
-              <TastingAnswers
-                answers={userAnswers}
-                showForBartender={isBartender}
-                editingAllowed={editingAllowed}
-                onClickItemAtIndex={handleClickItemAtIndex}
-              />
-            )}
-          </Section>
-          <Section title="Results">
-            {resultsLoading || resultsCalculating ? (
-              <ResultsCircularProgress />
-            ) : (
-              <ResultsContainer>
-                {(resultsError || resultsCalculationError) && (
-                  <ErrorMessage
-                    error={resultsError || resultsCalculationError}
-                  />
-                )}
-                <TastingResults results={tastingResults} />
-                {canEdit && (
-                  <CalculateResultsButton onClick={handleCalculateResults}>
-                    {resultsAvailable ? "Rec" : "C"}alculate Results
-                  </CalculateResultsButton>
-                )}
-              </ResultsContainer>
-            )}
-          </Section>
-        </>
+        <Section>
+          {answersError && <ErrorMessage error={answersError} />}
+          {canEdit && (
+            <AllowEditField
+              onChange={handleAllowEditing}
+              value={editingAllowed}
+            />
+          )}
+          {userAnswers && (
+            <TastingAnswers
+              answers={userAnswers}
+              showForBartender={isBartender}
+              editingAllowed={editingAllowed}
+              onClickItemAtIndex={handleClickItemAtIndex}
+            />
+          )}
+        </Section>
       )}
     </Container>
   );

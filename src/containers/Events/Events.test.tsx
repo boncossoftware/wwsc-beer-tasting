@@ -92,7 +92,7 @@ test('renders handle reset', async () => {
     expect(collectionCall.length).toBe(2); 
     expect(collectionCall[0][0]).toBe('events');
 
-    const resetAction = dispatch.mock.calls[0][0];
+    const resetAction = dispatch!.mock.calls[0][0];
     const reductions = await getActionRedutions(resetAction, mockState);
     expect(reductions).toStrictEqual([
         {type: ACTION_EVENTS_LOADING, payload: true},

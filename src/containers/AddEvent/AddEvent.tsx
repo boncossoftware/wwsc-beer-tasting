@@ -49,7 +49,7 @@ const AddEvent = () => {
             fullScreen 
             open={open} 
             onClose={handleCancel}
-            onExited={handleExit} 
+            TransitionProps={{ onExited: handleExit }}
             TransitionComponent={SlideUpTransition}
         >
             <AppBar 

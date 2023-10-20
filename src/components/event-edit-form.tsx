@@ -108,7 +108,7 @@ const EventEditForm = ({event=DEFAULT_EVENT, onChange}: EventEditFormProps) => {
 
         <Section title="Bartender">
           <BartenderEmailField
-            value={event?.bartender}
+            value={event?.bartender || ""}
             onChange={handleChange}
           />
         </Section>
@@ -130,7 +130,7 @@ const EventEditForm = ({event=DEFAULT_EVENT, onChange}: EventEditFormProps) => {
           </EditTastersList>
           <AddTasterButton onClick={handleAddTaster} />
           <AddMeAsTasterField
-            checked={event?.ownerAddedAsTaster}
+            checked={event?.ownerAddedAsTaster || false}
             onChange={handleChange}
           />
         </Section>

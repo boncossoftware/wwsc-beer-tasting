@@ -1,10 +1,10 @@
-import React from 'react'
 import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension'
 import { render as rtlRender } from '@testing-library/react'
 import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 // Import your own reducer
+import store from '../store';
 import reducer from '../store/reducer';
 import { BrowserRouter } from 'react-router-dom';
 

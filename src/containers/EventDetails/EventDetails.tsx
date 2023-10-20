@@ -20,8 +20,10 @@ import {
     EditButton,
     TastersBarItem,
     TastingBarItem,
-    VenueBarItem
+    VenueBarItem,
+    ResultsBarItem
  } from './EventDetails.styles';
+import Results from "containers/Results";
 
 const getBaseURL = (routeMatchURL: string) => {
     return routeMatchURL.endsWith('/') ? routeMatchURL.slice(0, routeMatchURL.length - 1 ) : routeMatchURL;
@@ -47,7 +49,7 @@ const EventDetails = () => {
 
     useEffect( () => {
         dispatch( events.loadItem(id) );
-    }, [dispatch, id] );
+    }, [id] );
 
     const handleBackToEvents = () => {
         history.push('/');
@@ -75,37 +77,39 @@ const EventDetails = () => {
             canEdit ? <EditButton onClick={handleEditEvent} /> : null
           }
         />
-        <Fade in={!displayLoading}>
-          <div>
-            {displayLoading ? (
-              <CircularProgress />
-            ) : (
-              <>
-                {error && <ErrorMessage error={error} />}
-                <Switch>
-                  <Route path={`${path}/tasting`}>
-                    <Tasting baseURL={`${baseURL}/tasting`} />
-                  </Route>
-                  <Route path={`${path}/beers`}>
-                    <Beers />
-                  </Route>
-                  <Route path={`${path}/tasters`}>
-                    <Tasters />
-                  </Route>
-                  <Route path={`${path}/venue`}>
-                    <Venue />
-                  </Route>
-                  <Redirect to={`${baseURL}/tasting`} />
-                </Switch>
-              </>
-            )}
-          </div>
-        </Fade>
+        <div>
+          {displayLoading ? (
+            <CircularProgress />
+          ) : (
+            <>
+              {error && <ErrorMessage error={error} />}
+              <Switch>
+                <Route path={`${path}/tasting`}>
+                  <Tasting baseURL={`${baseURL}/tasting`} />
+                </Route>
+                <Route path={`${path}/results`}>
+                  <Results />
+                </Route>
+                <Route path={`${path}/beers`}>
+                  <Beers />
+                </Route>
+                <Route path={`${path}/tasters`}>
+                  <Tasters />
+                </Route>
+                <Route path={`${path}/venue`}>
+                  <Venue />
+                </Route>
+                <Redirect to={`${baseURL}/tasting`} />
+              </Switch>
+            </>
+          )}
+        </div>
         <BottomNavigationBar
           value={activeSection}
           onChange={handleChangeActiveSection}
         >
           <TastingBarItem value={"tasting"} />
+          <ResultsBarItem value={"results"} />
           <BeersBarItem value={"beers"} />
           <TastersBarItem value={"tasters"} />
           <VenueBarItem value={"venue"} />
