@@ -17,16 +17,16 @@ export type VenueParams = {
     id: string
 }
 
-const Venue = () => {    
-    const {id} = useParams<VenueParams>();
-    const event = useSelector<RootState, TastingEvent|undefined>( 
-        s => s?.events?.items?.find( i => i.id === id ) 
+const Venue = () => {
+    const { id } = useParams<VenueParams>();
+    const event = useSelector<RootState, TastingEvent | undefined>(
+        s => s?.events?.items?.find(i => i.id === id)
     );
-    const loading = useSelector<RootState, boolean>( 
-        s => s?.events?.itemsLoading[id] 
+    const loading = useSelector<RootState, boolean>(
+        s => s?.events?.itemsLoading[id]
     );
-    const error = useSelector<RootState, StoreError|undefined>( 
-        s => s?.events?.itemsError[id] 
+    const error = useSelector<RootState, StoreError | undefined>(
+        s => s?.events?.itemsError[id]
     );
 
     const venue = event?.venue;
@@ -36,17 +36,17 @@ const Venue = () => {
     const formattedDate = date ? format(date, 'dd MMM, yyyy') : 'No Date set';
 
     return (
-        <Container id="venue">
+        <Container data-testid="venue">
             {loading ?
                 <CircularProgress />
                 :
                 <>
-                    {error && <ErrorMessage error={error}/>}
+                    {error && <ErrorMessage error={error} />}
                     <Section>
                         <VenueInfoHeader venue={venue} />
-                        <VenueInfoItem title="Time" value={formattedTime}/>
-                        <VenueInfoItem title="Date" value={formattedDate}/>
-                        <VenueInfoItem title="Price" value={price}/>
+                        <VenueInfoItem title="Time" value={formattedTime} />
+                        <VenueInfoItem title="Date" value={formattedDate} />
+                        <VenueInfoItem title="Price" value={price} />
                     </Section>
                 </>
             }

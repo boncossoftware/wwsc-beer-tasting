@@ -40,5 +40,13 @@ service cloud.firestore {
             allow create,update: if false;
             allow delete: if ownerOfEventWithID(eventId);
         }
+
+        match /users/{userId} {
+            //All users can read each others info
+            allow get: if true;
+            //Each user can only edit their own user data.
+            allow create,update: if request.auth.token.email == userId;
+            allow delete: if false;
+        }
     }
 }

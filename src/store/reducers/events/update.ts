@@ -29,19 +29,16 @@ export default function update(event: TastingEvent) {
         .collection("results")
         .doc(event.id);
       const answersRef = docRef.collection("answers");
-
       await Promise.all([
         docRef.update(eventToDocData(props)),
         //Reset all answers.
-        answersRef
-          .get()
-          .then((snaps: QuerySnapshot) => {
-            return Promise.all(
-              snaps?.docs?.map((snap) =>
-                snap?.ref.set(newAnswersData(event.rounds ?? 0))
-              ) ?? []
-            )
-          }),
+        answersRef.get().then((snaps: QuerySnapshot) => {
+          return Promise.all(
+            snaps?.docs?.map((snap) =>
+              snap?.ref.set(newAnswersData(event.rounds ?? 0))
+            ) ?? []
+          );
+        }),
         //Delete all results.
         resultsRef.delete(),
       ]);

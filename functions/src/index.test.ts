@@ -20,7 +20,14 @@ const dataService = {
 };
 jest.mock("./data-service", () => dataService);
 
-import { sortByRankedPointScores, TIE_BREAKER_REASON_LESS_ASTERISKS, TIE_BREAKER_REASON_MORE_CORRECT_SECOND_HALF } from ".";
+import {
+  calculateResults,
+  createBeerScoreResults,
+  createContestantRoundResults,
+  sortByRankedPointScores,
+  TIE_BREAKER_REASON_LESS_ASTERISKS,
+  TIE_BREAKER_REASON_MORE_CORRECT_SECOND_HALF,
+} from ".";
 import {
   ContestantAnswers,
   CONTESTANT_ANSWERS,
@@ -32,11 +39,11 @@ import {
   WSC_VIRTUAL_BBT_ANSWERS,
   WSC_VIRTUAL_BBT_CORRECT_BEERS,
 } from "./model";
+import * as firebaseFunctionsTest from "firebase-functions-test";
 
-const firebaseTest = require("firebase-functions-test")();
+const firebaseTest = firebaseFunctionsTest();
 
 test("calculateContestantRoundResults()", () => {
-  const { createContestantRoundResults } = require(".");
   const results = createContestantRoundResults(
     CORRECT_BEERS,
     CONTESTANT_ANSWERS
@@ -52,13 +59,12 @@ test("calculateContestantRoundResults()", () => {
 
   expect(results[0].totalCorrectAsterisks).toBe(2);
   expect(results[0].totalCorrectSecondHalf).toBe(5);
-  
+
   expect(results[1].totalCorrectAsterisks).toBe(0);
   expect(results[1].totalCorrectSecondHalf).toBe(0);
 });
 
 test("calculateBeerScoreResults()", () => {
-  const { createBeerScoreResults } = require(".");
   const results = createBeerScoreResults(CORRECT_BEERS, CONTESTANT_ANSWERS);
   expect(results[0].points).toBe(2);
   expect(results[1].points).toBe(3);
@@ -73,10 +79,6 @@ test("calculateBeerScoreResults()", () => {
 });
 
 test("BBT Vitrual event - calculateContestantRoundResults()", () => {
-  const {
-    createContestantRoundResults,
-    sortByRankedPointScores, // eslint-disable-line no-unused-vars,
-  } = require(".");
   const results = createContestantRoundResults(
     WSC_VIRTUAL_BBT_CORRECT_BEERS,
     WSC_VIRTUAL_BBT_ANSWERS
@@ -100,7 +102,6 @@ test("BBT Vitrual event - calculateContestantRoundResults()", () => {
 });
 
 test("event - createTastingResults()", async () => {
-  const { calculateResults } = require(".");
   const wrappedCalculateResults = firebaseTest.wrap(calculateResults);
   const eventID = "1";
   const results: TastingResults = await wrappedCalculateResults(eventID);
@@ -113,7 +114,6 @@ test("event - createTastingResults()", async () => {
 
 test("event with no bartender - createTastingResults()", async () => {
   dataService.getTastingEventAnswers = () => CONTESTANT_ANSWERS;
-  const { calculateResults } = require(".");
   const wrappedCalculateResults = firebaseTest.wrap(calculateResults);
   const eventID = "1";
   const results = (await wrappedCalculateResults(eventID)) as ServerError;
@@ -123,14 +123,13 @@ test("event with no bartender - createTastingResults()", async () => {
 });
 
 test("In a tie the participant with least asterisks should win.", async () => {
-  const { createContestantRoundResults } = require(".");
   const results = createContestantRoundResults(
     CORRECT_BEERS,
     CONTESTANT_ANSWERS_TIE_BREAKER_ASTERISK
   );
   const sortedResults = sortByRankedPointScores(results);
 
-  expect(sortedResults[0].userEmail).toBe("contestant_1@email.com");//Winner
+  expect(sortedResults[0].userEmail).toBe("contestant_1@email.com"); // Winner
   expect(sortedResults[0].isTied).toBe(true);
   expect(sortedResults[1].isTied).toBe(true);
   expect(sortedResults[0].tieBreakerReason).toBe(
@@ -140,14 +139,13 @@ test("In a tie the participant with least asterisks should win.", async () => {
 });
 
 test("In a tie the participant with same asterisks then most correct beers in second half should win.", async () => {
-  const { createContestantRoundResults } = require(".");
   const results = createContestantRoundResults(
     CORRECT_BEERS,
     CONTESTANT_ANSWERS_TIE_BREAKER_SECOND_HALF
   );
   const sortedResults = sortByRankedPointScores(results);
 
-  expect(sortedResults[0].userEmail).toBe("contestant_1@email.com"); //Winner
+  expect(sortedResults[0].userEmail).toBe("contestant_1@email.com"); // Winner
   expect(sortedResults[0].isTied).toBe(true);
   expect(sortedResults[1].isTied).toBe(true);
   expect(sortedResults[0].tieBreakerReason).toBe(

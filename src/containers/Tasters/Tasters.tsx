@@ -14,21 +14,21 @@ export type TastersParams = {
     id: string
 }
 
-const Tasters = () => {    
-    const {id} = useParams<TastersParams>();
-    const event = useSelector<RootState, TastingEvent|undefined>( 
-        s => s?.events?.items?.find( i => i.id === id ) 
+const Tasters = () => {
+    const { id } = useParams<TastersParams>();
+    const event = useSelector<RootState, TastingEvent | undefined>(
+        s => s?.events?.items?.find(i => i.id === id)
     );
-    const loading = useSelector<RootState, boolean|undefined>( 
+    const loading = useSelector<RootState, boolean | undefined>(
         s => s?.events?.itemsLoading[id]
     );
-    const error = useSelector<RootState, StoreError|undefined>( 
+    const error = useSelector<RootState, StoreError | undefined>(
         s => s?.events?.itemsError[id]
     );
     const tasters = event?.tasters || undefined;
     return (
         <Container id="tasters" disableGutters>
-            {loading ? 
+            {loading ?
                 <CircularProgress />
                 :
                 <>
