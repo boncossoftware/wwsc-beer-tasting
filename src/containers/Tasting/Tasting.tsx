@@ -6,7 +6,7 @@ import { RootState, StoreError, UserInfo } from "store/reducer";
 import { TastingAnswer } from "store/reducers/answers/reducer";
 import { TastingEvent } from "store/reducers/events/reducer";
 import TastingAnswers from "../../components/tasting-answers";
-import { answers, events, results } from "../../store";
+import { answers, events } from "../../store";
 import {
   Container,
   AllowEditField,

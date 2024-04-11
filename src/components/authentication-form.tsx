@@ -7,14 +7,14 @@ import {
 } from './authentication-form.styles';
 
 export type AuthenticationFormOnSubmitCallback = (
-    email:FormDataEntryValue|null, 
-    password: FormDataEntryValue|null
+    email: FormDataEntryValue | null,
+    password: FormDataEntryValue | null
 ) => void;
 
 export {
-    EmailField as EmailField,
-    PasswordField as PasswordField,
-    SubmitButton as SubmitButton
+    EmailField,
+    PasswordField,
+    SubmitButton
 } from './authentication-form.styles';
 
 export interface AuthenticationFormProps {
@@ -24,12 +24,12 @@ export interface AuthenticationFormProps {
 }
 const AuthenticationForm = (
     {
-        id='authentication-form', 
-        submitButtonTitle='Login', 
+        id = 'authentication-form',
+        submitButtonTitle = 'Login',
         onSubmit
     }: AuthenticationFormProps
 ) => {
-    
+
     const handleSubmit: MouseEventHandler = (event) => {
         event.preventDefault();
 
@@ -39,7 +39,7 @@ const AuthenticationForm = (
         const data = new FormData(form);
         const emailValue = data.get('email');
         const passwordValue = data.get('password');
-        
+
         (onSubmit && onSubmit(emailValue, passwordValue));
     }
 

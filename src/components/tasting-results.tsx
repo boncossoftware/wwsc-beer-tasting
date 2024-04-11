@@ -21,7 +21,7 @@ const TastingResults = ({ results }: TastingResultsProps) => {
       r.totalTaste < (lover?.totalTaste || Number.MAX_SAFE_INTEGER) ? r : lover;
     hater = r.totalTaste > (hater?.totalTaste || -0) ? r : hater;
   });
-  const resultsCount = results?.roundResults?.length || 0;
+  const resultsCount = results?.roundResults?.length ?? 0;
   return (
     <List disablePadding>
       {available ? (
@@ -56,11 +56,11 @@ const TastingResults = ({ results }: TastingResultsProps) => {
             <>
               <AchievementItem
                 achievement="Beer Lover"
-                receiver={lover?.userEmail || "-"}
+                receiver={lover?.userEmail ?? "-"}
               />
               <AchievementItem
                 achievement="Beer Hater"
-                receiver={hater?.userEmail || "-"}
+                receiver={hater?.userEmail ?? "-"}
               />
             </>
           )}

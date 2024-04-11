@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import { Chip, FormControlLabel, makeStyles, Radio, RadioGroup, Typography } from "@material-ui/core";
+import { FormControlLabel, makeStyles, Radio, RadioGroup, Typography } from "@material-ui/core";
 
 export type RatingProps = {
   id?: string;
@@ -32,7 +32,7 @@ const ratingOptions: {
   },
 };
 
-const Rating = ({ id, rating, onChange, type = "display"}: RatingProps) => {
+const Rating = ({ id, rating, onChange, type = "display" }: RatingProps) => {
   const classes = useStyles();
 
   const handleRatingClick = (
@@ -46,7 +46,7 @@ const Rating = ({ id, rating, onChange, type = "display"}: RatingProps) => {
       onChange && onChange(parseInt(newRating ?? '0'), event);
     }
   };
-  
+
   if (type === 'edit') {
     return (
       <RadioGroup
@@ -67,19 +67,19 @@ const Rating = ({ id, rating, onChange, type = "display"}: RatingProps) => {
         ))}
       </RadioGroup>
     );
+  } else if (rating != null) {
+
+    return (
+      <Typography
+        id={id}
+        component="span"
+        color="inherit"
+        classes={{ root: classes.rating }}
+      >{`${ratingOptions[rating].label} (${rating})`}</Typography>
+    );
   } else {
-    if (rating != null) {
-      return (
-        <Typography
-          id={id}
-          component="span"
-          color="inherit"
-          classes={{ root: classes.rating }}
-        >{`${ratingOptions[rating].label} (${rating})`}</Typography>
-      );
-    } else {
-      return <span>-</span>;
-    }
+    return <span>-</span>;
   }
+
 };
 export default Rating;

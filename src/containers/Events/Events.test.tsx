@@ -1,4 +1,4 @@
-import { render, screen, getActionRedutions} from 'testing/test-utils';
+import { render, screen, getActionRedutions } from 'testing/test-utils';
 import Events from './Events';
 import {
     ACTION_EVENTS_LOADING,
@@ -6,25 +6,25 @@ import {
 } from 'store/reducers/events/load';
 import { RootState, StoreError } from 'store';
 import { act } from '@testing-library/react';
-import {resetFirebaseMock} from 'testing/mock-firebase';
+import { resetFirebaseMock } from 'testing/mock-firebase';
 
-const createMockState = () => ({ 
+const createMockState = () => ({
     auth: {
-        user: {email:'test', uid: 'test'}
+        user: { email: 'test', uid: 'test' }
     },
-    events: { 
+    events: {
         loading: false,
         itemsLoading: {},
         itemsError: {},
         loaded: false,
         items: null,
         error: null,
-    } 
+    }
 } as any as RootState);
 
 
 test('renders correctly', () => {
-    render( <Events />);
+    render(<Events />);
 
     const container = document.getElementById('events');
     expect(container).toBeInTheDocument();
@@ -35,12 +35,12 @@ test('renders errors correctly', () => {
     const mockState = createMockState();
     const error = new StoreError('error', 1);
     mockState.events.error = error;
-    
+
     const mockDispatch = jest.fn();
-    render( <Events />, {
+    render(<Events />, {
         initialState: mockState,
-        wrapStore: (s:any) => ({
-            ...s, 
+        wrapStore: (s: any) => ({
+            ...s,
             dispatch: mockDispatch
         })
     });
@@ -55,12 +55,12 @@ test('renders errors correctly', () => {
 test('renders loading correctly', () => {
     const mockState = createMockState();
     mockState.events.loading = true;
-    
+
     const mockDispatch = jest.fn();
-    render( <Events />, {
+    render(<Events />, {
         initialState: mockState,
-        wrapStore: (s:any) => ({
-            ...s, 
+        wrapStore: (s: any) => ({
+            ...s,
             dispatch: mockDispatch
         })
     });
@@ -74,29 +74,29 @@ test('renders handle reset', async () => {
     resetFirebaseMock();
 
     const mockState = createMockState();
-    let dispatch;
-    render( <Events />, {
+    let dispatch: any;
+    render(<Events />, {
         initialState: mockState,
-        wrapStore: (s:any) => {
+        wrapStore: (s: any) => {
             dispatch = jest.fn(s.dispatch)
             s.dispatch = dispatch;
             return s;
         }
     });
     //Await for the useEffect to get called.
-    await act( () => new Promise(res => setTimeout(res, 10)));
+    await act(() => new Promise(res => setTimeout(res, 10)));
 
     const mockFirebase = require('../../store/firebase').default;
-    const collectionCall = mockFirebase.firestore().collection.mock.calls; 
+    const collectionCall = mockFirebase.firestore().collection.mock.calls;
     //Once the the load and once for onSnapshot (in subscribe).
-    expect(collectionCall.length).toBe(2); 
+    expect(collectionCall.length).toBe(2);
     expect(collectionCall[0][0]).toBe('events');
 
     const resetAction = dispatch!.mock.calls[0][0];
     const reductions = await getActionRedutions(resetAction, mockState);
     expect(reductions).toStrictEqual([
-        {type: ACTION_EVENTS_LOADING, payload: true},
-        {type: ACTION_EVENTS_LOAD, payload:[]},
-        {type: ACTION_EVENTS_LOADING, payload: false},
+        { type: ACTION_EVENTS_LOADING, payload: true },
+        { type: ACTION_EVENTS_LOAD, payload: [] },
+        { type: ACTION_EVENTS_LOADING, payload: false },
     ]);
 });

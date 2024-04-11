@@ -1,9 +1,9 @@
 import { DocumentSnapshot, Timestamp } from "store/firebase";
 import "firebase/firestore";
-import { TastingEvent } from "./reducer";
+import { TasterInfo, TastingEvent } from "./reducer";
 import { format } from "date-fns";
 
-export const eventFromDoc = (doc: DocumentSnapshot): TastingEvent => {
+export const eventFromDoc = (doc: DocumentSnapshot | null): TastingEvent => {
   return {
     id: doc?.id,
     owner: doc?.data()?.owner,
@@ -47,19 +47,18 @@ export const eventFromDoc = (doc: DocumentSnapshot): TastingEvent => {
 
 export const eventToDocData = (event: TastingEvent) => {
   return {
-    name: event?.name || null,
-    owner: event?.owner || null,
-    venue: event?.venue || null,
+    name: event?.name ?? null,
+    owner: event?.owner ?? null,
+    venue: event?.venue ?? null,
     date: event?.date ? Timestamp.fromDate(event.date) : null,
-    price: event?.price || null,
-    related: event?.related || null,
-    bartender: event?.bartender || null,
-    tasters: event?.tasters || null,
-    ownerAddedAsTaster: Boolean(event?.ownerAddedAsTaster),
-    beers: event?.beers || null,
-    asterisksAllowed: event?.asterisksAllowed || null,
+    price: event?.price ?? null,
+    related: event?.related ?? null,
+    bartender: event?.bartender ?? null,
+    tasters: event?.tasters ?? null,
+    beers: event?.beers ?? null,
+    asterisksAllowed: event?.asterisksAllowed ?? null,
     editingAllowed: Boolean(event?.editingAllowed),
-    rounds: event?.rounds || null,
+    rounds: event?.rounds ?? null,
   };
 };
 
@@ -68,9 +67,8 @@ export const propsForEvent = (
   event: TastingEvent
 ): TastingEvent => {
   const tasters = Array.from(
-    new Set([...(event?.tasters || [])].filter((t) => t !== userEmail))
+    new Set([...(event?.tasters || [])].filter((t) => t !== event?.bartender))
   );
-
   const related = Array.from(
     new Set(
       [
@@ -91,7 +89,7 @@ export const propsForEvent = (
   return {
     editingAllowed,
     rounds,
-    asterisksAllowed, 
+    asterisksAllowed,
     ...otherFields,
     owner: userEmail, //Set the user as the owner.
     related,

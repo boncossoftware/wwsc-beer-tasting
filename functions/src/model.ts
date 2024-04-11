@@ -5,7 +5,6 @@ export type TastingEvent = {
   related: string[] | undefined | null;
   bartender: string | undefined | null;
   tasters: string[] | undefined | null;
-  ownerAddedAsTaster: boolean | undefined | null;
   beers: string[] | undefined | null;
   asterisksAllowed: number | undefined | null;
   editingAllowed: boolean | undefined | null;
@@ -100,8 +99,7 @@ export const CONTESTANT_ANSWERS_TIE_BREAKER_ASTERISK: ContestantAnswers[] = [
   {
     id: "contestant_1@email.com",
     beers: CORRECT_BEERS,
-    asterisks: [null, null, null, null, null, null,
-      null, null, null, null], // Has less asterisks.
+    asterisks: [null, null, null, null, null, null, null, null, null, null], // Has less asterisks.
     ratings: [1, 1, 1, 1, 1, 2, 3, 4, 4, 4],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   },
@@ -112,8 +110,7 @@ export const CONTESTANT_ANSWERS_TIE_BREAKER_ASTERISK: ContestantAnswers[] = [
       ...CORRECT_BEERS.slice(0, 2), // These are incorrect
     ],
     // All incorrect asterisks (in second half).
-    asterisks: [true, true, null, null, null,
-      null, null, null, null, null],
+    asterisks: [true, true, null, null, null, null, null, null, null, null],
     ratings: [1, 2, 3, 4, 4, 4, 4, 4, 4, 4],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   },
