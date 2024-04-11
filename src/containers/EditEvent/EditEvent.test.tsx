@@ -170,7 +170,3 @@ test('renders handle update', async () => {
     );
 });
 
-test('Edit event clears answers', async () => {
-    //TODO: Test that answers are cleared.
-});
-

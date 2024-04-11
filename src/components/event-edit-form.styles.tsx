@@ -8,9 +8,6 @@ import {
     List,
     ListItem,
     InputAdornment,
-    FormControlLabel,
-    Checkbox,
-    FormControl,
     Typography
 } from '@material-ui/core';
 import {

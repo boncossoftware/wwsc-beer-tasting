@@ -119,7 +119,7 @@ const EventEditForm = ({ event = DEFAULT_EVENT, onChange }: EventEditFormProps) 
         <EditTastersList>
           {(event?.tasters || []).map((email, index) =>
             <EditTasterItem
-              key={index}
+              key={index as any}
               inputProps={{ "data-testid": `taster-${index}` }}
               email={email}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -139,7 +139,7 @@ const EventEditForm = ({ event = DEFAULT_EVENT, onChange }: EventEditFormProps) 
         <EditBeerList>
           {(event?.beers || []).map((name, index) => (
             <EditBeerItem
-              key={index}
+              key={index as any}
               name={name}
               inputProps={{ "data-testid": `beer-${index}` }}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
