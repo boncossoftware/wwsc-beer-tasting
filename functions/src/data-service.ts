@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import type {ContestantAnswers, TastingEvent, TastingResults} from "./model";
+import type { ContestantAnswers, TastingEvent, TastingResults } from "./model";
 
 if (admin.apps.length === 0) {
   admin.initializeApp();
@@ -9,7 +9,7 @@ export const getTastingEvent = (id: string): Promise<TastingEvent> => {
   const eventRef = admin.firestore().collection("events").doc(id);
   return eventRef
     .get()
-    .then((e) => ({id: e.id, ...e.data()} as TastingEvent));
+    .then((e) => ({ id: e.id, ...e.data() } as TastingEvent));
 };
 
 export const getTastingEventAnswers = (
@@ -20,7 +20,7 @@ export const getTastingEventAnswers = (
     .collection("answers")
     .get()
     .then((s) =>
-      s.docs.map((d) => ({id: d.id, ...d.data()} as ContestantAnswers))
+      s.docs.map((d) => ({ id: d.id, ...d.data() } as ContestantAnswers))
     );
 };
 

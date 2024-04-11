@@ -32,7 +32,7 @@ test('renders correctly', () => {
 
     render(<EventDetails />);
 
-    const container = document.getElementById('event-details');
+    const container = screen.getByTestId('event-details');
     expect(container).toBeInTheDocument();
 });
 

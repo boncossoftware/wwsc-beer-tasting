@@ -26,7 +26,7 @@ const createMockState = () => ({
 test('renders correctly', () => {
     render(<Events />);
 
-    const container = document.getElementById('events');
+    const container = screen.getByTestId('events');
     expect(container).toBeInTheDocument();
 });
 

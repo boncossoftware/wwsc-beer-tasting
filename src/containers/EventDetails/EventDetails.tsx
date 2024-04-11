@@ -66,12 +66,12 @@ const EventDetails = () => {
 
   const displayLoading = loading && !item;
   return (
-    <Container id="event-details">
+    <Container data-testid="event-details">
       <AppBar
         renderLeftComponent={() => (
           <BackButton onClick={handleBackToEvents} />
         )}
-        title={item?.name || "Event"}
+        title={item?.name ?? "Event"}
         renderRightComponent={() =>
           canEdit ? <EditButton onClick={handleEditEvent} /> : null
         }

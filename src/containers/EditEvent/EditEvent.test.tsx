@@ -1,9 +1,8 @@
-import ReactDOM from 'react-dom';
 import { getActionRedutions, render, screen } from 'testing/test-utils';
 import EditEvent from './EditEvent';
 import { RootState, StoreError } from 'store';
 import { act, fireEvent } from '@testing-library/react';
-import {resetFirebaseMock} from 'testing/mock-firebase';
+import { resetFirebaseMock } from 'testing/mock-firebase';
 import { ACTION_EVENTS_UPDATE, ACTION_EVENTS_UPDATING } from 'store/reducers/events/update';
 import { DEFAULT_EVENT } from '../../components/event-edit-form';
 
@@ -11,17 +10,17 @@ const TEST_ID = 'test-id';
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
-    useParams: () =>({ id: TEST_ID }),
+    useParams: () => ({ id: TEST_ID }),
 }));
 
 
-const createMockState = () => ({ 
+const createMockState = () => ({
     auth: {
-        user: {email:'test', uid: 'test'}
+        user: { email: 'test', uid: 'test' }
     },
     events: {
-        items: [{...DEFAULT_EVENT, id: TEST_ID}],
-        itemsLoading: {[TEST_ID]: false},
+        items: [{ ...DEFAULT_EVENT, id: TEST_ID }],
+        itemsLoading: { [TEST_ID]: false },
         update: {
             updating: false,
             updated: null,
@@ -31,9 +30,9 @@ const createMockState = () => ({
 } as any as RootState);
 
 test('renders correctly', () => {
-    render( <EditEvent />);
+    render(<EditEvent />);
 
-    const forgotContainer = document.getElementById('edit-event');
+    const forgotContainer = screen.getByTestId('edit-event');
     expect(forgotContainer).toBeInTheDocument();
 });
 
@@ -41,12 +40,12 @@ test('renders errors correctly', () => {
     const mockState = createMockState();
     const error = new StoreError('error', 1);
     mockState.events.update.error = error;
-    
+
     const mockDispatch = jest.fn();
-    render( <EditEvent />, {
+    render(<EditEvent />, {
         initialState: mockState,
-        wrapStore: (s:any) => ({
-            ...s, 
+        wrapStore: (s: any) => ({
+            ...s,
             dispatch: mockDispatch
         })
     });
@@ -61,12 +60,12 @@ test('renders errors correctly', () => {
 test('renders loading correctly', () => {
     const mockState = createMockState();
     mockState.events.itemsLoading[TEST_ID] = true;
-    
+
     const mockDispatch = jest.fn();
-    render( <EditEvent />, {
+    render(<EditEvent />, {
         initialState: mockState,
-        wrapStore: (s:any) => ({
-            ...s, 
+        wrapStore: (s: any) => ({
+            ...s,
             dispatch: mockDispatch
         })
     });
@@ -79,12 +78,12 @@ test('renders loading correctly', () => {
 test('renders updating correctly', () => {
     const mockState = createMockState();
     mockState.events.update.updating = true;
-    
+
     const mockDispatch = jest.fn();
-    render( <EditEvent />, {
+    render(<EditEvent />, {
         initialState: mockState,
-        wrapStore: (s:any) => ({
-            ...s, 
+        wrapStore: (s: any) => ({
+            ...s,
             dispatch: mockDispatch
         })
     });
@@ -114,47 +113,39 @@ test('renders handle update', async () => {
     window.confirm = () => true;
 
     let dispatch: any;
-    render( <EditEvent />, {
+    render(<EditEvent />, {
         initialState: mockState,
-        wrapStore: (s:any) => {
+        wrapStore: (s: any) => {
             dispatch = jest.fn(s.dispatch)
             s.dispatch = dispatch;
             return s;
         }
     });
     //Await for the useEffect to get called.
-    await act( () => new Promise(res => setTimeout(res, 10)));
+    await act(() => new Promise(res => setTimeout(res, 10)));
 
     const mockFirebase = require('../../store/firebase').default;
     //Clear any load calls before the update call. 
-    mockFirebase.firestore().collection.mock.calls = []; 
+    mockFirebase.firestore().collection.mock.calls = [];
     dispatch.mock.calls = [];
 
-    const name = document.getElementById('name') as HTMLInputElement;
-    await act( async () => { 
-        fireEvent.change(name, {target:{ value: 'Event'}}) 
-    });
-    
-    const venue = document.getElementById('venue') as HTMLInputElement;
-    await act( async () => { 
-        fireEvent.change(venue, {target:{ value: 'Place'}}) 
-    });
+    const name = screen.getByTestId('name') as HTMLInputElement;
+    fireEvent.change(name, { target: { value: 'Event' } })
 
-    const date = document.getElementById('date') as HTMLInputElement;
-    await act( async () => { 
-        fireEvent.change(date, {target:{ value: '12-05-2021 12:00 pm'}}) 
-    });
+    const venue = screen.getByTestId('venue') as HTMLInputElement;
+    fireEvent.change(venue, { target: { value: 'Place' } })
 
-    const price = document.getElementById('price') as HTMLInputElement;
-    await act( async () => { 
-        fireEvent.change(price, {target:{ value: 'Afl. 75'}}) 
-    });
-    
+    const date = screen.getByTestId('date') as HTMLInputElement;
+    fireEvent.change(date, { target: { value: '12-05-2021 12:00 pm' } })
+
+    const price = screen.getByTestId('price') as HTMLInputElement;
+    fireEvent.change(price, { target: { value: 'Afl. 75' } })
+
     const updateButton = screen.getByText("Update");
-    await act( async () => { fireEvent.click(updateButton) } );
+    fireEvent.click(updateButton);
 
     //Once during add.
-    const collectionCall = mockFirebase.firestore().collection.mock.calls; 
+    const collectionCall = mockFirebase.firestore().collection.mock.calls;
     expect(collectionCall.length).toBe(3); //1 for events, 1 for results and 1 for answers.
     expect(collectionCall[0][0]).toBe('events');
     expect(collectionCall[1][0]).toBe('results');
@@ -164,7 +155,7 @@ test('renders handle update', async () => {
     const updateAction = dispatch.mock.calls[0][0];
     const reductions = await getActionRedutions(updateAction, mockState);
     expect(reductions[0]).toStrictEqual(
-        {type: ACTION_EVENTS_UPDATING, payload: true}
+        { type: ACTION_EVENTS_UPDATING, payload: true }
     );
 
     expect(reductions[1].type).toStrictEqual(ACTION_EVENTS_UPDATE);
@@ -175,7 +166,7 @@ test('renders handle update', async () => {
     expect(payload.price).toStrictEqual('Afl. 75');
 
     expect(reductions[2]).toStrictEqual(
-        {type: ACTION_EVENTS_UPDATING, payload: false}
+        { type: ACTION_EVENTS_UPDATING, payload: false }
     );
 });
 

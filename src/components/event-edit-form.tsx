@@ -15,7 +15,6 @@ import {
   AsterisksAllowedField,
   PriceField,
   RoundsField,
-  EditTasterItem2,
   EditTasterItem
 } from './event-edit-form.styles';
 
@@ -89,7 +88,7 @@ const EventEditForm = ({ event = DEFAULT_EVENT, onChange }: EventEditFormProps) 
   }
 
   return (
-    <Container id={"event-edit-form"}>
+    <Container data-testid="event-edit-form">
       <Section title="Event">
         <NameField
           value={event?.name ?? DEFAULT_EVENT.name}
@@ -99,7 +98,10 @@ const EventEditForm = ({ event = DEFAULT_EVENT, onChange }: EventEditFormProps) 
           value={event?.venue ?? DEFAULT_EVENT.venue}
           onChange={handleChange}
         />
-        <DateField value={event?.date} onChange={handleChange} />
+        <DateField
+          value={event?.date}
+          onChange={handleChange}
+        />
         <PriceField
           value={event?.price ?? DEFAULT_EVENT.price}
           onChange={handleChange}
@@ -118,7 +120,7 @@ const EventEditForm = ({ event = DEFAULT_EVENT, onChange }: EventEditFormProps) 
           {(event?.tasters || []).map((email, index) =>
             <EditTasterItem
               key={index}
-              id={`taster-${index}`}
+              inputProps={{ "data-testid": `taster-${index}` }}
               email={email}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 handleChangeTaster(index, e)
@@ -139,7 +141,7 @@ const EventEditForm = ({ event = DEFAULT_EVENT, onChange }: EventEditFormProps) 
             <EditBeerItem
               key={index}
               name={name}
-              id={`beer-${index}`}
+              inputProps={{ "data-testid": `beer-${index}` }}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 handleChangeBeer(index, e)
               }

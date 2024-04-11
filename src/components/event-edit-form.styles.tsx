@@ -49,11 +49,12 @@ export const Section = SectionGrid;
 export const NameField = styled(p =>
     <Grid item>
         <TextField
+            id="name"
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="name"
+            inputProps={{ "data-testid": "name" }}
             label="Name"
             name="name"
             placeholder="My Special Event"
@@ -69,11 +70,12 @@ export const NameField = styled(p =>
 export const VenueField = styled(p =>
     <Grid item>
         <TextField
+            id="venue"
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="venue"
+            inputProps={{ "data-testid": "venue" }}
             label="Venue"
             name="venue"
             placeholder="Drink Drunk Bar"
@@ -91,6 +93,7 @@ export const DateField = styled(p =>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDateTimePicker
                 id="date"
+                inputProps={{ "data-testid": "date" }}
                 margin="normal"
                 variant="inline"
                 inputVariant="outlined"
@@ -119,11 +122,12 @@ export const DateField = styled(p =>
 export const PriceField = styled(p =>
     <Grid item>
         <TextField
+            id="price"
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="price"
+            inputProps={{ "data-testid": "price" }}
             label="Price"
             name="price"
             placeholder="Alf. 75"
@@ -140,11 +144,12 @@ export const PriceField = styled(p =>
 export const BartenderEmailField = styled(p =>
     <Grid item>
         <TextField
+            id="bartender"
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            id="bartender"
+            inputProps={{ "data-testid": "bartender" }}
             label="Bartender's Email"
             name="bartender"
             placeholder="bartender@boncos.io"
@@ -312,10 +317,11 @@ const parseToInt = (defaultValue: any) => (value: any) => {
 export const AsterisksAllowedField = styled((p) => (
     <Grid item>
         <TextField
+            id="asterisksAllowed"
             variant="outlined"
             margin="normal"
             fullWidth
-            id="asterisksAllowed"
+            inputProps={{ "data-testid": "asterisksAllowed" }}
             label="Asterisks' Allowed"
             name="asterisksAllowed"
             placeholder="2"

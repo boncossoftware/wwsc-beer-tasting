@@ -12,7 +12,7 @@ test('renders correctly', () => {
         <EventEditForm event={mockEvent} />
     );
 
-    const formContainer = document.getElementById('event-edit-form');
+    const formContainer = screen.getByTestId('event-edit-form');
     expect(formContainer).toBeInTheDocument();
 });
 
@@ -23,12 +23,12 @@ const testValueChange = async (key: string, value: any, changes: any[], options?
         useClick
     } = options ?? {};
     const e = (v: any) => ({ target: { value: v, checked: !v } });
-    const elem = document.getElementById(key) as HTMLInputElement;
+    const elem = screen.getByTestId(key);
     if (!useClick) {
-        await act(async () => { fireEvent.change(elem, e(value)) });
+        fireEvent.change(elem, e(value));
     }
     else {
-        await act(async () => { fireEvent.click(elem, e(value)) });
+        fireEvent.click(elem, e(value));
     }
     const index = Math.max(0, changes.length - 1);
     const returnValue: any = (getValueHandler ?

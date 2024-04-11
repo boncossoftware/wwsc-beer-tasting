@@ -99,7 +99,8 @@ export const CONTESTANT_ANSWERS_TIE_BREAKER_ASTERISK: ContestantAnswers[] = [
   {
     id: "contestant_1@email.com",
     beers: CORRECT_BEERS,
-    asterisks: [null, null, null, null, null, null, null, null, null, null], // Has less asterisks.
+    // Has less asterisks.
+    asterisks: [null, null, null, null, null, null, null, null, null, null],
     ratings: [1, 1, 1, 1, 1, 2, 3, 4, 4, 4],
     changes: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   },
