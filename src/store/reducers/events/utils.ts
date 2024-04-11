@@ -1,11 +1,20 @@
 import { DocumentSnapshot, Timestamp } from "store/firebase";
 import "firebase/firestore";
-import { TasterInfo, TastingEvent } from "./reducer";
+import { TastingEvent } from "./reducer";
 import { format } from "date-fns";
 
-export const eventFromDoc = (doc: DocumentSnapshot | null): TastingEvent => {
+export type TastingEventWithFormatting = TastingEvent & {
+  _formattedDate?: string;
+  formattedDate: () => string;
+  _formattedMonth?: string;
+  formattedMonth: () => string;
+};
+
+export const eventFromDoc = (
+  doc: DocumentSnapshot | null
+): TastingEventWithFormatting => {
   return {
-    id: doc?.id,
+    id: doc?.id ?? "no-id?",
     owner: doc?.data()?.owner,
     name: doc?.data()?.name,
     venue: doc?.data()?.venue,
@@ -14,35 +23,33 @@ export const eventFromDoc = (doc: DocumentSnapshot | null): TastingEvent => {
     related: doc?.data()?.related,
     bartender: doc?.data()?.bartender,
     tasters: doc?.data()?.tasters,
-    ownerAddedAsTaster: doc?.data()?.ownerAddedAsTaster,
     beers: doc?.data()?.beers,
     asterisksAllowed: doc?.data()?.asterisksAllowed,
     editingAllowed: doc?.data()?.editingAllowed,
     rounds: doc?.data()?.rounds,
 
     formattedDate: function () {
-      if (!(this as any)._formattedDate) {
-        (this as any)._formattedDate = this.date
+      if (!this._formattedDate) {
+        this._formattedDate = this.date
           ? format(this.date, "ccc dd, hh:mm aaaa")
           : "-";
       }
       return (this as any)._formattedDate;
     },
     formattedMonth: function () {
-      if (!(this as any)._formattedMonth) {
-        (this as any)._formattedMonth = this.date
-          ? format(
-              this.date,
-              "MMMM" +
-                (this.date.getFullYear() === new Date().getFullYear()
-                  ? ""
-                  : ", yyyy")
-            )
-          : "-";
+      if (!this._formattedMonth) {
+        if (!this.date) {
+          this._formattedMonth = "-";
+        } else {
+          const isSameYear =
+            this.date.getFullYear() === new Date().getFullYear();
+          const yearFormat = isSameYear ? "" : ", yyyy";
+          this._formattedMonth = format(this.date, `MMMM${yearFormat}`);
+        }
       }
       return (this as any)._formattedMonth;
     },
-  } as TastingEvent;
+  };
 };
 
 export const eventToDocData = (event: TastingEvent) => {

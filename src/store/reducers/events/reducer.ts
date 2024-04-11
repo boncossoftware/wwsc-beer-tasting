@@ -34,11 +34,6 @@ import {
 import { AnyAction } from "redux";
 import { addOrUpdateItem } from "../results/utils";
 
-export type TasterInfo = {
-  email: string | null;
-  displayName: string | null;
-};
-
 export type TastingEvent = {
   id: string;
   owner: string | undefined | null;
@@ -102,7 +97,7 @@ const initialState: TastingEventsState = {
 };
 
 const sortItems = (i1: TastingEvent, i2: TastingEvent): number => {
-  return (i2?.date?.getTime() || 0) - (i1?.date?.getTime() || 0);
+  return (i2?.date?.getTime() ?? 0) - (i1?.date?.getTime() ?? 0);
 };
 
 export default function eventsReducer(
@@ -129,6 +124,7 @@ export default function eventsReducer(
       newState.itemsLoading[id] = loading;
       return newState;
     }
+    case ACTION_EVENTS_LISTEN_CHANGE:
     case ACTION_EVENTS_ITEM_LOAD: {
       const item = action.payload;
       newState.items = (
@@ -200,13 +196,6 @@ export default function eventsReducer(
     case ACTION_EVENTS_ALLOW_EDIT_ERROR: {
       const { id, error } = action.payload;
       newState.allowEditingError[id] = error;
-      return newState;
-    }
-    case ACTION_EVENTS_LISTEN_CHANGE: {
-      const item = action.payload;
-      newState.items = (
-        addOrUpdateItem(item, state.items) as TastingEvent[]
-      ).sort(sortItems);
       return newState;
     }
     case ACTION_EVENTS_LISTEN_REMOVE: {
