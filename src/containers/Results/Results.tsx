@@ -22,7 +22,7 @@ const Results = () => {
   const dispatch = useDispatch();
   const user = useSelector<RootState, UserInfo | null>((s) => s?.auth?.user);
   const relatedUsers = useSelector<RootState, User[] | null>((s) => s?.users?.items);
-  const resultsLoading = useSelector<RootState, boolean>(
+  const loading = useSelector<RootState, boolean>(
     (s) => s?.results?.itemsLoading[id] || s?.users?.loading
   );
   const resultsError = useSelector<RootState, StoreError | undefined>(
@@ -46,6 +46,7 @@ const Results = () => {
   const owner = tastingEvent.owner;
   const canEdit = owner === user?.email;
   const resultsAvailable = Boolean(tastingResults?.lastUpdated);
+  const displayLoading = (loading && !tastingEvent);
 
   useEffect(() => {
     dispatch(results.loadItem(id));
@@ -59,7 +60,7 @@ const Results = () => {
   return (
     <Container data-testid="results" disableGutters>
       <Section>
-        {resultsLoading || resultsCalculating ? (
+        {displayLoading || resultsCalculating ? (
           <ResultsCircularProgress />
         ) : (
           <ResultsContainer>

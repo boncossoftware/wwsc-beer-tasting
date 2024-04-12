@@ -15,49 +15,51 @@ import { Typography } from '@material-ui/core';
 const Login = () => {
     const location = useLocation()
     const dispatch = useDispatch();
-    const confirmed = useSelector<RootState, boolean>( s => s.auth.confirmPasswordReset.confirmed );
-    const error = useSelector<RootState, StoreError|null>( s => s.auth.confirmPasswordReset.error );
-    const confirming = useSelector<RootState, boolean>( s => s.auth.confirmPasswordReset.confirming );
+    const confirmed = useSelector<RootState, boolean>(s => s.auth.confirmPasswordReset.confirmed);
+    const error = useSelector<RootState, StoreError | null>(s => s.auth.confirmPasswordReset.error);
+    const confirming = useSelector<RootState, boolean>(s => s.auth.confirmPasswordReset.confirming);
 
-    const {email, mode, oobCode=''} = parse(location.search);
+    const { email, mode, oobCode = '' } = parse(location.search);
     const resetMode = (mode !== RESET_PASSWORD_CONFIRM_MODE_RESET_PASSWORD);
 
     const handleSaveNewPassword = (event: React.MouseEvent<HTMLElement>) => {
         event.preventDefault();
 
-        const form = document.getElementById('reset-password-form') as HTMLFormElement|undefined;
+        const form = document.getElementById('reset-password-form') as HTMLFormElement | undefined;
         const data = new FormData(form);
 
-        dispatch( auth.confirmPasswordReset(
-            oobCode as string|null, 
-            data.get('password') as string|null,  
-        ));
+        if (oobCode && data.get('password')) {
+            dispatch(auth.confirmPasswordReset(
+                oobCode as string,
+                data.get('password') as string
+            ));
+        }
     }
-    
+
     return (
         <Container
             id='reset'
         >
             {!resetMode && <Redirect to="/" />}
             <FormContainer>
-                {confirming ? 
+                {confirming ?
                     <CircularProgress />
                     :
                     <>
-                        { error && <ErrorMessage error={error} />}        
+                        {error && <ErrorMessage error={error} />}
                         <Form id="reset-password-form">
-                            {!confirmed ? 
+                            {!confirmed ?
                                 <>
-                                    <input type="hidden" id="email" name="email" value={email as string|undefined}/>
+                                    <input type="hidden" id="email" name="email" value={email as string | undefined} />
                                     <PasswordField />
-                                    <SubmitButton 
+                                    <SubmitButton
                                         onClick={handleSaveNewPassword}
                                     >
                                         Save New Password
                                     </SubmitButton>
                                 </>
                                 :
-                                <Typography>Your password has been reset! Try login in with your new password.</Typography>  
+                                <Typography>Your password has been reset! Try login in with your new password.</Typography>
                             }
                         </Form>
                         <OptionsContainer>

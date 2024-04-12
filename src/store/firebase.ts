@@ -8,7 +8,7 @@ const TEST_ENV = process.env.NODE_ENV === "test";
 const _firebase = TEST_ENV
   ? require("../testing/mock-firebase").default
   : firebase;
-export default _firebase;
+export default _firebase as typeof firebase;
 
 if (!TEST_ENV && firebase.apps.length === 0) {
   firebase.initializeApp({

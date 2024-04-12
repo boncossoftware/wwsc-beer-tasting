@@ -21,7 +21,9 @@ const Forgot = () => {
         const data = new FormData(form);
 
         const email: FormDataEntryValue | null = data.get('email');
-        dispatch(auth.sendPasswordResetEmail(email as string | null));
+        if (email) {
+            dispatch(auth.sendPasswordResetEmail(email as string));
+        }
     }
 
     const handleBackToLogin = () => {

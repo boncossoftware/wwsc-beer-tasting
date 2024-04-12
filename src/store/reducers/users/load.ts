@@ -32,13 +32,11 @@ export default function load(eventId: string) {
         .get();
       const item = eventFromDoc(doc);
       const related = item.related ?? [];
-      const usersColRef = firebase
-        .firestore()
-        .collection("users")
-        .where(FieldPath.documentId(), "in", related)
-        .orderBy("displayName", "asc");
-      const result = await usersColRef.get();
-      const items = result.docs.map(userFromDoc);
+      const gets = related.map((id) =>
+        firebase.firestore().collection("users").doc(id!).get()
+      );
+      const result = await Promise.all(gets);
+      const items = result.map(userFromDoc);
       const mixedItems = mixItems(related, items);
       dispatch({ type: ACTION_USERS_LOAD, payload: mixedItems });
       subscribe(related); //Listen for changes for this user.
