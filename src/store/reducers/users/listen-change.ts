@@ -1,8 +1,4 @@
-import firebase, {
-  DocumentSnapshot,
-  FieldPath,
-  QuerySnapshot,
-} from "store/firebase";
+import firebase, { DocumentSnapshot } from "store/firebase";
 import "firebase/firestore";
 
 import { AnyAction, Dispatch } from "redux";

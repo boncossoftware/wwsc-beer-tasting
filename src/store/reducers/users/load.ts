@@ -1,4 +1,4 @@
-import firebase, { FieldPath } from "store/firebase";
+import firebase from "store/firebase";
 import "firebase/firestore";
 
 import { subscribe } from "./listen-change";
