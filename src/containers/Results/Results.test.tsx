@@ -149,10 +149,10 @@ test('renders handle load', async () => {
     const docCall = mockFirebase.firestore().doc.mock.calls;
 
     //Once the the load.
-    expect(collectionCall.length).toBe(4);
+    expect(collectionCall.length).toBe(5);
     expect(collectionCall[0][0]).toBe('results');
 
-    expect(docCall.length).toBe(2);
+    expect(docCall.length).toBe(3);
     expect(docCall[0][0]).toBe(TEST_ID);
 
     const resultsLoadItemAction = dispatch!.mock.calls[0][0];

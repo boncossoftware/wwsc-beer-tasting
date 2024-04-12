@@ -23,7 +23,7 @@ const Results = () => {
   const user = useSelector<RootState, UserInfo | null>((s) => s?.auth?.user);
   const relatedUsers = useSelector<RootState, User[] | null>((s) => s?.users?.items);
   const resultsLoading = useSelector<RootState, boolean>(
-    (s) => s?.results?.itemsLoading[id]
+    (s) => s?.results?.itemsLoading[id] || s?.users?.loading
   );
   const resultsError = useSelector<RootState, StoreError | undefined>(
     (s) => s?.results?.itemsError[id]

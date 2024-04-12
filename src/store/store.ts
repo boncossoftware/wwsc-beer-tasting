@@ -1,21 +1,28 @@
-import { createStore, applyMiddleware, AnyAction } from "redux";
-import thunkMiddleware, { ThunkDispatch } from "redux-thunk";
+import { AnyAction, applyMiddleware, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
+import thunkMiddleware, { ThunkDispatch } from "redux-thunk";
 import rootReducer, { RootState, StoreError } from "./reducer";
-import {
-  EVENT_MODIFIED_EVENT,
-  listenChange as listenChangeEvents,
-  listenRemove as listenRemoveEvents,
-} from "./reducers/events";
-import { listenChange as listenChangeUsers } from "./reducers/users";
-import { TastingEvent } from "./reducers/events/reducer";
 import {
   ANSWER_MODIFIED_EVENT,
   listenChange as listenChangeAnswers,
 } from "./reducers/answers";
 import { TastingAnswer } from "./reducers/answers/reducer";
+import {
+  EVENT_MODIFIED_EVENT,
+  listenChange as listenChangeEvents,
+  listenRemove as listenRemoveEvents,
+} from "./reducers/events";
 import { EVENT_REMOVED_EVENT } from "./reducers/events/listen-change";
-import { USER_MODIFIED_EVENT } from "./reducers/users";
+import { TastingEvent } from "./reducers/events/reducer";
+import {
+  RESULTS_MODIFIED_EVENT,
+  listenChange as listenChangeResults,
+} from "./reducers/results";
+import { Result } from "./reducers/results/reducer";
+import {
+  USER_MODIFIED_EVENT,
+  listenChange as listenChangeUsers,
+} from "./reducers/users";
 import { User } from "./reducers/users/reducer";
 
 const composedEnhancers = composeWithDevTools(applyMiddleware(thunkMiddleware));
@@ -43,6 +50,10 @@ if (window && !listeningModifiedEvent) {
   window.addEventListener(ANSWER_MODIFIED_EVENT, (windowEvent) => {
     const answer = (windowEvent as CustomEvent).detail as TastingAnswer;
     asyncDispatch(listenChangeAnswers(answer));
+  });
+  window.addEventListener(RESULTS_MODIFIED_EVENT, (windowEvent) => {
+    const result = (windowEvent as CustomEvent).detail as Result;
+    asyncDispatch(listenChangeResults(result));
   });
   window.addEventListener(USER_MODIFIED_EVENT, (windowEvent) => {
     const user = (windowEvent as CustomEvent).detail as User;

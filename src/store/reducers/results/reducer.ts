@@ -11,6 +11,7 @@ import {
   ACTION_EVENT_RESULTS_LOAD_ITEM_ERROR,
 } from "./load-item";
 import { addOrUpdateItem } from "./utils";
+import { ACTION_RESULTS_LISTEN_CHANGE } from "./listen-change";
 
 export interface RoundResult {
   index: number;
@@ -78,6 +79,7 @@ export default function resultsReducer(
       return newState;
     }
     case ACTION_EVENT_RESULTS_CALCULATED:
+    case ACTION_RESULTS_LISTEN_CHANGE:
     case ACTION_EVENT_RESULTS_LOAD_ITEM: {
       const item = action.payload;
       newState.items = addOrUpdateItem(item, state.items) as Result[];
