@@ -3,34 +3,34 @@ import { MouseEvent } from "react";
 import TasterListItem from './taster-list-item';
 
 export type TasterListProps = {
-    tasters?: (string|null)[], 
-    onClickTaster?: (taster: string|null, event?: MouseEvent<HTMLDivElement>) => void,  
-    isTasterDisabled?: ((taster: string|null) => boolean),
-    isTasterSelected?: ((taster: string|null) => boolean),
+    tasters?: (string | null)[],
+    onClickTaster?: (taster: string | null, event?: MouseEvent<HTMLDivElement>) => void,
+    isTasterDisabled?: ((taster: string | null) => boolean),
+    isTasterSelected?: ((taster: string | null) => boolean),
     itemsSelectable?: boolean
 }
 
 const TasterList = ({
-    tasters=[], 
-    onClickTaster, 
-    isTasterDisabled, 
+    tasters = [],
+    onClickTaster,
+    isTasterDisabled,
     isTasterSelected,
-    itemsSelectable=false
+    itemsSelectable = false
 }: TasterListProps) => {
-    
-    const handleClickTaster = (taster: string|null, event: MouseEvent<HTMLDivElement>) => {
+
+    const handleClickTaster = (taster: string | null, event: MouseEvent<HTMLDivElement>) => {
         onClickTaster && onClickTaster(taster, event);
     };
 
     const renderItems = () => {
-        return tasters.map( (taster, index) => {
+        return tasters.map((taster, index) => {
             const disabled = (isTasterDisabled && isTasterDisabled(taster)) || false;
             const selected = (isTasterSelected && isTasterSelected(taster)) || false;
             return (
-                <TasterListItem 
-                    key={index} 
-                    taster={taster} 
-                    onClick={ event => handleClickTaster(taster, event)}
+                <TasterListItem
+                    key={index as any}
+                    taster={taster}
+                    onClick={event => handleClickTaster(taster, event)}
                     selected={selected}
                     disabled={disabled}
                     selectable={itemsSelectable}
@@ -38,12 +38,12 @@ const TasterList = ({
             );
         });
     }
-    
+
     if (tasters.length === 0) {
         return <Typography>No tasters added</Typography>
     }
     else {
         return <List disablePadding>{renderItems()}</List>
     }
-}   
+}
 export default TasterList;

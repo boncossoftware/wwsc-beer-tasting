@@ -29,7 +29,7 @@ const TastingResults = ({ results }: TastingResultsProps) => {
           <Subheader>Ranking</Subheader>
           {results?.roundResults?.map((s, i) => (
             <RankingResult
-              key={i}
+              key={i as any}
               rank={i + 1}
               name={s.userEmail}
               points={s.totalPoints}
@@ -43,7 +43,7 @@ const TastingResults = ({ results }: TastingResultsProps) => {
           <Subheader>Best Taste</Subheader>
           {results?.beerScoreResults?.map((s, i) => (
             <RankingResult
-              key={i}
+              key={i as any}
               rank={i + 1}
               name={s.name}
               points={s.points}
