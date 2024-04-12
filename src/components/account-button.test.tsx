@@ -7,7 +7,7 @@ test('renders correctly', () => {
         <AccountButton data-testid="account-button" />
     );
 
-    const button = screen.getAllByTestId('account-button');
+    const button = screen.getByTestId('account-button');
     expect(button).toBeInTheDocument();
 });
 

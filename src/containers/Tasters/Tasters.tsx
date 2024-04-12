@@ -8,7 +8,6 @@ import {
     Container,
     Section
 } from './Tasters.styles';
-import { User } from "store/reducers/users/reducer";
 import { useEffect } from "react";
 
 export type TastersParams = {
