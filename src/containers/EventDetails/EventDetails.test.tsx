@@ -1,12 +1,12 @@
-import { render, screen, getActionRedutions } from 'testing/test-utils';
+import { render, screen, getActionRedutions } from '@/testing/test-utils';
 import EventDetails from './EventDetails';
 import {
     ACTION_EVENTS_ITEM_LOADING,
     ACTION_EVENTS_ITEM_LOAD
-} from 'store/reducers/events/load-item';
-import { RootState } from 'store';
+} from '@/store/reducers/events/load-item';
+import { RootState } from '@/store';
 import { act } from '@testing-library/react';
-import { resetFirebaseMock } from 'testing/mock-firebase';
+import { resetFirebaseMock } from '@/testing/mock-firebase';
 import { StoreError } from '../../store';
 
 const TEST_ID = 'test-id';

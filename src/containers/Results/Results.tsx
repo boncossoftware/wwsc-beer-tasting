@@ -1,12 +1,12 @@
-import ErrorMessage from "components/error-message";
+import ErrorMessage from "@/components/error-message";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { RootState, StoreError, UserInfo } from "store/reducer";
-import { TastingEvent } from "store/reducers/events/reducer";
-import { Result } from "store/reducers/results/reducer";
+import { RootState, StoreError, UserInfo } from "@/store/reducer";
+import { TastingEvent } from "@/store/reducers/events/reducer";
+import { Result } from "@/store/reducers/results/reducer";
 import TastingResults from "../../components/tasting-results";
-import {results } from "../../store";
+import { results } from "../../store";
 import {
   Container,
   CalculateResultsButton,
@@ -56,25 +56,25 @@ const Results = () => {
 
   return (
     <Container id="results" disableGutters>
-        <Section>
+      <Section>
         {resultsLoading || resultsCalculating ? (
-            <ResultsCircularProgress />
+          <ResultsCircularProgress />
         ) : (
-            <ResultsContainer>
+          <ResultsContainer>
             {(resultsError || resultsCalculationError) && (
-                <ErrorMessage
+              <ErrorMessage
                 error={resultsError || resultsCalculationError}
-                />
+              />
             )}
             <TastingResults results={tastingResults} />
             {canEdit && (
-                <CalculateResultsButton onClick={handleCalculateResults}>
+              <CalculateResultsButton onClick={handleCalculateResults}>
                 {resultsAvailable ? "Rec" : "C"}alculate Results
-                </CalculateResultsButton>
+              </CalculateResultsButton>
             )}
-            </ResultsContainer>
+          </ResultsContainer>
         )}
-        </Section>
+      </Section>
     </Container>
   );
 };

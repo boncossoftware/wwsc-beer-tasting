@@ -1,12 +1,12 @@
-import { render, screen, getActionRedutions } from 'testing/test-utils';
+import { render, screen, getActionRedutions } from '@/testing/test-utils';
 import Events from './Events';
 import {
     ACTION_EVENTS_LOADING,
     ACTION_EVENTS_LOAD
-} from 'store/reducers/events/load';
-import { RootState, StoreError } from 'store';
+} from '@/store/reducers/events/load';
+import { RootState, StoreError } from '@/store';
 import { act } from '@testing-library/react';
-import { resetFirebaseMock } from 'testing/mock-firebase';
+import { resetFirebaseMock } from '@/testing/mock-firebase';
 
 const createMockState = () => ({
     auth: {

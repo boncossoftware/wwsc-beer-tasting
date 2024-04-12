@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import { TastingEvent } from "store/reducers/events/reducer";
+import { TastingEvent } from "@/store/reducers/events/reducer";
 import {
   BartenderEmailField,
   Container,

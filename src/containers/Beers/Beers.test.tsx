@@ -1,33 +1,33 @@
-import { render, screen} from 'testing/test-utils';
+import { render, screen } from '@/testing/test-utils';
 import Beers from './Beers';
-import { RootState } from 'store';
-import {resetFirebaseMock} from 'testing/mock-firebase';
+import { RootState } from '@/store';
+import { resetFirebaseMock } from '@/testing/mock-firebase';
 import { StoreError } from '../../store';
-import { DEFAULT_EVENT } from 'components/event-edit-form';
+import { DEFAULT_EVENT } from '@/components/event-edit-form';
 
 const TEST_ID = 'test-id';
 
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
-    useParams: () =>({ id: TEST_ID }),
+    useParams: () => ({ id: TEST_ID }),
 }));
 
-const createMockState = () => ({ 
+const createMockState = () => ({
     auth: {
-        user: {email:'test', uid: 'test'}
+        user: { email: 'test', uid: 'test' }
     },
-    events: { 
-        itemsLoading: {[TEST_ID]: false },
-        itemsError: {[TEST_ID]: false },
-        items: [{...DEFAULT_EVENT, id: TEST_ID}]
-    } 
+    events: {
+        itemsLoading: { [TEST_ID]: false },
+        itemsError: { [TEST_ID]: false },
+        items: [{ ...DEFAULT_EVENT, id: TEST_ID }]
+    }
 } as any as RootState);
 
 
 test('renders correctly', () => {
     resetFirebaseMock();
 
-    render( <Beers />);
+    render(<Beers />);
 
     const container = document.getElementById('beers');
     expect(container).toBeInTheDocument();
@@ -40,12 +40,12 @@ test('renders errors correctly', () => {
     const mockState = createMockState();
     const error = new StoreError('error', 1);
     mockState.events.itemsError[TEST_ID] = error;
-    
+
     const mockDispatch = jest.fn();
-    render( <Beers />, {
+    render(<Beers />, {
         initialState: mockState,
-        wrapStore: (s:any) => ({
-            ...s, 
+        wrapStore: (s: any) => ({
+            ...s,
             dispatch: mockDispatch
         })
     });
@@ -61,12 +61,12 @@ test('renders loading correctly', () => {
 
     const mockState = createMockState();
     mockState.events.itemsLoading[TEST_ID] = true;
-    
+
     const mockDispatch = jest.fn();
-    render( <Beers />, {
+    render(<Beers />, {
         initialState: mockState,
-        wrapStore: (s:any) => ({
-            ...s, 
+        wrapStore: (s: any) => ({
+            ...s,
             dispatch: mockDispatch
         })
     });

@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
-import { TastingEvent } from 'store/reducers/events/reducer';
+import { TastingEvent } from '@/store/reducers/events/reducer';
 import EventEditForm, { DEFAULT_EVENT } from './event-edit-form';
 
 

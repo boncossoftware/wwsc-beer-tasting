@@ -1,9 +1,9 @@
-import { getActionRedutions, render, screen } from 'testing/test-utils';
+import { getActionRedutions, render, screen } from '@/testing/test-utils';
 import AddEvent from './AddEvent';
-import { RootState, StoreError } from 'store';
+import { RootState, StoreError } from '@/store';
 import { fireEvent } from '@testing-library/react';
-import { resetFirebaseMock } from 'testing/mock-firebase';
-import { ACTION_EVENTS_ADD, ACTION_EVENTS_ADDING } from 'store/reducers/events/add';
+import { resetFirebaseMock } from '@/testing/mock-firebase';
+import { ACTION_EVENTS_ADD, ACTION_EVENTS_ADDING } from '@/store/reducers/events/add';
 
 const createMockState = () => ({
     auth: {

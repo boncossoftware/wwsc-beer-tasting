@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/react';
-import { render } from 'testing/test-utils';
+import { render } from '@/testing/test-utils';
 import Container from './center-container';
 
 test('renders correctly', () => {
@@ -10,8 +10,8 @@ test('renders correctly', () => {
     );
 
     const container = document.getElementById('container');
-    expect(container).toBeInTheDocument();  
+    expect(container).toBeInTheDocument();
 
     const content = screen.getByText(/content/gi);
-    expect(content).toBeInTheDocument();  
+    expect(content).toBeInTheDocument();
 });

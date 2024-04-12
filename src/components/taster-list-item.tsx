@@ -1,9 +1,10 @@
 import { Checkbox, ListItem, ListItemIcon } from "@material-ui/core";
 import { MouseEventHandler } from "react";
-import {TasterName} from './taster-list-item.styles';
+import { TasterName } from './taster-list-item.styles';
+import { User } from "@/store/reducers/users/reducer";
 
 export type TasterListItemProps = {
-    taster: string | null,
+    taster: User,
     onClick?: MouseEventHandler<HTMLDivElement>,
     selected?: boolean,
     disabled?: boolean,
@@ -37,7 +38,7 @@ const TasterListItem = ({
                     />
                 </ListItemIcon>
             }
-            <TasterName>{taster}</TasterName>
+            <TasterName>{taster.displayName ?? taster.email}</TasterName>
         </ItemComponent>
     );
 };

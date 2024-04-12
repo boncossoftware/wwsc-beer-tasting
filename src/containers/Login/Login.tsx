@@ -11,11 +11,11 @@ import {
     Subtitle,
     MadeByBoncos
 } from './Login.styles';
-import Container from 'components/center-container';
-import ErrorMessage from 'components/error-message';
-import OptionLink, { OptionsContainer } from 'components/option-link';
-import FormContainer, { CircularProgress } from 'components/form-container';
-import { StoreError, UserInfo } from 'store/reducer';
+import Container from '@/components/center-container';
+import ErrorMessage from '@/components/error-message';
+import OptionLink, { OptionsContainer } from '@/components/option-link';
+import FormContainer, { CircularProgress } from '@/components/form-container';
+import { StoreError, UserInfo } from '@/store/reducer';
 
 const Login = () => {
     const dispatch = useDispatch();

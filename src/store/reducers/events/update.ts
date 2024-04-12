@@ -1,12 +1,12 @@
-import firebase, { QuerySnapshot } from "store/firebase";
+import firebase, { QuerySnapshot } from "@/store/firebase";
 import "firebase/auth";
 import "firebase/firestore";
 
 import { eventFromDoc, eventToDocData, propsForEvent } from "./utils";
 import { TastingEvent } from "./reducer";
 import { Dispatch, AnyAction } from "redux";
-import { RootState, StoreError } from "store/reducer";
-import { getCurrentUserInfo } from "store/firebase";
+import { RootState, StoreError } from "@/store/reducer";
+import { getCurrentUserInfo } from "@/store/firebase";
 import { newAnswersData } from "../answers/utils";
 
 export const ACTION_EVENTS_UPDATING = "events/updating";

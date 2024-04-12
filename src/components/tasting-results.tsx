@@ -1,5 +1,5 @@
 import { List } from "@material-ui/core";
-import { Result, ResultSummary } from "store/reducers/results/reducer";
+import { Result, ResultSummary } from "@/store/reducers/results/reducer";
 import {
   AchievementItem,
   LineItem,

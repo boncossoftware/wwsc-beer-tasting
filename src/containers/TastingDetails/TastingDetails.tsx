@@ -1,13 +1,13 @@
 import { Dialog } from "@material-ui/core";
-import AppBar from "components/app-bar";
-import ErrorMessage from "components/error-message";
-import SlideUpTransition from "components/slide-up-transition";
+import AppBar from "@/components/app-bar";
+import ErrorMessage from "@/components/error-message";
+import SlideUpTransition from "@/components/slide-up-transition";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useParams } from "react-router";
-import { StoreError, UserInfo } from "store/reducer";
-import { TastingAnswer } from "store/reducers/answers/reducer";
-import { TastingEvent } from "store/reducers/events/reducer";
+import { StoreError, UserInfo } from "@/store/reducer";
+import { TastingAnswer } from "@/store/reducers/answers/reducer";
+import { TastingEvent } from "@/store/reducers/events/reducer";
 import { events, answers, RootState } from '../../store';
 import {
   Container,

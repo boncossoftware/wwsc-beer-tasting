@@ -1,9 +1,9 @@
-import { getActionRedutions, render, screen } from 'testing/test-utils';
+import { getActionRedutions, render, screen } from '@/testing/test-utils';
 import EditEvent from './EditEvent';
-import { RootState, StoreError } from 'store';
+import { RootState, StoreError } from '@/store';
 import { act, fireEvent } from '@testing-library/react';
-import { resetFirebaseMock } from 'testing/mock-firebase';
-import { ACTION_EVENTS_UPDATE, ACTION_EVENTS_UPDATING } from 'store/reducers/events/update';
+import { resetFirebaseMock } from '@/testing/mock-firebase';
+import { ACTION_EVENTS_UPDATE, ACTION_EVENTS_UPDATING } from '@/store/reducers/events/update';
 import { DEFAULT_EVENT } from '../../components/event-edit-form';
 
 const TEST_ID = 'test-id';

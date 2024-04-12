@@ -1,9 +1,9 @@
-import { render, screen } from 'testing/test-utils';
+import { render, screen } from '@/testing/test-utils';
 import Venue from './Venue';
-import { RootState } from 'store';
-import { resetFirebaseMock } from 'testing/mock-firebase';
+import { RootState } from '@/store';
+import { resetFirebaseMock } from '@/testing/mock-firebase';
 import { StoreError } from '../../store';
-import { DEFAULT_EVENT } from 'components/event-edit-form';
+import { DEFAULT_EVENT } from '@/components/event-edit-form';
 
 const TEST_ID = 'test-id';
 

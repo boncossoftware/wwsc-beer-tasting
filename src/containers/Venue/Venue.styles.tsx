@@ -1,35 +1,35 @@
 import {
-    Container as BaseContainer, 
-    Grid, 
+    Container as BaseContainer,
+    Grid,
     styled,
     Avatar,
     Typography
 } from '@material-ui/core';
-import { 
-    PlaceOutlined as VenueIcon, 
+import {
+    PlaceOutlined as VenueIcon,
 } from "@material-ui/icons";
-import FullPageCircularProgress from "components/full-page-circular-progress";
-import BaseSection from 'components/section-grid';
+import FullPageCircularProgress from "@/components/full-page-circular-progress";
+import BaseSection from '@/components/section-grid';
 
 
 export const CircularProgress = FullPageCircularProgress;
 export const Section = BaseSection;
-export const Container = styled( ({...p}) =>
+export const Container = styled(({ ...p }) =>
     <BaseContainer {...p} />
-)(({theme}) => ({
+)(({ theme }) => ({
     paddingBottom: theme.spacing(4),
 }));
 
-export const VenueInfoHeader = styled( ({venue, ...p}) =>
-    <Grid 
-        container 
-        spacing={1} 
+export const VenueInfoHeader = styled(({ venue, ...p }) =>
+    <Grid
+        container
+        spacing={1}
         alignItems='center'
         {...p}
     >
         <Grid item >
             <Avatar>
-                <VenueIcon fontSize="large"/>
+                <VenueIcon fontSize="large" />
             </Avatar>
         </Grid>
         <Grid item >
@@ -38,7 +38,7 @@ export const VenueInfoHeader = styled( ({venue, ...p}) =>
             </Typography>
         </Grid>
     </Grid>
-)(({theme}) => ({
+)(({ theme }) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
 
@@ -48,28 +48,28 @@ export const VenueInfoHeader = styled( ({venue, ...p}) =>
     }
 }));
 
-export const VenueInfoItem = styled( ({title, value, ...p}) =>
-    <Grid 
-        container 
-        spacing={2} 
+export const VenueInfoItem = styled(({ title, value, ...p }) =>
+    <Grid
+        container
+        spacing={2}
         alignItems='center'
         {...p}
     >
         <Grid item >
-            <Typography 
-                variant="subtitle2" 
+            <Typography
+                variant="subtitle2"
             >
                 {title}
             </Typography>
         </Grid>
         <Grid item >
-            <Typography 
-                variant="subtitle1" 
+            <Typography
+                variant="subtitle1"
             >
                 {value}
             </Typography>
         </Grid>
     </Grid>
-)(({theme}) => ({
-    
+)(({ theme }) => ({
+
 }));

@@ -12,7 +12,7 @@ import {
   PlaceOutlined,
   CalendarToday,
 } from "@material-ui/icons";
-import FullPageCircularProgress from "components/full-page-circular-progress";
+import FullPageCircularProgress from "@/components/full-page-circular-progress";
 
 export const Container = styled((p) => <div {...p} />)({});
 

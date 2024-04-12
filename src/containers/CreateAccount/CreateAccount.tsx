@@ -4,12 +4,12 @@ import { Redirect } from 'react-router-dom';
 import AuthenticationForm, {
     AuthenticationFormOnSubmitCallback
 } from '../../components/authentication-form';
-import Container from 'components/center-container';
-import FormContainer, { CircularProgress } from 'components/form-container';
-import OptionLink, { OptionsContainer } from 'components/option-link';
-import ErrorMessage from 'components/error-message';
-import { auth, RootState } from 'store';
-import { StoreError, UserInfo } from 'store/reducer';
+import Container from '@/components/center-container';
+import FormContainer, { CircularProgress } from '@/components/form-container';
+import OptionLink, { OptionsContainer } from '@/components/option-link';
+import ErrorMessage from '@/components/error-message';
+import { auth, RootState } from '@/store';
+import { StoreError, UserInfo } from '@/store/reducer';
 
 
 const CreateAccount = () => {

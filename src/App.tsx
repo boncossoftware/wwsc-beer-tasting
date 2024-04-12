@@ -12,8 +12,8 @@ import EditEvent from "./containers/EditEvent";
 import Forgot from "./containers/Forgot";
 import Reset from "./containers/Reset";
 import CreateAccount from "./containers/CreateAccount/CreateAccount";
-import { UserInfo } from "store/reducer";
-import FullPageCircularProgress from "components/full-page-circular-progress";
+import { UserInfo } from "@/store/reducer";
+import FullPageCircularProgress from "@/components/full-page-circular-progress";
 import { Fade } from "@material-ui/core";
 
 function App() {

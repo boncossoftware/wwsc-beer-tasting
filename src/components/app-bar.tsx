@@ -1,6 +1,6 @@
 import { Toolbar } from "@material-ui/core";
 import { useDispatch } from "react-redux";
-import { auth } from "store";
+import { auth } from "@/store";
 import AccountButton from "./account-button";
 import { AppBar as BaseAppBar, AppBarTitle } from "./app-bar.styles";
 

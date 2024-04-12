@@ -1,4 +1,4 @@
-import { DocumentSnapshot, Timestamp } from "store/firebase";
+import { DocumentSnapshot, Timestamp } from "@/store/firebase";
 import "firebase/firestore";
 import { TastingEvent } from "./reducer";
 import { format } from "date-fns";

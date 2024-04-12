@@ -1,33 +1,33 @@
-import { 
-    BottomNavigation, 
-    BottomNavigationAction, 
-    Box, 
-    Button, 
-    styled, 
+import {
+    BottomNavigation,
+    BottomNavigationAction,
+    Box,
+    Button,
+    styled,
     Typography,
 } from "@material-ui/core";
-import { 
-    ArrowBackIos as BackIcon, 
-    EmojiEvents as TastingIcon, 
+import {
+    ArrowBackIos as BackIcon,
+    EmojiEvents as TastingIcon,
     FormatListNumbered as ResultsIcon,
     LocalDrink as BeerIcon,
     People as TastersIcon,
     PlaceOutlined as VenueIcon,
 } from "@material-ui/icons";
-import FullPageCircularProgress from "components/full-page-circular-progress";
+import FullPageCircularProgress from "@/components/full-page-circular-progress";
 
-export const Container = styled( ({...p})=> 
+export const Container = styled(({ ...p }) =>
     <div {...p} />
-)(({theme}) => ({
+)(({ theme }) => ({
     marginBottom: theme.mixins.toolbar.minHeight,
 }));;
 
-export const BackButton = styled( (p) => 
-<Button color="inherit" {...p} >
-    <BackIcon />
-    <Typography variant="button" color="inherit">Events</Typography>
-</Button>
-)(({theme}) => ({
+export const BackButton = styled((p) =>
+    <Button color="inherit" {...p} >
+        <BackIcon />
+        <Typography variant="button" color="inherit">Events</Typography>
+    </Button>
+)(({ theme }) => ({
     marginRight: theme.spacing(1),
     '& svg': {
         fontSize: 'inherit',
@@ -35,21 +35,21 @@ export const BackButton = styled( (p) =>
     }
 }));
 
-export const EditButton = styled( ({...p}: any) => 
-<Button color="inherit" {...p} >
-    <Typography color="inherit">Edit</Typography>
-</Button>
-)(({theme}) => ({
+export const EditButton = styled(({ ...p }: any) =>
+    <Button color="inherit" {...p} >
+        <Typography color="inherit">Edit</Typography>
+    </Button>
+)(({ theme }) => ({
     marginLeft: theme.spacing(1),
 }));
 
 export const CircularProgress = FullPageCircularProgress;
 
 
-export const BottomNavigationBar = styled(({className, ...p}: any) => 
-    <Box 
-        boxShadow={3} 
-        className={className} 
+export const BottomNavigationBar = styled(({ className, ...p }: any) =>
+    <Box
+        boxShadow={3}
+        className={className}
     >
         <BottomNavigation
             showLabels
@@ -63,62 +63,62 @@ export const BottomNavigationBar = styled(({className, ...p}: any) =>
     zIndex: 1,
 });
 
-export const TastingBarItem = styled(({...p}) =>
-    <BottomNavigationAction 
-        label="Tasting" 
+export const TastingBarItem = styled(({ ...p }) =>
+    <BottomNavigationAction
+        label="Tasting"
         icon={
             <TastingIcon />
-        } 
-        {...p} 
+        }
+        {...p}
     />
 )({
 
 });
 
-export const ResultsBarItem = styled(({...p}) =>
-    <BottomNavigationAction 
-        label="Results" 
+export const ResultsBarItem = styled(({ ...p }) =>
+    <BottomNavigationAction
+        label="Results"
         icon={
             <ResultsIcon />
-        } 
-        {...p} 
+        }
+        {...p}
     />
 )({
 
 });
 
-export const BeersBarItem = styled(({...p}) =>
-    <BottomNavigationAction 
-        label="Beers" 
+export const BeersBarItem = styled(({ ...p }) =>
+    <BottomNavigationAction
+        label="Beers"
         icon={
             <BeerIcon />
-        } 
-        {...p} 
+        }
+        {...p}
     />
 )({
 
 });
 
 
-export const TastersBarItem = styled(({...p}) =>
-    <BottomNavigationAction 
-        label="Tasters" 
+export const TastersBarItem = styled(({ ...p }) =>
+    <BottomNavigationAction
+        label="Tasters"
         icon={
             <TastersIcon />
-        } 
-        {...p} 
+        }
+        {...p}
     />
 )({
 
 });
 
-export const VenueBarItem = styled(({...p}) =>
-    <BottomNavigationAction 
-        label="Venue" 
+export const VenueBarItem = styled(({ ...p }) =>
+    <BottomNavigationAction
+        label="Venue"
         icon={
             <VenueIcon />
-        } 
-        {...p} 
+        }
+        {...p}
     />
 )({
 

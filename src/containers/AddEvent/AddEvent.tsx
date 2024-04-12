@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import EventEditForm, { EventEditFormChangeHandler, DEFAULT_EVENT } from "../../components/event-edit-form";
 import { events, RootState, StoreError } from '../../store';
-import SlideUpTransition from 'components/slide-up-transition';
-import { TastingEvent } from "store/reducers/events/reducer";
-import AppBar from "components/app-bar";
-import ErrorMessage from "components/error-message";
+import SlideUpTransition from '@/components/slide-up-transition';
+import { TastingEvent } from "@/store/reducers/events/reducer";
+import AppBar from "@/components/app-bar";
+import ErrorMessage from "@/components/error-message";
 import { CancelButton, AddButton } from './AddEvent.styles';
 
 const AddEvent = () => {

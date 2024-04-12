@@ -1,10 +1,10 @@
-import AppBar from "components/app-bar";
-import ErrorMessage from "components/error-message";
+import AppBar from "@/components/app-bar";
+import ErrorMessage from "@/components/error-message";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams, Switch, Route, Redirect, useRouteMatch } from "react-router";
-import { StoreError, UserInfo } from "store/reducer";
-import { TastingEvent } from "store/reducers/events/reducer";
+import { StoreError, UserInfo } from "@/store/reducer";
+import { TastingEvent } from "@/store/reducers/events/reducer";
 import { events, RootState } from "../../store";
 import Beers from "../Beers";
 import Tasters from "../Tasters";
@@ -22,7 +22,7 @@ import {
   VenueBarItem,
   ResultsBarItem
 } from './EventDetails.styles';
-import Results from "containers/Results";
+import Results from "@/containers/Results";
 
 const getBaseURL = (routeMatchURL: string) => {
   return routeMatchURL.endsWith('/') ? routeMatchURL.slice(0, routeMatchURL.length - 1) : routeMatchURL;

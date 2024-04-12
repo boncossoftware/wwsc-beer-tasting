@@ -1,9 +1,9 @@
 import { MouseEventHandler, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-import { TastingEvent } from "store/reducers/events/reducer";
+import { TastingEvent } from "@/store/reducers/events/reducer";
 import { events, RootState, StoreError } from '../../store';
-import AppBar from 'components/app-bar';
+import AppBar from '@/components/app-bar';
 import {
   Container,
   InnerContainer,
@@ -14,7 +14,7 @@ import {
   EventListItemDetails,
   EventListSectionHeader
 } from './Events.styles';
-import ErrorMessage from "components/error-message";
+import ErrorMessage from "@/components/error-message";
 
 
 const Events = () => {

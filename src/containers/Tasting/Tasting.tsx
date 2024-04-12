@@ -1,10 +1,10 @@
-import ErrorMessage from "components/error-message";
+import ErrorMessage from "@/components/error-message";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router";
-import { RootState, StoreError, UserInfo } from "store/reducer";
-import { TastingAnswer } from "store/reducers/answers/reducer";
-import { TastingEvent } from "store/reducers/events/reducer";
+import { RootState, StoreError, UserInfo } from "@/store/reducer";
+import { TastingAnswer } from "@/store/reducers/answers/reducer";
+import { TastingEvent } from "@/store/reducers/events/reducer";
 import TastingAnswers from "../../components/tasting-answers";
 import { answers, events } from "../../store";
 import {

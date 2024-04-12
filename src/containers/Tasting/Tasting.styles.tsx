@@ -1,13 +1,13 @@
-import { 
-    Container as BaseContainer,
-    FormControl,
-    FormControlLabel,
-    styled,
-    Switch,
-    Divider,
+import {
+  Container as BaseContainer,
+  FormControl,
+  FormControlLabel,
+  styled,
+  Switch,
+  Divider,
 } from "@material-ui/core";
-import FullPageCircularProgress from "components/full-page-circular-progress";
-import SectionGrid from "components/section-grid";
+import FullPageCircularProgress from "@/components/full-page-circular-progress";
+import SectionGrid from "@/components/section-grid";
 
 export const Container = BaseContainer;
 

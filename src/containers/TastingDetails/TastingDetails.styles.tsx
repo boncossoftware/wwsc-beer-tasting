@@ -11,10 +11,10 @@ import {
 import {
     Alert
 } from '@material-ui/lab';
-import BeerList from "components/beer-list";
-import FullPageCircularProgress from "components/full-page-circular-progress";
-import Rating from "components/rating";
-import SectionGrid from "components/section-grid";
+import BeerList from "@/components/beer-list";
+import FullPageCircularProgress from "@/components/full-page-circular-progress";
+import Rating from "@/components/rating";
+import SectionGrid from "@/components/section-grid";
 
 export const Container = styled(({ ...p }) =>
     <div {...p} />
@@ -67,9 +67,9 @@ export const BeerListCaption = styled(p =>
 
 });
 
-const FormLabel = styled( p =>
+const FormLabel = styled(p =>
     <BaseFormLabel {...p} />
-)(({theme}) => ({
+)(({ theme }) => ({
     fontSize: theme.typography.h6.fontSize,
     color: theme.palette.text.primary
 }));
@@ -105,16 +105,16 @@ export const BeerSelectionField = styled(({
 
 
 export const RatingField = styled(({ rating, onChange, ...p }) => (
-  <FormControl margin="normal" fullWidth {...p}>
-    <FormLabel>Rating</FormLabel>
-    <Rating rating={rating} onChange={onChange} type="edit" />
-  </FormControl>
+    <FormControl margin="normal" fullWidth {...p}>
+        <FormLabel>Rating</FormLabel>
+        <Rating rating={rating} onChange={onChange} type="edit" />
+    </FormControl>
 ))(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  "& .MuiRating-root": {
-    marginTop: theme.spacing(1),
-    width: "fit-content",
-  },
+    marginTop: theme.spacing(4),
+    "& .MuiRating-root": {
+        marginTop: theme.spacing(1),
+        width: "fit-content",
+    },
 }));
 
 export const AsteriskedField = styled(({

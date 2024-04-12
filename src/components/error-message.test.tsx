@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { StoreError } from 'store';
+import { StoreError } from '@/store';
 import ErrorMessage from './error-message';
 
 test('renders correctly', () => {

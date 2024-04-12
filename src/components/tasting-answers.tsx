@@ -1,5 +1,5 @@
 import { List } from "@material-ui/core";
-import { TastingAnswer } from "store/reducers/answers/reducer";
+import { TastingAnswer } from "@/store/reducers/answers/reducer";
 import TastingAnswerItem from "./tasting-answer-item";
 
 export type TastingAnswersProps = {

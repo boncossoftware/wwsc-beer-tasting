@@ -1,5 +1,5 @@
-import {DocumentSnapshot} from "store/firebase";
-import { TastingAnswer } from "./reducer"
+import { DocumentSnapshot } from "@/store/firebase";
+import { TastingAnswer } from "./reducer";
 
 export const answerFromDoc = (doc: DocumentSnapshot): TastingAnswer => {
   return {
@@ -13,14 +13,14 @@ export const answerFromDoc = (doc: DocumentSnapshot): TastingAnswer => {
 };
 
 export const answerToDocData = (answer: TastingAnswer) => {
-    return {
-        ...(answer.beers ? {beers: answer.beers} : {}),
-        ...(answer.asterisks ? {asterisks: answer.asterisks} : {}),
-        ...(answer.ratings ? {ratings: answer.ratings} : {}),
-        ...(answer.changes ? {changes: answer.changes} : {}),
-        ...(answer.rounds ? {rounds: answer.rounds} : {}),
-    }   
-}
+  return {
+    ...(answer.beers ? { beers: answer.beers } : {}),
+    ...(answer.asterisks ? { asterisks: answer.asterisks } : {}),
+    ...(answer.ratings ? { ratings: answer.ratings } : {}),
+    ...(answer.changes ? { changes: answer.changes } : {}),
+    ...(answer.rounds ? { rounds: answer.rounds } : {}),
+  };
+};
 
 const emptyList = (i = 0) => {
   let list = Array(i);

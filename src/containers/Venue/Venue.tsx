@@ -1,10 +1,10 @@
 
-import ErrorMessage from "components/error-message";
+import ErrorMessage from "@/components/error-message";
 import { format } from "date-fns";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { RootState, StoreError } from "store";
-import { TastingEvent } from "store/reducers/events/reducer";
+import { RootState, StoreError } from "@/store";
+import { TastingEvent } from "@/store/reducers/events/reducer";
 import {
     Container,
     CircularProgress,
