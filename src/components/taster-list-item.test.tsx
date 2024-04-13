@@ -9,13 +9,13 @@ test('renders correctly', () => {
 
     const beer = screen.queryByText(tasterName);
     expect(beer).toBeInTheDocument();
-    
+
 });
 
 
 test('renders disabled correctly', () => {
     render(
-        <TasterListItem taster={"test-taster"} disabled selectable/>
+        <TasterListItem taster={"test-taster"} disabled selectable />
     );
 
     const item = screen.getByRole('button');
@@ -25,10 +25,10 @@ test('renders disabled correctly', () => {
 
 test('renders selected correctly', () => {
     render(
-        <TasterListItem taster={"test-taster"} selected={true} selectable/>
+        <TasterListItem taster={"test-taster"} selected={true} selectable />
     );
 
-    const checkbox = document.getElementsByTagName('input')[0] as HTMLInputElement;
+    const checkbox = screen.getByRole('checkbox') as HTMLInputElement;
     expect(checkbox).toBeInTheDocument();
     expect(checkbox.checked).toBe(true);
 });
@@ -37,13 +37,13 @@ test('renders selected correctly', () => {
 test('renders onclick correctly', () => {
     const onClick = jest.fn();
     render(
-        <TasterListItem taster={"test-taster"} onClick={onClick} selectable/>
+        <TasterListItem taster={"test-taster"} onClick={onClick} selectable />
     );
-    
+
     const item = screen.queryByRole('button');
     expect(item).toBeInTheDocument()
     fireEvent.click(item!);
 
     expect(onClick.mock.calls.length).toBe(1);
-    
+
 });

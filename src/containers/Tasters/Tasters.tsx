@@ -1,34 +1,44 @@
 import ErrorMessage from "components/error-message";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { RootState, StoreError } from "store";
-import { TastingEvent } from "store/reducers/events/reducer";
+import { RootState, StoreError, users } from "store";
 import TasterList from "../../components/taster-list";
 import {
-    Container,
     CircularProgress,
+    Container,
     Section
 } from './Tasters.styles';
+import { useEffect } from "react";
 
 export type TastersParams = {
     id: string
 }
 
-const Tasters = () => {    
-    const {id} = useParams<TastersParams>();
-    const event = useSelector<RootState, TastingEvent|undefined>( 
-        s => s?.events?.items?.find( i => i.id === id ) 
+const Tasters = () => {
+    const dispatch = useDispatch();
+    const { id } = useParams<TastersParams>();
+    const tasters = useSelector<RootState, string[] | undefined>(
+        s => {
+            const event = s?.events?.items?.find(i => i.id === id);
+            const tasters = event?.tasters ?? [];
+            const users = s?.users?.items?.filter(u => tasters.includes(u.id));
+            return users?.map(u => u.displayName ?? u.email);
+        }
     );
-    const loading = useSelector<RootState, boolean|undefined>( 
-        s => s?.events?.itemsLoading[id]
+    const loading = useSelector<RootState, boolean | undefined>(
+        s => s?.events?.itemsLoading[id] || s?.users?.loading
     );
-    const error = useSelector<RootState, StoreError|undefined>( 
+    const error = useSelector<RootState, StoreError | undefined>(
         s => s?.events?.itemsError[id]
     );
-    const tasters = event?.tasters || undefined;
+
+    useEffect(() => {
+        dispatch(users.load(id));
+    }, [id, dispatch]);
+
     return (
         <Container id="tasters" disableGutters>
-            {loading ? 
+            {loading ?
                 <CircularProgress />
                 :
                 <>

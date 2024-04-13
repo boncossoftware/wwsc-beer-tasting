@@ -3,7 +3,6 @@ module.exports = {
   env: {
     es6: true,
     node: true,
-    "jest/globals": true,
   },
   extends: [
     "eslint:recommended",
@@ -11,6 +10,7 @@ module.exports = {
     "plugin:import/warnings",
     "plugin:import/typescript",
     "google",
+    "plugin:@typescript-eslint/recommended",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -19,13 +19,18 @@ module.exports = {
   },
   ignorePatterns: [
     "/lib/**/*", // Ignore built files.
-    "*.test.*", // Ignore test files.
   ],
-  plugins: ["@typescript-eslint", "import", "jest"],
+  plugins: [
+    "@typescript-eslint",
+    "import",
+  ],
   rules: {
-    quotes: ["error", "double"],
+    "quotes": ["error", "double"],
+    "import/no-unresolved": 0,
+    "indent": ["error", 2],
     "no-unused-vars": "off",
-    indent: ["error", 2],
     "quote-props": "off",
+    "object-curly-spacing": [1, "always"],
+    "max-len": ["error", { "code": 140 }],
   },
 };

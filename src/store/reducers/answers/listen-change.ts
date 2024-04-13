@@ -9,7 +9,7 @@ export const ANSWER_MODIFIED_EVENT = "answer-modified";
 export const ACTION_ANSWERS_LISTEN_CHANGE = "answers/listen_change";
 
 //Subscribe to event changes to listen for allow edit from owner.
-var _unsubscribe: (() => void) | undefined;
+let _unsubscribe: (() => void) | undefined;
 
 export function subscribe(eventId: string, answersId: string) {
   unsubscribe();
@@ -17,11 +17,11 @@ export function subscribe(eventId: string, answersId: string) {
   const eventDocRef = firebase.firestore().collection("events").doc(eventId);
   const itemRef = eventDocRef.collection("answers").doc(answersId);
   _unsubscribe = itemRef.onSnapshot((snapshot: DocumentSnapshot) => {
-      const answerData = answerFromDoc(snapshot);
-      const windowEvent = new CustomEvent(ANSWER_MODIFIED_EVENT, {
-        detail: answerData,
-      });
-      window.dispatchEvent(windowEvent);
+    const answerData = answerFromDoc(snapshot);
+    const windowEvent = new CustomEvent(ANSWER_MODIFIED_EVENT, {
+      detail: answerData,
+    });
+    window.dispatchEvent(windowEvent);
   }, console.log);
 }
 

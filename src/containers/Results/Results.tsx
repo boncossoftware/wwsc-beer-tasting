@@ -6,7 +6,7 @@ import { RootState, StoreError, UserInfo } from "store/reducer";
 import { TastingEvent } from "store/reducers/events/reducer";
 import { Result } from "store/reducers/results/reducer";
 import TastingResults from "../../components/tasting-results";
-import {results } from "../../store";
+import { results, users } from "../../store";
 import {
   Container,
   CalculateResultsButton,
@@ -14,15 +14,16 @@ import {
   Section,
   ResultsContainer,
 } from "./Results.styles";
+import { User } from "store/reducers/users/reducer";
 
 const Results = () => {
   const { id } = useParams<{ id: string }>();
 
   const dispatch = useDispatch();
   const user = useSelector<RootState, UserInfo | null>((s) => s?.auth?.user);
-
-  const resultsLoading = useSelector<RootState, boolean>(
-    (s) => s?.results?.itemsLoading[id]
+  const relatedUsers = useSelector<RootState, User[] | null>((s) => s?.users?.items);
+  const loading = useSelector<RootState, boolean>(
+    (s) => s?.results?.itemsLoading[id] || s?.users?.loading
   );
   const resultsError = useSelector<RootState, StoreError | undefined>(
     (s) => s?.results?.itemsError[id]
@@ -45,9 +46,11 @@ const Results = () => {
   const owner = tastingEvent.owner;
   const canEdit = owner === user?.email;
   const resultsAvailable = Boolean(tastingResults?.lastUpdated);
+  const displayLoading = (loading && !tastingEvent);
 
   useEffect(() => {
     dispatch(results.loadItem(id));
+    dispatch(users.load(id));
   }, [dispatch, id]);
 
   const handleCalculateResults = () => {
@@ -55,26 +58,26 @@ const Results = () => {
   };
 
   return (
-    <Container id="results" disableGutters>
-        <Section>
-        {resultsLoading || resultsCalculating ? (
-            <ResultsCircularProgress />
+    <Container data-testid="results" disableGutters>
+      <Section>
+        {displayLoading || resultsCalculating ? (
+          <ResultsCircularProgress />
         ) : (
-            <ResultsContainer>
+          <ResultsContainer>
             {(resultsError || resultsCalculationError) && (
-                <ErrorMessage
+              <ErrorMessage
                 error={resultsError || resultsCalculationError}
-                />
+              />
             )}
-            <TastingResults results={tastingResults} />
+            <TastingResults results={tastingResults} users={relatedUsers} />
             {canEdit && (
-                <CalculateResultsButton onClick={handleCalculateResults}>
+              <CalculateResultsButton onClick={handleCalculateResults}>
                 {resultsAvailable ? "Rec" : "C"}alculate Results
-                </CalculateResultsButton>
+              </CalculateResultsButton>
             )}
-            </ResultsContainer>
+          </ResultsContainer>
         )}
-        </Section>
+      </Section>
     </Container>
   );
 };

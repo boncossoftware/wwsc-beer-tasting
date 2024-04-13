@@ -1,13 +1,12 @@
-import firebase, { QuerySnapshot } from "store/firebase";
 import "firebase/auth";
 import "firebase/firestore";
+import firebase, { QuerySnapshot, getCurrentUserInfo } from "store/firebase";
 
-import { eventFromDoc, eventToDocData, propsForEvent } from "./utils";
-import { TastingEvent } from "./reducer";
-import { Dispatch, AnyAction } from "redux";
+import { AnyAction, Dispatch } from "redux";
 import { RootState, StoreError } from "store/reducer";
-import { getCurrentUserInfo } from "store/firebase";
 import { newAnswersData } from "../answers/utils";
+import { TastingEvent } from "./reducer";
+import { eventFromDoc, eventToDocData, propsForEvent } from "./utils";
 
 export const ACTION_EVENTS_UPDATING = "events/updating";
 export const ACTION_EVENTS_UPDATE = "events/update";
@@ -29,19 +28,16 @@ export default function update(event: TastingEvent) {
         .collection("results")
         .doc(event.id);
       const answersRef = docRef.collection("answers");
-
       await Promise.all([
         docRef.update(eventToDocData(props)),
         //Reset all answers.
-        answersRef
-          .get()
-          .then((snaps: QuerySnapshot) => {
-            return Promise.all(
-              snaps?.docs?.map((snap) =>
-                snap?.ref.set(newAnswersData(event.rounds ?? 0))
-              ) ?? []
-            )
-          }),
+        answersRef.get().then((snaps: QuerySnapshot) => {
+          return Promise.all(
+            snaps?.docs?.map((snap) =>
+              snap?.ref.set(newAnswersData(event.rounds ?? 0))
+            ) ?? []
+          );
+        }),
         //Delete all results.
         resultsRef.delete(),
       ]);

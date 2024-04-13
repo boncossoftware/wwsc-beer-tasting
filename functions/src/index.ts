@@ -39,10 +39,8 @@ export class ResultsError extends Error {
   }
 }
 
-export const calculateResults = onCall(async (data, _) => {
+export const calculateResults = onCall(async (id: string) => {
   // Get all answers.
-  const id = data;
-
   try {
     // Fetch event & answers
     functions.logger.debug(`fetching answers (${id})`);
@@ -56,20 +54,17 @@ export const calculateResults = onCall(async (data, _) => {
     const barTenderAnswers = answers.find((a) => a.id === event.bartender);
     validateBarTenderAnswers(barTenderAnswers);
 
-    const correctBeers = barTenderAnswers?.beers;
+    const correctBeers = barTenderAnswers?.beers ?? [];
     functions.logger.debug(`answers valid (${id})`);
 
     // clear out the bartender's answers and owner answers if needed.
-    const exludeEmails = [
-      event.bartender,
-      event.ownerAddedAsTaster && event.owner,
-    ];
+    const exludeEmails = [event.bartender];
     answers = answers.filter((a) => !exludeEmails.includes(a.id));
 
     // Create the tasting results
-    const roundResults = createContestantRoundResults(correctBeers!, answers);
+    const roundResults = createContestantRoundResults(correctBeers, answers);
     sortByRankedPointScores(roundResults);
-    const beerScoreResults = createBeerScoreResults(correctBeers!, answers);
+    const beerScoreResults = createBeerScoreResults(correctBeers, answers);
     sortByRankedBeerTasteScores(beerScoreResults);
     const tastingResults = {
       roundResults,
@@ -88,10 +83,15 @@ export const calculateResults = onCall(async (data, _) => {
     const message = (error as ResultsError).message;
     const code = (error as ResultsError).code;
     functions.logger.error(
-      `Error: ${message} (${code})\n` + `${(error as any).stack}`
+      `Error: ${message} (${code})\n` + `${(error as Error).stack}`
     );
 
-    return {error: {message, code}} as ServerError;
+    return {
+      error: {
+        message,
+        code,
+      },
+    } as ServerError;
   }
 });
 
@@ -115,7 +115,7 @@ export const validateBarTenderAnswers = (
 
 export const createContestantRoundResults = (
   correctBeers: string[],
-  contestantAnswers: ContestantAnswers[]
+  contestantAnswers: ContestantAnswers[] | undefined
 ): ResultSummary[] => {
   const rounds = correctBeers.length;
   return (contestantAnswers || []).map((contestantAnswers) => {
@@ -135,9 +135,9 @@ export const createContestantRoundResults = (
     summary.roundResults = contestantAnswers?.beers.map(
       (roundAnswer, roundIndex) => {
         const correctBeer = correctBeers[roundIndex];
-        const asterisked = (contestantAnswers?.asterisks[roundIndex] ||
+        const asterisked = (contestantAnswers?.asterisks[roundIndex] ??
           false) as boolean;
-        const tasteScore = contestantAnswers?.ratings[roundIndex] || 4;
+        const tasteScore = contestantAnswers?.ratings[roundIndex] ?? 4;
         const changes = contestantAnswers?.changes[roundIndex] as number;
         const correct = (roundAnswer === correctBeer) as boolean;
         const points =
@@ -169,7 +169,7 @@ export const createContestantRoundResults = (
     );
 
     return summary;
-  }) as ResultSummary[];
+  });
 };
 
 export const createBeerScoreResults = (
@@ -178,15 +178,15 @@ export const createBeerScoreResults = (
 ): BeerRanking[] =>
   correctBeers.map((correctBeer, index) => {
     const points = contestantAnswers.reduce(
-      (total, contestant) => total + (contestant.ratings[index] || 4),
+      (total, contestant) => total + (contestant.ratings[index] ?? 4),
       0
     );
-    return {name: correctBeer, points: points};
+    return { name: correctBeer, points: points };
   });
 
 export const sortByRankedPointScores = (
   contestantRoundResults: ResultSummary[] = []
-) =>
+) => {
   /* NOTE FOR SORTING:
    * If the result is negative, r1 is sorted
    * before r2.
@@ -195,45 +195,45 @@ export const sortByRankedPointScores = (
    * If the result is 0, no changes are done
    * with the sort order of the two values.
    */
-  contestantRoundResults.sort(
-    (r1: ResultSummary, r2: ResultSummary): number => {
-      if (r2.totalPoints !== r1.totalPoints) {
-        // Base on points if not tied. Based
-        // on scoring rules 1 and 2 (see
-        // createContestantRoundResults)
-        return r2.totalPoints - r1.totalPoints;
+  const sorter = (r1: ResultSummary, r2: ResultSummary): number => {
+    if (r2.totalPoints !== r1.totalPoints) {
+      // Base on points if not tied. Based
+      // on scoring rules 1 and 2 (see
+      // createContestantRoundResults)
+      return r2.totalPoints - r1.totalPoints;
+    } else {
+      r1.isTied = true;
+      r2.isTied = true;
+      // If points are tied than base on total
+      // asterisks (less wins). Based tie breaker rule 1.
+      if (r2.totalCorrectAsterisks !== r1.totalCorrectAsterisks) {
+        const result = r1.totalCorrectAsterisks - r2.totalCorrectAsterisks;
+        (result > 0 ? r2 : r1).tieBreakerReason =
+          TIE_BREAKER_REASON_LESS_ASTERISKS;
+        return result;
+      } else if (r2.totalCorrectSecondHalf !== r1.totalCorrectSecondHalf) {
+        // If points and total asterisks are tied than base
+        // on total correct beers in second half (more wins).
+        // Based tie breaker rule 2.
+        const result = r2.totalCorrectSecondHalf - r1.totalCorrectSecondHalf;
+        (result > 0 ? r2 : r1).tieBreakerReason =
+          TIE_BREAKER_REASON_MORE_CORRECT_SECOND_HALF;
+        return result;
       } else {
-        r1.isTied = true;
-        r2.isTied = true;
-        // If points are tied than base on total
-        // asterisks (less wins). Based tie breaker rule 1.
-        if (r2.totalCorrectAsterisks !== r1.totalCorrectAsterisks) {
-          const result = r1.totalCorrectAsterisks - r2.totalCorrectAsterisks;
-          (result > 0 ? r2 : r1).tieBreakerReason =
-            TIE_BREAKER_REASON_LESS_ASTERISKS;
-          return result;
-        } else {
-          // If points and total asterisks are tied than base
-          // on total correct beers in second half (more wins).
-          // Based tie breaker rule 2.
-          if (r2.totalCorrectSecondHalf !== r1.totalCorrectSecondHalf) {
-            const result =
-              r2.totalCorrectSecondHalf - r1.totalCorrectSecondHalf;
-            (result > 0 ? r2 : r1).tieBreakerReason =
-              TIE_BREAKER_REASON_MORE_CORRECT_SECOND_HALF;
-            return result;
-          } else {
-            r1.tieBreakerReason = DRINK_OFF;
-            r2.tieBreakerReason = DRINK_OFF;
-            // Drink off.
-            return 0;
-          }
-        }
+        r1.tieBreakerReason = DRINK_OFF;
+        r2.tieBreakerReason = DRINK_OFF;
+        // Drink off.
+        return 0;
       }
     }
-  );
+  };
+  return contestantRoundResults.sort(sorter);
+};
 
 export const sortByRankedBeerTasteScores = (
   beerScoreResults: BeerRanking[] = []
-): BeerRanking[] =>
-  beerScoreResults.sort(({points: p1}, {points: p2}) => p1 - p2);
+): BeerRanking[] => {
+  const sorter = ({ points: p1 }: BeerRanking, { points: p2 }: BeerRanking) =>
+    p1 - p2;
+  return beerScoreResults.sort(sorter);
+};

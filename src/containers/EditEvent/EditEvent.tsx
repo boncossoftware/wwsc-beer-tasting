@@ -80,7 +80,7 @@ const EditEvent = () => {
   };
 
   return (
-    <div id="edit-event">
+    <div data-testid="edit-event">
       <Dialog
         fullScreen
         open={open}
