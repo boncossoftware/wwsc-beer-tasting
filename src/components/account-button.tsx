@@ -7,8 +7,8 @@ export type AccountButtonProps = {
     onClickLogout?: () => void
 }
 
-const OptionsButton = ({onClickLogout, ...p}: AccountButtonProps) => {
-    const [menuRef, setMenuRef] = useState<Element|null>(null);
+const OptionsButton = ({ onClickLogout, ...p }: AccountButtonProps) => {
+    const [menuRef, setMenuRef] = useState<Element | null>(null);
 
     const handleClickAccountIcon: MouseEventHandler = (event) => {
         setMenuRef(event.currentTarget);
@@ -19,14 +19,14 @@ const OptionsButton = ({onClickLogout, ...p}: AccountButtonProps) => {
     }
 
     return (<>
-        <IconButton 
-            color="inherit" 
+        <IconButton
+            color="inherit"
             onClick={handleClickAccountIcon}
-            {...p} 
+            {...p}
         >
-            <AccountIcon/>
+            <AccountIcon />
         </IconButton>
-        <Menu 
+        <Menu
             open={Boolean(menuRef)}
             anchorEl={menuRef}
             onClose={handleCloseMenu}

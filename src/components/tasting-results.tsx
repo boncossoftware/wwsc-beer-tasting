@@ -7,12 +7,14 @@ import {
   RankingResult,
   Subheader,
 } from "./tasting-results.styles";
+import { User } from "store/reducers/users/reducer";
 
 type TastingResultsProps = {
   results?: Result;
+  users?: User[] | null;
 };
 
-const TastingResults = ({ results }: TastingResultsProps) => {
+const TastingResults = ({ results, users }: TastingResultsProps) => {
   const available = Boolean(results?.lastUpdated);
   let lover: ResultSummary | undefined;
   let hater: ResultSummary | undefined;
@@ -21,6 +23,13 @@ const TastingResults = ({ results }: TastingResultsProps) => {
       r.totalTaste < (lover?.totalTaste || Number.MAX_SAFE_INTEGER) ? r : lover;
     hater = r.totalTaste > (hater?.totalTaste || -0) ? r : hater;
   });
+
+  const display = (email?: string | null) => {
+    if (!email) return "-";
+    const user = users?.find((u) => u.email === email);
+    return user?.displayName ?? email;
+  }
+
   const resultsCount = results?.roundResults?.length ?? 0;
   return (
     <List disablePadding>
@@ -29,9 +38,9 @@ const TastingResults = ({ results }: TastingResultsProps) => {
           <Subheader>Ranking</Subheader>
           {results?.roundResults?.map((s, i) => (
             <RankingResult
-              key={i}
+              key={i as any}
               rank={i + 1}
-              name={s.userEmail}
+              name={display(s.userEmail)}
               points={s.totalPoints}
               isTied={s.isTied}
               tieBreakerReason={s.tieBreakerReason}
@@ -43,7 +52,7 @@ const TastingResults = ({ results }: TastingResultsProps) => {
           <Subheader>Best Taste</Subheader>
           {results?.beerScoreResults?.map((s, i) => (
             <RankingResult
-              key={i}
+              key={i as any}
               rank={i + 1}
               name={s.name}
               points={s.points}
@@ -56,11 +65,11 @@ const TastingResults = ({ results }: TastingResultsProps) => {
             <>
               <AchievementItem
                 achievement="Beer Lover"
-                receiver={lover?.userEmail ?? "-"}
+                receiver={display(lover?.userEmail)}
               />
               <AchievementItem
                 achievement="Beer Hater"
-                receiver={hater?.userEmail ?? "-"}
+                receiver={display(hater?.userEmail)}
               />
             </>
           )}

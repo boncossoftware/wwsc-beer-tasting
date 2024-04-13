@@ -47,26 +47,24 @@ export type EventListItemDetailsProps = {
 };
 
 export const EventListItemDetails = styled((p: EventListItemDetailsProps) => (
-  <>
-    <ListItemText
-      primary={p.name}
-      secondary={
-        <div className="details">
-          <span className="venue">
-            <PlaceOutlined fontSize="inherit" />
-            {p.venue}
+  <ListItemText
+    primary={p.name}
+    secondary={
+      <div className="details">
+        <span className="venue">
+          <PlaceOutlined fontSize="inherit" />
+          {p.venue}
+        </span>
+        {p.date && (
+          <span className="date">
+            <CalendarToday fontSize="inherit" />
+            {p.date}
           </span>
-          {p.date && (
-            <span className="date">
-              <CalendarToday fontSize="inherit" />
-              {p.date}
-            </span>
-          )}
-        </div>
-      }
-      {...p}
-    />
-  </>
+        )}
+      </div>
+    }
+    {...p}
+  />
 ))(({ theme }) => ({
   "& .MuiSvgIcon-root": {
     marginBottom: -2,

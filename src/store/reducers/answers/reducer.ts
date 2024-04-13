@@ -1,16 +1,20 @@
-import { ACTION_EVENT_ANSWERS_LOAD_ITEM_ERROR } from "./load-item";
-import { ACTION_EVENT_ANSWERS_LOAD_ITEM } from "./load-item";
-import { ACTION_EVENT_ANSWERS_ITEM_LOADING } from "./load-item";
+import {
+  ACTION_EVENT_ANSWERS_ITEM_LOADING,
+  ACTION_EVENT_ANSWERS_LOAD_ITEM,
+  ACTION_EVENT_ANSWERS_LOAD_ITEM_ERROR,
+} from "./load-item";
 
-import { ACTION_EVENT_ANSWERS_UPDATING } from "./update";
-import { ACTION_EVENT_ANSWERS_UPDATED } from "./update";
-import { ACTION_EVENT_ANSWERS_UPDATE_ERROR } from "./update";
+import {
+  ACTION_EVENT_ANSWERS_UPDATED,
+  ACTION_EVENT_ANSWERS_UPDATE_ERROR,
+  ACTION_EVENT_ANSWERS_UPDATING,
+} from "./update";
 
-import { ACTION_EVENT_ANSWERS_UPDATE_RESET } from "./reset-update";
 import { AnyAction } from "redux";
 import { StoreError } from "store/reducer";
 import { addOrUpdateItem } from "../results/utils";
 import { ACTION_ANSWERS_LISTEN_CHANGE } from "./listen-change";
+import { ACTION_EVENT_ANSWERS_UPDATE_RESET } from "./reset-update";
 
 export type TastingAnswer = {
   id: string;
@@ -56,6 +60,7 @@ export default function answersReducer(
       newState.itemsLoading[id] = loading;
       return newState;
     }
+    case ACTION_ANSWERS_LISTEN_CHANGE:
     case ACTION_EVENT_ANSWERS_LOAD_ITEM: {
       const item = action.payload;
       newState.items = addOrUpdateItem(item, state.items) as TastingAnswer[];
@@ -85,11 +90,6 @@ export default function answersReducer(
       newState.update.updated = null;
       newState.update.error = null;
       return newState;
-    }
-    case ACTION_ANSWERS_LISTEN_CHANGE: {
-        const item = action.payload;
-        newState.items = addOrUpdateItem(item, state.items) as TastingAnswer[];
-        return newState;
     }
     default: {
       return state;
