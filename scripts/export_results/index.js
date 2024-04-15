@@ -13,7 +13,7 @@ const run = async () => {
   const db = getFirestore();
   const results = await db
     .collection("results")
-    .doc("NQjTpWLJjDd7hA5xyRov")
+    .doc("ZHj34gWbE8msqCbsHUz0")
     .get();
 
   const rounds = [...Array(10).keys()];
@@ -25,8 +25,7 @@ const run = async () => {
       "Contestant",
       ...rounds.map(
         (_, i) =>
-          `#${i + 1} Beer, #${i + 1} Correct, #${i + 1} Asterisk, #${
-            i + 1
+          `#${i + 1} Beer, #${i + 1} Correct, #${i + 1} Asterisk, #${i + 1
           } Taste, #${i + 1} Score`
       ),
     ].join(", ")
@@ -39,10 +38,8 @@ const run = async () => {
     columns.push(
       ...rounds.map(
         (round) =>
-          `${round.selectedBeer}, ${round.correct ? "YES" : "NO"}, ${
-            round.asterisked ? "YES" : "NO"
-          }, ${round.tasteScore + 1 === 5 ? "4" : round.tasteScore + 1}, ${
-            round.points
+          `${round.selectedBeer}, ${round.correct ? "YES" : "NO"}, ${round.asterisked ? "YES" : "NO"
+          }, ${round.tasteScore + 1 === 5 ? "4" : round.tasteScore + 1}, ${round.points
           }`
       )
     );
